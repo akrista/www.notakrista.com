@@ -1,0 +1,112 @@
+---
+import { Code } from "astro:components";
+
+const code = `<?php
+
+class Developer {
+    public string $name;
+    public array $skills;
+    public array $interests;
+    
+    public function __construct(string $name, array $skills, array $interests) {
+        $this->name = $name;
+        $this->skills = $skills;
+        $this->interests = $interests;
+    }
+}
+
+class TechStack {
+    public array $devOps;
+    public array $backend;
+    public array $frontend;
+    
+    public function __construct(array $devOps, array $backend, array $frontend) {
+        $this->devOps = $devOps;
+        $this->backend = $backend;
+        $this->frontend = $frontend;
+    }
+}
+
+$techStack = new TechStack(
+    devOps: [
+        'GitHub',
+        'Cloudflare',
+        'Docker'
+    ],
+    frontend: [
+        'JavaScript',
+        'TypeScript',
+        'TailwindCSS',
+        'Astro',
+        'Svelte',
+        'React',
+        'Markdown'
+    ],
+    backend: [
+        'Laravel',
+        'Filament',
+        'Bun',
+        'PHP',
+        'Redis',
+        'SQLite',
+        'PostgreSQL'
+    ]
+);
+
+// Developer profile
+$me = new Developer(
+    name: 'Jorge Thomas',
+    skills: array_merge(
+        $techStack->devOps,
+        $techStack->backend,
+        $techStack->frontend
+    ),
+    interests: [
+        'Open Source',
+        'Security',
+        'Privacy',
+        'Performance',
+        'Self-Hosting',
+        'Networking'
+    ]
+);
+
+// Contact function
+function contact(string $type): string {
+    return match($type) {
+        'github' => 'https://github.com/akrista',
+        'linkedIn' => 'https://www.linkedin.com/in/akrista',
+        'email' => 'info@notakrista.com',
+        default => 'Send a message.'
+    };
+}
+
+?>
+
+`;
+---
+
+<Code code={code} lang="php" wrap={true} />
+
+<style is:global>
+    /* Custom styling for code block line numbers */
+    pre.astro-code {
+        @apply bg-transparent !important;
+    }
+
+    pre.astro-code code {
+        @apply block;
+        counter-reset: step;
+        counter-increment: step 0;
+    }
+
+    pre.astro-code code .line {
+        @apply relative;
+    }
+
+    pre.astro-code code .line::before {
+        content: counter(step);
+        counter-increment: step;
+        @apply text-muted pr-2;
+    }
+</style>

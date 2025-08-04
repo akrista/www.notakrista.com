@@ -1,0 +1,102 @@
+---
+interface Project {
+	name: string;
+	description: string;
+	link: {
+		url?: string;
+		target?: string;
+		title?: string;
+		buttonLabel?: string;
+	};
+}
+
+const projects: Project[] = [
+	{
+		name: "Rockery",
+		description:
+			"My blog and digital garden, where I share my thoughts and experiences.",
+		link: {
+			url: "https://rockery.notakrista.com",
+			buttonLabel: "Visit my rockery",
+		},
+	},
+	{
+		name: "Selfhost Resources",
+		description:
+			"A collection of resources to help you build your own homelab.",
+		link: {
+			url: "https://github.com/akrista/selfhost",
+			buttonLabel: "Build your homelab",
+		},
+	},
+	{
+		name: "Venezuelan Georeference Tools",
+		description: "A set of json files to georeference Venezuelan maps.",
+		link: {
+			url: "https://github.com/akrista/MadGeoTools",
+			buttonLabel: "Get the files",
+		},
+	},
+	{
+		name: "Terminal Course",
+		description:
+			"A course about the terminal and how to use it to be more productive.",
+		link: {
+			url: "https://github.com/akrista/terminalCourse",
+			buttonLabel: "Learn more",
+		},
+	},
+	{
+		name: "Steam Mini Profile",
+		description: "A simple web app to display your Steam profile information.",
+		link: {
+			url: "https://github.com/akrista/steam-miniprofile",
+			buttonLabel: "See it in action",
+		},
+	},
+	{
+		name: "Wakfu Music Extractor",
+		description: "A tool to extract music from the game Wakfu.",
+		link: {
+			url: "https://github.com/akrista/wakfu_music_extractor",
+			buttonLabel: "Get the code",
+		},
+	},
+];
+---
+
+<div>
+    <!-- <h2 class="text-2xl font-bold text-white mb-4">Latest Projects</h2> -->
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {
+            projects.map((project) => (
+                <div class="flex flex-col justify-center items-start border border-surface rounded-lg p-4 bg-background">
+                    <h3 class="text-xl font-semibold text-text mb-2">
+                        {project.name}
+                    </h3>
+
+                    <p class="text-muted">{project.description}</p>
+
+                    {project.link?.url ? (
+                        <a
+                            href={project.link.url}
+                            title={project.link.title || project.name}
+                            target={project.link.target || "_blank"}
+                            class="
+                                w-full px-4 py-2.5 mt-4 text-center
+
+                                border border-surface rounded-lg
+
+                                hover:text-primary
+                                hover:border-primary hover:text-primary
+                            "
+                        >
+                            {project.link.buttonLabel || "Check it out"}
+                        </a>
+                    ) : null}
+                </div>
+            ))
+        }
+    </div>
+</div>

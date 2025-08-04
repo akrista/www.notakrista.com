@@ -1,0 +1,45 @@
+---
+import Socials from "./Socials.astro";
+---
+
+<div>
+    <!-- Start: Terminal -->
+    <div
+        class="mt-6 bg-background rounded-lg p-4 border border-surface text-xs"
+    >
+        <div class="flex items-center mb-2">
+            <span class="text-accent mr-2">$</span>
+            <span class="text-text">composer connect</span>
+        </div>
+
+        <div class="mt-2 text-muted">
+            Initializing...
+            <br />
+            Ready to connect.
+            <br />
+            Waiting for contact request...
+        </div>
+
+        <div class="flex items-center mt-3 pt-2 border-t border-surface">
+            <span class="text-accent mr-2">$</span>
+            <span class="text-text mr-2">status</span>
+            <a
+                href="https://status.notakrista.com/"
+                target="_blank"
+                title="View System Status"
+                class="text-primary hover:text-secondary transition-colors duration-200"
+            >
+                --check-all
+            </a>
+        </div>
+        <div class="mt-1 text-xs">
+            <span class="text-accent">●</span>
+            <span class="text-muted ml-1">All systems operational</span>
+        </div>
+    </div>
+    <!-- End: Terminal -->
+
+    <!-- Start: Social Links -->
+    <Socials />
+    <!-- End: Social Links -->
+</div>

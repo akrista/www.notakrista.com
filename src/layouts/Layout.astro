@@ -1,0 +1,178 @@
+---
+import "../styles/global.scss";
+import PrivacyBanner from "../components/PrivacyBanner.astro";
+
+// Base domain URL without trailing slash
+const domainBaseURL = "https://www.notakrista.com";
+const ogImageUrl = "https://www.notakrista.com/img/meta.png";
+
+// Website publisher & region
+const authorPublisher = "Jorge Thomas";
+const geoRegion = "ES-VE";
+
+// SEO title, description and keywords
+const seoTitle =
+    "www.notakrista.com | Jorge Thomas | Venezuelan Full Stack Developer";
+const seoDescription =
+    "🚀 Venezuelan full-stack developer crafting robust web solutions with Docker containers and Laravel magic. Specialized in Filament admin panels and PostgreSQL optimization. Gaming enthusiast and self-hosting hobbyist.";
+const seoKeywords =
+    "Full Stack Developer, Jorge Thomas, Akrista, Venezuelan Developer, Caracas, Docker, Laravel, Filament, PostgreSQL, Self-hosting, Gaming, DevOps";
+
+// Twitter card data
+const twitter = {
+    title: seoTitle,
+    description: seoDescription,
+    image: ogImageUrl,
+    site: "@notakrista",
+    creator: "@notakrista",
+};
+
+// Open graph data
+const openGraph = {
+    title: seoTitle,
+    description: seoDescription,
+    url: domainBaseURL,
+    image: ogImageUrl,
+    type: "website",
+    locale: "en_US",
+    siteName: "www.notakrista.com",
+};
+
+// Caracas Core - Custom metadata schema
+const caracasCore = {
+    title: "www.notakrista.com",
+    creator: authorPublisher,
+    publisher: authorPublisher,
+    rights: authorPublisher,
+    description: seoDescription,
+    language: "en",
+    type: "Software",
+    format: "text/html",
+};
+---
+
+<!doctype html>
+<html lang="en" class="bg-background text-text font-mono">
+    <head>
+        <!-- Crawler & Robots -->
+        <meta
+            name="robots"
+            content="index, follow, noodp, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+        />
+        <meta name="revisit-after" content="7 days" />
+        <meta name="revisit" content="after 7 days" />
+
+        <!-- Start: Meta-Tags -->
+        <meta charset="UTF-8" />
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+        <meta http-equiv="Pragma" content="cache" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <!-- End: Meta-Tags -->
+
+        <!-- Start: DNS prefetch and preconnect -->
+        <!-- <link rel="preload" as="image" href="/img/logo.svg" /> -->
+
+        <!-- End: DNS prefetch and preconnect -->
+
+        <!-- Start: Theming and Favicons -->
+        <link
+            rel="icon"
+            type="image/svg+xml"
+            crossorigin="anonymous"
+            href="/img/logo.svg"
+        />
+        <!-- <link rel="alternate icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+        <link rel="alternate icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+        <link rel="icon" type="image/x-icon" href="/img/favicon/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+        <link rel="manifest" href="/img/favicon/site.webmanifest"> -->
+        <!-- End: Theming and Favicons -->
+
+        <!-- Start: Misc meta tags -->
+        <link rel="sitemap" href="/sitemap-index.xml" />
+        <link rel="canonical" href={Astro.url} />
+
+        <meta name="geo.region" content={geoRegion} />
+        <meta name="author" content={authorPublisher} />
+        <meta name="publisher" content={authorPublisher} />
+        <meta name="copyright" content={authorPublisher} />
+        <!-- End: Misc meta tags -->
+
+        <!-- Start: Facebook open graph -->
+        <meta property="og:title" content={openGraph.title} />
+        <meta property="og:description" content={openGraph.description} />
+        <meta property="og:url" content={openGraph.url} />
+        <meta property="og:type" content={openGraph.type} />
+        <meta property="og:image" content={openGraph.image} />
+        <meta property="og:locale" content={openGraph.locale} />
+        <meta property="og:site_name" content={openGraph.siteName} />
+        <!-- End: Facebook open graph -->
+
+        <!-- Start: Twitter card -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={twitter.title} />
+        <meta name="twitter:description" content={twitter.description} />
+        <meta name="twitter:image" content={twitter.image} />
+        <meta name="twitter:site" content={twitter.site} />
+        <meta name="twitter:creator" content={twitter.creator} />
+        <!-- End: Twitter card -->
+
+        <!-- Start: Caracas Core (CC) - Custom metadata schema -->
+        <meta name="CC.Title" content={caracasCore.title} />
+        <meta name="CC.Creator" content={caracasCore.creator} />
+        <meta name="CC.Rights" content={caracasCore.rights} />
+        <meta name="CC.Publisher" content={caracasCore.publisher} />
+        <meta name="CC.Description" content={caracasCore.description} />
+        <meta name="CC.Language" content={caracasCore.language} />
+        <meta name="CC.Type" content={caracasCore.type} />
+        <meta name="CC.Format" content={caracasCore.format} />
+        <!-- End: Caracas Core (CC) -->
+
+        <!-- Start: Analytics -->
+        <!-- Google Analytics -->
+
+        <!-- Google tag (gtag.js) -->
+        <script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=G-K451T3Q0ZM"
+        ></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+
+            gtag("config", "G-K451T3Q0ZM");
+        </script>
+
+        <!-- Microsoft Clarity -->
+        <script type="text/javascript">
+            (function (c, l, a, r, i, t, y) {
+                c[a] =
+                    c[a] ||
+                    function () {
+                        (c[a].q = c[a].q || []).push(arguments);
+                    };
+                t = l.createElement(r);
+                t.async = 1;
+                t.src = "https://www.clarity.ms/tag/" + i;
+                y = l.getElementsByTagName(r)[0];
+                y.parentNode.insertBefore(t, y);
+            })(window, document, "clarity", "script", "n2ucz8sijs");
+        </script>
+        <!-- End: Analytics -->
+
+        <!-- Title & Description -->
+        <title>{seoTitle}</title>
+        <meta name="description" content={seoDescription} />
+        <meta name="abstract" content={seoDescription} />
+        <meta name="keywords" content={seoKeywords} />
+    </head>
+
+    <body class="min-h-[100vh] flex items-center justify-center p-4">
+        <slot />
+        <PrivacyBanner />
+    </body>
+</html>
