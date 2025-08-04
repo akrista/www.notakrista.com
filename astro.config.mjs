@@ -8,6 +8,19 @@ export default defineConfig({
 	output: "static",
 	trailingSlash: "always",
 	site: "https://www.notakrista.com",
+	build: {
+		assetsPrefix: "./"
+	},
+	vite: {
+		build: {
+			assetsDir: "_astro",
+			rollupOptions: {
+				output: {
+					assetFileNames: "_astro/[name].[hash][extname]"
+				}
+			}
+		}
+	},
 
 	// Single page, no prefetch needed
 	prefetch: false,
