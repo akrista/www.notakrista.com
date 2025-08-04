@@ -5,10 +5,10 @@ networks:
     external: true
 services:
   notakrista.com:
-    image: akrista/www.notakrista.com:latest
+    image: ghcr.io/akrista/www.notakrista.com:latest
     container_name: notakrista
     build: .
     networks:
       - proxy
-    # ports:
-    #   - 8000:8000
+    ports:
+      - 8000:8000
