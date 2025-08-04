@@ -1,0 +1,14 @@
+name: ${STACK_NAME:-www.notakrista.com}
+networks:
+  proxy:
+    name: ${PROXY_NETWORK:-proxy}
+    external: true
+services:
+  www.notakrista.com:
+    image: akrista/www.notakrista.com:latest
+    container_name: www.notakrista.com
+    build: .
+    networks:
+      - proxy
+    # ports:
+    #   - 8000:8000

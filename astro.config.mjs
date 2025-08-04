@@ -8,9 +8,6 @@ export default defineConfig({
 	output: "static",
 	trailingSlash: "always",
 	site: "https://www.notakrista.com",
-	build: {
-		assetsPrefix: "./"
-	},
 
 	// Single page, no prefetch needed
 	prefetch: false,
