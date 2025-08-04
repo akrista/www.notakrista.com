@@ -11,16 +11,6 @@ export default defineConfig({
 	build: {
 		assetsPrefix: "./"
 	},
-	vite: {
-		build: {
-			assetsDir: "_astro",
-			rollupOptions: {
-				output: {
-					assetFileNames: "_astro/[name].[hash][extname]"
-				}
-			}
-		}
-	},
 
 	// Single page, no prefetch needed
 	prefetch: false,
