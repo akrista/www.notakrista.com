@@ -4,9 +4,9 @@ networks:
     name: ${PROXY_NETWORK:-proxy}
     external: true
 services:
-  www.notakrista.com:
+  notakrista.com:
     image: akrista/www.notakrista.com:latest
-    container_name: www.notakrista.com
+    container_name: notakrista
     build: .
     networks:
       - proxy

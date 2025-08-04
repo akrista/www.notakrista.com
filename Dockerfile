@@ -1,3 +1,8 @@
+LABEL maintainer="Jorge Thomas <info@notakrista.com>"
+LABEL org.opencontainers.image.title="www.notakrista.com Dockerfile"
+LABEL org.opencontainers.image.description="Dockerfile for www.notakrista.com"
+LABEL org.opencontainers.image.source=https://github.com/akrista/www.notakrista.com
+
 FROM oven/bun:alpine AS build
 WORKDIR /app
 COPY package.json ./
