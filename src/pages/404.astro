@@ -1,0 +1,43 @@
+---
+import Contact from "../components/Contact.astro";
+import ErrorPage from "../components/ErrorPage.astro";
+import Profile from "../components/Profile.astro";
+import Layout from "../layouts/Layout.astro";
+
+// SEO específico para la página 404
+const seoTitle = "404 - Página no encontrada | www.notakrista.com";
+const seoDescription =
+	"La página que buscas no existe. Regresa al inicio para explorar mi portfolio y proyectos.";
+---
+
+<Layout>
+    <!-- Start: Main Wrapper -->
+    <main
+        class="flex flex-col md:flex-row w-full max-w-full md:max-w-7xl border border-surface rounded-2xl overflow-hidden shadow-2xl relative bg-background mb-12 md:mb-4"
+    >
+        <!-- Start: Left / upper card -->
+        <div
+            class="p-8 md:p-6 flex flex-col justify-between w-full md:w-2/5 border-b md:border-b-0 md:border-r border-surface"
+        >
+            <Profile />
+            <Contact />
+        </div>
+        <!-- End: Left / upper card -->
+
+        <!-- Start: Right / lower card (error content) -->
+        <div class="w-full md:w-4/5 p-0">
+            <div class="min-h-full h-[90vh] flex flex-col">
+                <ErrorPage
+                    errorCode="404"
+                    title="Página no encontrada"
+                    description="Lo siento, la página que buscas no existe o ha sido movida. Puede que hayas escrito mal la URL o que el enlace esté desactualizado."
+                    iconEmoji="⚠"
+                    iconColor="primary"
+                    showReloadButton={false}
+                />
+            </div>
+        </div>
+        <!-- End: Right / lower card -->
+    </main>
+    <!-- End: Main Wrapper -->
+</Layout>
