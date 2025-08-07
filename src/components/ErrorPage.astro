@@ -1,0 +1,171 @@
+---
+export interface Props {
+	errorCode: string;
+	title: string;
+	description: string;
+	iconEmoji: string;
+	iconColor: string;
+	showTechnicalInfo?: boolean;
+	showReloadButton?: boolean;
+}
+
+const {
+	errorCode,
+	title,
+	description,
+	iconEmoji,
+	iconColor,
+	showTechnicalInfo = false,
+	showReloadButton = true,
+} = Astro.props;
+---
+
+<!-- Start: Header bar -->
+<div class="flex bg-background border-b border-surface">
+    <div class={`px-6 py-3 text-sm font-medium text-text border-b-2 border-b-${iconColor} bg-${iconColor}/10`}>
+        <span class={`text-${iconColor}`}>{iconEmoji}</span> {errorCode}.html
+    </div>
+</div>
+<!-- End: Header bar -->
+
+<!-- Start: Error content -->
+<div class="p-6 flex-grow flex flex-col items-center justify-center bg-background text-center">
+    <div class="max-w-md mx-auto">
+        <!-- Error code or icon -->
+        {errorCode && errorCode.match(/^\d+$/) ? (
+            <div class={`text-8xl font-bold text-${iconColor} mb-4 error-code`}>{errorCode}</div>
+        ) : (
+            <div class="text-6xl mb-6">
+                <span class={`text-${iconColor} error-icon`}>{iconEmoji}</span>
+            </div>
+        )}
+        
+        <!-- Error title -->
+        <h1 class="text-2xl font-bold text-text mb-4">
+            {title}
+        </h1>
+        
+        <!-- Error description -->
+        <p class="text-text/70 mb-8 leading-relaxed">
+            {description}
+        </p>
+        
+        <!-- Action buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+                href="/"
+                class="inline-flex items-center px-6 py-3 bg-primary text-background font-medium rounded-lg hover:bg-primary/90 transition-colors duration-200"
+            >
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Volver al inicio
+            </a>
+            
+            {showReloadButton && (
+                <button
+                    onclick="window.location.reload()"
+                    class="inline-flex items-center px-6 py-3 border border-surface text-text font-medium rounded-lg hover:bg-surface/50 transition-colors duration-200"
+                >
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                    </svg>
+                    Recargar página
+                </button>
+            )}
+            
+            {!showReloadButton && (
+                <button
+                    onclick="history.back()"
+                    class="inline-flex items-center px-6 py-3 border border-surface text-text font-medium rounded-lg hover:bg-surface/50 transition-colors duration-200"
+                >
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414a2 2 0 001.414.586H19a2 2 0 002-2V7a2 2 0 00-2-2h-8.172a2 2 0 00-1.414.586L3 12z"></path>
+                    </svg>
+                    Página anterior
+                </button>
+            )}
+        </div>
+
+        <!-- Technical info for 500 errors -->
+        {showTechnicalInfo && (
+            <div class={`mt-8 p-4 bg-${iconColor}/10 border border-${iconColor}/20 rounded-lg`}>
+                <p class="text-sm text-text/60">
+                    <strong>Para desarrolladores:</strong><br>
+                    Si eres el administrador del sitio, revisa los logs del servidor 
+                    para más información sobre este error.
+                </p>
+            </div>
+        )}
+
+        <!-- Additional help -->
+        <div class="mt-4 p-4 bg-surface/30 rounded-lg">
+            <p class="text-sm text-text/60">
+                <strong>¿Necesitas ayuda?</strong><br>
+                Puedes contactarme a través de los enlaces en el panel izquierdo.
+            </p>
+        </div>
+
+        <!-- Status info for 500 errors -->
+        {errorCode === '500' && (
+            <div class="mt-4 p-3 bg-surface/30 rounded-lg">
+                <p class="text-xs text-text/50">
+                    Error reportado automáticamente • 
+                    <span id="error-time"></span>
+                </p>
+            </div>
+        )}
+    </div>
+</div>
+<!-- End: Error content -->
+
+{errorCode === '500' && (
+    <script>
+        // Mostrar timestamp del error
+        document.addEventListener('DOMContentLoaded', function() {
+            const errorTimeElement = document.getElementById('error-time');
+            if (errorTimeElement) {
+                const now = new Date();
+                errorTimeElement.textContent = now.toLocaleString('es-ES');
+            }
+        });
+    </script>
+)}
+
+<style define:vars={{ iconColor }}>
+    /* Animaciones específicas para códigos de error */
+    .error-code {
+        animation: pulse-glow 2s ease-in-out infinite alternate;
+    }
+    
+    .error-icon {
+        animation: warning-bounce 1.5s ease-in-out infinite;
+    }
+    
+    /* Animación de error crítico para 500 */
+    .text-red-500.error-code {
+        animation: error-shake 0.5s ease-in-out infinite alternate;
+    }
+    
+    @keyframes pulse-glow {
+        from {
+            text-shadow: 0 0 5px var(--iconColor), 0 0 10px var(--iconColor), 0 0 15px var(--iconColor);
+        }
+        to {
+            text-shadow: 0 0 10px var(--iconColor), 0 0 20px var(--iconColor), 0 0 30px var(--iconColor);
+        }
+    }
+    
+    @keyframes warning-bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+    }
+    
+    @keyframes error-shake {
+        0% { transform: translateX(0); }
+        25% { transform: translateX(-2px); }
+        50% { transform: translateX(2px); }
+        75% { transform: translateX(-1px); }
+        100% { transform: translateX(0); }
+    }
+</style>
