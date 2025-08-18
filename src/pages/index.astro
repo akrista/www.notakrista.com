@@ -55,34 +55,35 @@ import Layout from "../layouts/Layout.astro";
                     <div
                         class="flex bg-background border-b border-surface sticky top-0 z-10"
                     >
-                        <ContentLink contentId="tab1" contentName="About.php" />
-                        <ContentLink contentId="tab2" contentName="README.md" />
+                        <ContentLink contentId="tab1" contentName="README.md" />
+                        <ContentLink contentId="tab2" contentName="PROJECTS.md" />
                         <ContentLink
                             contentId="tab3"
-                            contentName="PROJECTS.md"
+                            contentName="About.php"
                         />
                     </div>
                     <!-- End: Tab bar -->
 
                     <!-- Start: Tab content -->
                     <div class="p-6 flex-grow overflow-y-auto bg-background">
-                        <!-- Start: About content -->
-                        <div id="content1" class="tab-content">
-                            <ContentCode />
-                        </div>
-                        <!-- End: About content -->
-
                         <!-- Start: README content -->
-                        <div id="content2" class="tab-content">
+                        <div id="content1" class="tab-content">
                             <ContentReadme />
                         </div>
                         <!-- End: README content -->
 
                         <!-- Start: Projects content -->
-                        <div id="content3" class="tab-content">
+                        <div id="content2" class="tab-content">
                             <ContentProjects />
                         </div>
                         <!-- End: Projects content -->
+
+                        <!-- Start: About content -->
+                        <div id="content3" class="tab-content">
+                            <ContentCode />
+                        </div>
+                        <!-- End: About content -->
+
                     </div>
                     <!-- End: Tab content -->
                 </div>
