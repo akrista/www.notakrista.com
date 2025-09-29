@@ -9,7 +9,7 @@
 		"astro": "astro"
 	},
 	"dependencies": {
-		"astro": "^5.13.2",
+		"astro": "^5.14.1",
 		"shiki": "^3.11.0",
 		"swetrix": "^3.7.1",
 		"tailwindcss": "^3.4.17"
