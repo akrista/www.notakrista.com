@@ -12,7 +12,7 @@
 		"astro": "^5.13.2",
 		"shiki": "^3.11.0",
 		"swetrix": "^3.7.1",
-		"tailwindcss": "^3.4.17"
+		"tailwindcss": "^4.1.14"
 	},
 	"devDependencies": {
 		"@astrojs/sitemap": "^3.5.0",
