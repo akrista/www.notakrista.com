@@ -17,7 +17,7 @@
 	"devDependencies": {
 		"@astrojs/sitemap": "^3.6.0",
 		"@astrojs/tailwind": "^6.0.2",
-		"@biomejs/biome": "2.3.1",
+		"@biomejs/biome": "2.3.3",
 		"astro-compress": "^2.3.8",
 		"sass": "^1.93.2"
 	}
