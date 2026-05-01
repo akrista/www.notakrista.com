@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+
+set -e
+
+if pgrep -x php-fpm > /dev/null; then
+    if nc -z 127.0.0.1 9000 2>/dev/null; then
+        echo "PHP-FPM is healthy"
+        exit 0
+    else
+        echo "PHP-FPM is not listening on port 9000"
+        exit 1
+    fi
+else
+    echo "PHP-FPM process not found"
+    exit 1
+fi

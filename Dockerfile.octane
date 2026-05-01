@@ -1,0 +1,120 @@
+FROM php:8.5-cli-alpine
+
+LABEL maintainer="Jorge Thomas - Akrista <info@notakrista.com>"
+LABEL org.opencontainers.image.title="notakrista.com"
+LABEL org.opencontainers.image.description="My personal website built with Laravel and Filament"
+LABEL org.opencontainers.image.source=https://github.com/akrista/notakrista.com
+
+ARG WWWUSER=1000
+ARG WWWGROUP=1000
+ARG TZ=America/Caracas
+
+ENV TERM=xterm-color \
+    OCTANE_SERVER=swoole \
+    TZ=${TZ} \
+    USER=laravel \
+    ROOT=/var/www/html \
+    COMPOSER_FUND=0 \
+    COMPOSER_MAX_PARALLEL_HTTP=48 \
+    WITH_HORIZON=false \
+    WITH_SCHEDULER=false \
+    WITH_REVERB=false \
+    WITH_SSR=false
+
+WORKDIR /var/www/html
+
+SHELL ["/bin/sh", "-eou", "pipefail", "-c"]
+
+RUN ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime \
+    && echo ${TZ} > /etc/timezone
+
+ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+
+RUN apk update; \
+    apk upgrade; \
+    apk add --no-cache \
+    supervisor \
+    curl \
+    nodejs \
+    npm \
+    libpng-dev \
+    libxml2-dev \
+    zip \
+    unzip \
+    # wget \
+    # vim \
+    # tzdata \
+    # git \
+    # ncdu \
+    # procps \
+    # ca-certificates \
+    # libsodium-dev \
+    # brotli \
+    # bash \
+    && install-php-extensions \
+    apcu \
+    pcntl \
+    intl \
+    zip \
+    exif \
+    redis \
+    pgsql \
+    pdo_pgsql \
+    # bz2 \
+    # mbstring \
+    # bcmath \
+    # uv \
+    # vips \
+    # gd \
+    # rdkafka \
+    # ffi \
+    # igbinary \
+    # swoole \
+    openswoole \
+    pdo_mysql \
+    pdo_sqlsrv \
+    sockets \
+    opcache \
+    # ldap \
+    && docker-php-source delete \
+    && rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
+
+# Install supercronic for scheduler
+RUN arch="$(apk --print-arch)" \
+    && case "$arch" in \
+    armhf) _cronic_fname='supercronic-linux-arm' ;; \
+    aarch64) _cronic_fname='supercronic-linux-arm64' ;; \
+    x86_64) _cronic_fname='supercronic-linux-amd64' ;; \
+    x86) _cronic_fname='supercronic-linux-386' ;; \
+    *) echo >&2 "error: unsupported architecture: $arch"; exit 1 ;; \
+    esac \
+    && curl -fsSL "https://github.com/aptible/supercronic/releases/download/v0.2.38/${_cronic_fname}" \
+    -o /usr/bin/supercronic \
+    && chmod +x /usr/bin/supercronic \
+    && mkdir -p /etc/supercronic \
+    && echo "*/1 * * * * php ${ROOT}/artisan schedule:run --no-interaction" > /etc/supercronic/laravel
+
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+
+RUN addgroup -g ${WWWGROUP} laravel \
+    && adduser -D -u ${WWWUSER} -G laravel laravel \
+    && mkdir -p /var/www/.composer /var/www/.npm \
+    && chown -R laravel:laravel /var/www
+
+COPY docker/octane/php.ini /usr/local/etc/php/conf.d/99-octane.ini
+COPY docker/supervisord/supervisord.conf /etc/supervisord.conf
+COPY docker/octane/supervisord.octane.conf /etc/supervisor/conf.d/supervisord.octane.conf
+COPY docker/octane/supervisord.services.conf /etc/supervisor/conf.d/supervisord.services.conf
+COPY docker/octane/start-container /usr/local/bin/start-container
+COPY docker/octane/healthcheck /usr/local/bin/octane-healthcheck
+
+RUN chmod +x /usr/local/bin/start-container /usr/local/bin/octane-healthcheck
+
+USER laravel
+
+EXPOSE 8000
+EXPOSE 8080
+
+ENTRYPOINT ["start-container"]
+
+HEALTHCHECK --start-period=5s --interval=3s --timeout=5s --retries=12 CMD octane-healthcheck || exit 1

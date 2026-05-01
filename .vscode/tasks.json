@@ -1,0 +1,114 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "build",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "npm: build",
+			"detail": "vite build"
+		},
+		{
+			"type": "npm",
+			"script": "dev",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "npm: dev",
+			"detail": "vite"
+		},
+		{
+			"type": "composer",
+			"command": "run-script",
+			"args": ["setup"],
+			"group": "build",
+			"problemMatcher": [],
+			"label": "composer: setup",
+			"detail": "Install dependencies, generate key, migrate, and build assets"
+		},
+		{
+			"type": "composer",
+			"command": "run-script",
+			"args": ["dev"],
+			"group": "build",
+			"problemMatcher": [],
+			"label": "composer: dev",
+			"detail": "Run serve, queue:listen, and npm dev concurrently"
+		},
+		{
+			"type": "composer",
+			"command": "run-script",
+			"args": ["prod"],
+			"group": "build",
+			"problemMatcher": [],
+			"label": "composer: prod",
+			"detail": "Run production server with Octane, Horizon, Reverb, and Pail"
+		},
+		{
+			"type": "composer",
+			"command": "run-script",
+			"args": ["build"],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [],
+			"label": "composer: build",
+			"detail": "Optimize Laravel caches and build assets"
+		},
+		{
+			"type": "composer",
+			"command": "run-script",
+			"args": ["migrate"],
+			"group": "build",
+			"problemMatcher": [],
+			"label": "composer: migrate",
+			"detail": "Run database migrations"
+		},
+		{
+			"type": "composer",
+			"command": "run-script",
+			"args": ["migrate:fresh"],
+			"group": "build",
+			"problemMatcher": [],
+			"label": "composer: migrate:fresh",
+			"detail": "Fresh migration with seeding"
+		},
+		{
+			"type": "composer",
+			"command": "run-script",
+			"args": ["ide"],
+			"group": "build",
+			"problemMatcher": [],
+			"label": "composer: ide",
+			"detail": "Generate IDE helper files"
+		},
+		{
+			"type": "composer",
+			"command": "run-script",
+			"args": ["format"],
+			"group": "build",
+			"problemMatcher": [],
+			"label": "composer: format",
+			"detail": "Format code with Laravel Pint"
+		},
+		{
+			"type": "composer",
+			"command": "run-script",
+			"args": ["lint"],
+			"group": "build",
+			"problemMatcher": [],
+			"label": "composer: lint",
+			"detail": "Run Rector for code linting"
+		},
+		{
+			"type": "composer",
+			"command": "run-script",
+			"args": ["test"],
+			"group": "test",
+			"problemMatcher": [],
+			"label": "composer: test",
+			"detail": "Run Laravel tests with Pest"
+		}
+	]
+}

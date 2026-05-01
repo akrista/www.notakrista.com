@@ -1,0 +1,11 @@
+{
+    "recommendations": [
+        "mikestead.dotenv",
+        "EditorConfig.EditorConfig",
+        "laravel.vscode-laravel",
+        "bmewburn.vscode-intelephense-client",
+        "svelte.svelte-vscode",
+        "Vue.volar",
+        "DEVSENSE.phptools-vscode"
+    ]
+}

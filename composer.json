@@ -1,0 +1,204 @@
+{
+    "$schema": "https://getcomposer.org/schema.json",
+    "name": "akrista/notakrista.com",
+    "type": "project",
+    "description": "A laravel starter kit built with filament",
+    "keywords": ["laravel", "framework","filamentphp"],
+    "license": "MIT",
+    "homepage": "https://notakrista.com",
+    "authors": [
+        {
+            "name": "Jorge Thomas (akrista)",
+            "role": "Author",
+            "email": "info@notakrista.com",
+            "homepage": "https://notakrista.com"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/scalar/laravel"
+        }
+    ],
+    "require": {
+        "php": "^8.5",
+        "convergephp/blade-components": "^1.0",
+        "convergephp/converge": "^1.0.2",
+        "dedoc/scramble": "^0.13.17",
+        "dialloibrahima/smart-cache": "^2.3",
+        "eznix86/blade-islands": "^0.1.0",
+        "filament/filament": "^5.4.3",
+        "filament/spatie-laravel-media-library-plugin": "^5.4.3",
+        "filament/spatie-laravel-settings-plugin": "^5.4.3",
+        "grazulex/laravel-apiroute": "^2.1.0",
+        "inertiajs/inertia-laravel": "^2.0.22",
+        "laravel/ai": "^0.3.2",
+        "laravel/framework": "^13.2.0",
+        "laravel/horizon": "^5.45.4",
+        "laravel/octane": "^2.17.1",
+        "laravel/pulse": "^1.7.2",
+        "laravel/reverb": "^1.9.0",
+        "laravel/sanctum": "^4.3.1",
+        "laravel/tinker": "^3.0",
+        "laravel/wayfinder": "^0.1.15",
+        "league/flysystem-aws-s3-v3": "3.0",
+        "livewire/livewire": "^4.2.3",
+        "scalar/laravel": "dev-main",
+        "silviolleite/laravelpwa": "^2.0.3",
+        "spatie/laravel-activitylog": "^4.12.3",
+        "spatie/laravel-data": "^4.20.1",
+        "spatie/laravel-permission": "^6.25.0",
+        "spatie/laravel-query-builder": "^6.4.4",
+        "spatie/laravel-settings": "^3.7.2"
+    },
+    "require-dev": {
+        "laravel/boost": "^2.1.0",
+        "barryvdh/laravel-ide-helper": "^3.7.0",
+        "driftingly/rector-laravel": "^2.3.0",
+        "fakerphp/faker": "^1.24.1",
+        "larastan/larastan": "^3.9.3",
+        "laravel/pail": "^1.2.6",
+        "laravel/pint": "^1.29.0",
+        "laraveldaily/filacheck": "^0.2.0",
+        "mockery/mockery": "^1.6.12",
+        "nunomaduro/collision": "^8.9.1",
+        "pestphp/pest": "^4.4.3",
+        "pestphp/pest-plugin-browser": "^4.3.0",
+        "pestphp/pest-plugin-laravel": "^4.1",
+        "pestphp/pest-plugin-type-coverage": "^4.0.3",
+        "phpunit/phpunit": "^12.5.14",
+        "rector/rector": "^2.3.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "setup": [
+            "composer install",
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
+            "@php artisan key:generate",
+            "@php artisan migrate --force",
+            "bun install",
+            "bun run build"
+        ],
+        "dev": [
+            "Composer\\Config::disableProcessTimeout",
+            "bunx concurrently -c \"#93c5fd,#c4b5fd,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"bun run dev\" --names='server,queue,vite'"
+        ],
+        "dev:ssr": [
+            "bun run build:ssr",
+            "Composer\\Config::disableProcessTimeout",
+            "bunx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"php artisan inertia:start-ssr\" --names=server,queue,logs,ssr --kill-others"
+        ],
+        "prod": [
+            "Composer\\Config::disableProcessTimeout",
+            "bun run build",
+            "bunx concurrently -c \"#93c5fd,#c4b5fd,#10b981,#fb7185,#fdba74\" \"php artisan octane:start --host=0.0.0.0\" \"php artisan horizon\" \"php artisan reverb:start\" \"php artisan pail --timeout=0\" --names=server,queue,broadcast,logs --kill-others"
+        ],
+        "build": [
+            "Composer\\Config::disableProcessTimeout",
+            "@php artisan converge:index-search",
+            "@php artisan filament:upgrade",
+            "@php artisan livewire:publish --assets",
+            "@php artisan optimize:clear",
+            "@php artisan icons:cache",
+            "@php artisan filament:cache-components",
+            "@php artisan optimize",
+            "@php artisan storage:link",
+            "bun run build"
+        ],
+        "ide": [
+            "Composer\\Config::disableProcessTimeout",
+            "@php artisan ide-helper:generate",
+            "@php artisan ide-helper:models -NR",
+            "@php artisan ide-helper:meta"
+        ],
+        "update:requirements": [
+            "Composer\\Config::disableProcessTimeout",
+            "composer bump",
+            "bunx bun-check-updates -u"
+        ],
+        "lint": [
+            "Composer\\Config::disableProcessTimeout",
+            "rector",
+            "pint --parallel",
+            "pint --parallel --config=pint.filament.json app/Filament",
+            "bun run lint",
+            "bun run format"
+        ],
+        "lint:check": [
+            "Composer\\Config::disableProcessTimeout",
+            "pint --parallel --test",
+            "pint --parallel --test --config=pint.filament.json app/Filament",
+            "rector --dry-run",
+            "bun run lint:check",
+            "bun run format:check",
+            "bun run types:check"
+        ],
+        "test:unit": "XDEBUG_MODE=\"coverage\" pest --parallel --coverage --exactly=100.0",
+        "test:types": "phpstan",
+        "ci:check": [
+            "Composer\\Config::disableProcessTimeout",
+            "@test"
+        ],
+        "test": [
+            "@php artisan config:clear --ansi",
+            "@test:type-coverage",
+            "@test:unit",
+            "@lint:check",
+            "@test:types",
+            "@php artisan test"
+        ],
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi",
+            "@php artisan filament:upgrade"
+        ],
+        "post-update-cmd": [
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force",  "@php artisan boost:update --ansi",
+            "@php artisan ide-helper:generate",
+            "@php artisan ide-helper:models -NR",
+            "@php artisan ide-helper:meta"
+        ],
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php artisan key:generate --ansi",
+            "@php -r \"file_exists('storage/sqlite/notakrista.sqlite') || touch('storage/sqlite/notakrista.sqlite');\"",
+            "@php artisan migrate --graceful --ansi"
+        ],
+        "pre-package-uninstall": [
+            "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": []
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "php-code-archeology/php-code-archeology": true,
+            "php-http/discovery": true
+        },
+        "platform": {
+            "php": "8.5.1"
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

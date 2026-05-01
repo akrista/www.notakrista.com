@@ -1,0 +1,6 @@
+{
+    "php.version": "8.5",
+    "[php]": {
+        "editor.defaultFormatter": "laravel.vscode-laravel"
+    }
+}

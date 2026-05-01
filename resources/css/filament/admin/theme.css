@@ -1,0 +1,7 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+/* @import './themes/shadcn/theme.css'; */
+/* @import './themes/brisk/theme.css'; */
+/* @import './themes/nord/theme.css'; */
+/* @import './themes/neobrut/theme.css'; */
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';

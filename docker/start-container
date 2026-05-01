@@ -1,0 +1,51 @@
+#!/usr/bin/env sh
+set -e
+
+initialStuff() {
+    if [ ! -d "vendor" ] || [ "composer.lock" -nt "vendor/autoload.php" ]; then
+        echo "Installing/updating Composer dependencies..."
+        composer install \
+            --no-dev \
+            --no-interaction \
+            --no-autoloader \
+            --no-ansi \
+            --no-scripts \
+            --no-progress \
+            --audit
+        
+        composer dump-autoload \
+            --optimize \
+            --apcu \
+            --no-dev
+    else
+        echo "Composer dependencies up to date"
+    fi
+    
+    if [ ! -d "node_modules" ] || [ "package-lock.json" -nt "node_modules/.package-lock.json" ]; then
+        echo "Installing/updating NPM dependencies..."
+        # TODO: Re-enable this when we have a proper production build
+        # npm ci --omit=dev
+        npm ci
+    else
+        echo "NPM dependencies up to date"
+    fi
+    
+    if [ -z "$APP_KEY" ]; then
+        echo "APP_KEY not found, generating application key..."
+        php artisan key:generate --force --no-ansi
+    fi
+    
+    echo "Running Laravel initialization and build..."
+    php artisan migrate --force --no-ansi -q
+    composer build || {
+        echo "WARNING: composer build failed, but continuing to start PHP-FPM..."
+    }
+}
+
+if [ "$1" != "" ]; then
+    exec "$@"
+else
+    initialStuff
+    echo "Starting PHP-FPM Server..."
+    exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.fpm.conf
+fi

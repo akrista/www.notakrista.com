@@ -1,0 +1,52 @@
+#!/usr/bin/env sh
+set -e
+
+initialStuff() {
+    if [ ! -d "vendor" ] || [ "composer.lock" -nt "vendor/autoload.php" ]; then
+        echo "Installing/updating Composer dependencies..."
+        composer install \
+            --no-interaction \
+            --no-ansi \
+            --no-scripts \
+            --no-progress \
+            --audit
+        
+        composer dump-autoload \
+            --optimize \
+            --apcu
+    else
+        echo "Composer dependencies up to date"
+    fi
+    
+    if [ ! -d "node_modules" ] || [ "package-lock.json" -nt "node_modules/.package-lock.json" ]; then
+        echo "Installing/updating NPM dependencies..."
+        npm ci --omit=optional
+    else
+        echo "NPM dependencies up to date"
+    fi
+    
+    if [ -z "$APP_KEY" ]; then
+        echo "APP_KEY not found, generating application key..."
+        php artisan key:generate --force --no-ansi
+    fi
+    
+    echo "Running Laravel initialization..."
+    php artisan migrate --force --no-ansi -q
+    php artisan storage:link --no-ansi -q || true
+    php artisan optimize --no-ansi -q
+    
+    echo "Building assets..."
+    composer build || {
+        echo "WARNING: composer build failed, but continuing to start Octane..."
+    }
+}
+
+if [ "$1" != "" ]; then
+    exec "$@"
+else
+    initialStuff
+    echo "Starting Laravel Octane with Swoole..."
+    echo "Octane Server: $OCTANE_SERVER"
+    echo "Watch mode: enabled for hot reload"
+    exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.octane.conf
+fi

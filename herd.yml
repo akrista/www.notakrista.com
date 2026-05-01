@@ -1,0 +1,6 @@
+name: notakrista.com
+php: "8.5"
+secured: false
+aliases: {}
+integrations:
+  forge: {}

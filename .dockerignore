@@ -1,0 +1,78 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+*.md
+docs/
+.github/
+
+# IDE
+.idea/
+.vscode/
+.cursor/
+.windsurf/
+.claude/
+.ai/
+.agent/
+.agents/
+.junie/
+.opencode/
+.phpstorm.meta.php
+_ide_helper*.php
+*.swp
+*.swo
+*~
+
+# Dependencies (will be installed in container)
+/vendor/
+/node_modules/
+
+# Build artifacts
+/public/hot
+/public/storage
+/public/build
+/public/css/filament/
+/public/js/filament/
+/public/fonts/filament/
+
+# Storage
+/storage/*.key
+/storage/app/*
+!/storage/app/public
+!/storage/app/.gitignore
+/storage/framework/cache/*
+!/storage/framework/cache/.gitignore
+/storage/framework/sessions/*
+!/storage/framework/sessions/.gitignore
+/storage/framework/testing/*
+!/storage/framework/testing/.gitignore
+/storage/framework/views/*
+!/storage/framework/views/.gitignore
+/storage/logs/*
+!/storage/logs/.gitignore
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Testing
+/coverage/
+.phpunit.cache
+.phpunit.result.cache
+.phpunit.database.checksum
+/phpunit.xml
+tests/
+.husky/
+
+# Misc
+/bootstrap/cache/*
+!/bootstrap/cache/.gitignore
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+**/.DS_Store
+.env.backup
