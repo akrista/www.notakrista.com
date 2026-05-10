@@ -22,7 +22,7 @@
     <button
         type="button"
         @click="toggle()"
-        class="inline-flex items-center gap-1.5 rounded-lg bg-[oklch(95%_0.005_260)] dark:bg-[oklch(25%_0.08_260)] px-2.5 py-2 sm:px-3 sm:py-2 text-xs font-semibold uppercase tracking-wider text-secondary-surface border border-border-light transition-colors hover:text-primary-surface"
+        class="inline-flex items-center gap-1.5 rounded-lg bg-[oklch(95%_0.005_65)] dark:bg-[oklch(25%_0.012_65)] px-2.5 py-2 sm:px-3 sm:py-2 text-xs font-semibold uppercase tracking-wider text-secondary-surface border border-border-light transition-colors hover:text-primary-surface"
         aria-haspopup="true"
         :aria-expanded="open.toString()"
         aria-label="{{ __('welcome.language') }}"
@@ -47,7 +47,7 @@
         role="menu"
         aria-orientation="vertical"
     >
-        <div class="rounded-lg bg-[oklch(95%_0.005_260)] dark:bg-[oklch(25%_0.08_260)] border border-border-light shadow-lg overflow-hidden">
+        <div class="rounded-lg bg-[oklch(95%_0.005_65)] dark:bg-[oklch(25%_0.012_65)] border border-border-light shadow-lg overflow-hidden">
             @if(app()->getLocale() !== 'en')
             <a
                 href="{{ route('language-switcher.switch', ['code' => 'en']) }}"

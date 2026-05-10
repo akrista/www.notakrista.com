@@ -1,0 +1,358 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-01T00:00:00.000Z",
+  "title": "Design System: notakrista.com",
+  "extensions": {
+    "colorMeta": {
+      "monokai-orange": {
+        "role": "primary",
+        "displayName": "Monokai Orange",
+        "canonical": "oklch(74% 0.175 65)",
+        "tonalRamp": [
+          "oklch(15% 0.04 65)",
+          "oklch(25% 0.09 65)",
+          "oklch(35% 0.14 65)",
+          "oklch(48% 0.17 65)",
+          "oklch(60% 0.175 65)",
+          "oklch(74% 0.175 65)",
+          "oklch(84% 0.14 65)",
+          "oklch(92% 0.06 65)"
+        ]
+      },
+      "monokai-green": {
+        "role": "tertiary",
+        "displayName": "Monokai Green",
+        "canonical": "oklch(80% 0.155 135)",
+        "tonalRamp": [
+          "oklch(18% 0.05 135)",
+          "oklch(28% 0.09 135)",
+          "oklch(40% 0.13 135)",
+          "oklch(52% 0.15 135)",
+          "oklch(66% 0.155 135)",
+          "oklch(80% 0.155 135)",
+          "oklch(88% 0.10 135)",
+          "oklch(95% 0.04 135)"
+        ]
+      },
+      "monokai-pink": {
+        "role": "accent",
+        "displayName": "Monokai Pink",
+        "canonical": "oklch(62% 0.21 8)",
+        "tonalRamp": [
+          "oklch(18% 0.07 8)",
+          "oklch(28% 0.13 8)",
+          "oklch(40% 0.18 8)",
+          "oklch(52% 0.21 8)",
+          "oklch(62% 0.21 8)",
+          "oklch(74% 0.16 8)",
+          "oklch(85% 0.09 8)",
+          "oklch(93% 0.04 8)"
+        ]
+      },
+      "warm-page": {
+        "role": "neutral",
+        "displayName": "Warm Page",
+        "canonical": "oklch(99% 0.005 65)",
+        "tonalRamp": [
+          "oklch(85% 0.008 65)",
+          "oklch(88% 0.007 65)",
+          "oklch(91% 0.006 65)",
+          "oklch(94% 0.005 65)",
+          "oklch(96% 0.005 65)",
+          "oklch(98% 0.004 65)",
+          "oklch(99% 0.003 65)",
+          "oklch(99.5% 0.001 65)"
+        ]
+      },
+      "warm-charcoal": {
+        "role": "neutral",
+        "displayName": "Warm Charcoal",
+        "canonical": "oklch(18% 0.01 65)",
+        "tonalRamp": [
+          "oklch(8% 0.005 65)",
+          "oklch(12% 0.008 65)",
+          "oklch(18% 0.01 65)",
+          "oklch(22% 0.012 65)",
+          "oklch(28% 0.012 65)",
+          "oklch(35% 0.01 65)",
+          "oklch(42% 0.008 65)",
+          "oklch(52% 0.005 65)"
+        ]
+      },
+      "warm-ink": {
+        "role": "neutral",
+        "displayName": "Warm Ink",
+        "canonical": "oklch(17% 0.01 65)"
+      },
+      "warm-steel": {
+        "role": "neutral",
+        "displayName": "Warm Steel",
+        "canonical": "oklch(45% 0.014 65)"
+      },
+      "warm-border": {
+        "role": "neutral",
+        "displayName": "Warm Border",
+        "canonical": "oklch(90% 0.008 65)"
+      },
+      "warm-subtle": {
+        "role": "neutral",
+        "displayName": "Warm Subtle",
+        "canonical": "oklch(92% 0.006 65)"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero headlines only. The largest type on the site — uses Bricolage Grotesque at 800 weight with aggressive tracking (-0.04em) and tight leading (0.85).",
+        "fontFamily": "'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif",
+        "fontWeight": 800,
+        "fontSize": "clamp(2.5rem, 10vw + 0.5rem, 9rem)",
+        "lineHeight": 0.85,
+        "letterSpacing": "-0.04em"
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Page titles on interior pages (projects). Same font and weight as Display but at reduced scale.",
+        "fontFamily": "'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif",
+        "fontWeight": 800,
+        "fontSize": "clamp(2.5rem, 8vw + 0.5rem, 6rem)",
+        "lineHeight": 0.85,
+        "letterSpacing": "-0.04em"
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Section headers and card headlines. Bold Bricolage at reduced scale.",
+        "fontFamily": "'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif",
+        "fontWeight": 700,
+        "fontSize": "clamp(1.4rem, 3vw + 0.3rem, 2.5rem)",
+        "lineHeight": 0.9,
+        "letterSpacing": "-0.025em"
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running text, descriptions, paragraphs. Albert Sans at 400 regular, 500 medium for emphasis. Capped at 65ch line length.",
+        "fontFamily": "'Albert Sans', ui-sans-serif, system-ui, sans-serif",
+        "fontWeight": 400,
+        "fontSize": "1rem",
+        "lineHeight": 1.6
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Filter labels, tab text, button text, navigation items. Small but assertive uppercase Albert Sans at 600 weight with wide tracking.",
+        "fontFamily": "'Albert Sans', ui-sans-serif, system-ui, sans-serif",
+        "fontWeight": 600,
+        "fontSize": "0.75rem",
+        "letterSpacing": "0.05em"
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "ease-out-quart",
+        "value": "cubic-bezier(0.25, 1, 0.5, 1)",
+        "purpose": "Default easing for most state transitions (hover, focus, toggle). Smooth deceleration."
+      },
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Easing for entrance animations and page transitions. Sharper deceleration than quart."
+      },
+      {
+        "name": "ease-in-out-quart",
+        "value": "cubic-bezier(0.76, 0, 0.24, 1)",
+        "purpose": "Symmetric easing for bidirectional transitions."
+      },
+      {
+        "name": "duration-fast",
+        "value": "150ms",
+        "purpose": "Hover transitions, active state feedback. Felt but not watched."
+      },
+      {
+        "name": "duration-normal",
+        "value": "250ms",
+        "purpose": "Color transitions, opacity fades. Perceptible but not slow."
+      },
+      {
+        "name": "duration-slow",
+        "value": "400ms",
+        "purpose": "Entrance animations, tab panel reveals."
+      },
+      {
+        "name": "duration-slower",
+        "value": "600ms",
+        "purpose": "Major layout transitions, theme switching."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The main action button. Monokai Orange fill with dark text. Used for email and social links on the home page.",
+      "html": "<button class=\"ds-btn-primary\">GET STARTED</button>",
+      "css": ".ds-btn-primary {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  min-height: 44px;\n  padding: 12px 24px;\n  background-color: oklch(74% 0.175 65);\n  color: oklch(17% 0.01 65);\n  font-family: 'Albert Sans', ui-sans-serif, system-ui, sans-serif;\n  font-size: 0.875rem;\n  font-weight: 600;\n  border: none;\n  border-radius: 8px;\n  cursor: pointer;\n  transition: background-color 150ms cubic-bezier(0.25, 1, 0.5, 1), transform 150ms cubic-bezier(0.25, 1, 0.5, 1);\n}\n.ds-btn-primary:hover {\n  filter: brightness(1.1);\n}\n.ds-btn-primary:focus-visible {\n  outline: 2px solid oklch(74% 0.175 65 / 50%);\n  outline-offset: 2px;\n}\n.ds-btn-primary:active {\n  transform: scale(0.98);\n  filter: brightness(0.95);\n}\n.ds-btn-primary:disabled {\n  opacity: 0.5;\n  cursor: not-allowed;\n}\n@media (prefers-reduced-motion: reduce) {\n  .ds-btn-primary {\n    transition-duration: 0.01ms;\n  }\n}"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "The secondary action. Transparent fill with a 1px border. Used for filter controls and secondary navigation.",
+      "html": "<button class=\"ds-btn-outline\">VIEW ALL</button>",
+      "css": ".ds-btn-outline {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  min-height: 44px;\n  padding: 12px 24px;\n  background-color: transparent;\n  color: oklch(45% 0.014 65);\n  font-family: 'Albert Sans', ui-sans-serif, system-ui, sans-serif;\n  font-size: 0.875rem;\n  font-weight: 600;\n  letter-spacing: 0.05em;\n  text-transform: uppercase;\n  border: 2px solid oklch(90% 0.008 65);\n  border-radius: 8px;\n  cursor: pointer;\n  transition: color 150ms cubic-bezier(0.25, 1, 0.5, 1), background-color 150ms cubic-bezier(0.25, 1, 0.5, 1), border-color 150ms cubic-bezier(0.25, 1, 0.5, 1);\n}\n.ds-btn-outline:hover {\n  border-color: oklch(60% 0.01 65);\n  background-color: oklch(92% 0.006 65);\n}\n.ds-btn-outline:focus-visible {\n  outline: 2px solid oklch(74% 0.175 65 / 50%);\n  outline-offset: 2px;\n}\n.ds-btn-outline:active {\n  transform: scale(0.98);\n}\n@media (prefers-reduced-motion: reduce) {\n  .ds-btn-outline {\n    transition-duration: 0.01ms;\n  }\n}"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "The tertiary action. Transparent with no border. Hover reveals an underline.",
+      "html": "<button class=\"ds-btn-ghost\">Cancel</button>",
+      "css": ".ds-btn-ghost {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  min-height: 44px;\n  padding: 12px 24px;\n  background-color: transparent;\n  color: oklch(45% 0.014 65);\n  font-family: 'Albert Sans', ui-sans-serif, system-ui, sans-serif;\n  font-size: 0.875rem;\n  font-weight: 500;\n  border: none;\n  border-radius: 8px;\n  cursor: pointer;\n  transition: color 150ms cubic-bezier(0.25, 1, 0.5, 1);\n}\n.ds-btn-ghost:hover {\n  color: oklch(17% 0.01 65);\n  text-decoration: underline;\n  text-underline-offset: 4px;\n}\n.ds-btn-ghost:focus-visible {\n  outline: 2px solid oklch(74% 0.175 65 / 50%);\n  outline-offset: 2px;\n}\n.ds-btn-ghost:active {\n  transform: scale(0.98);\n}\n@media (prefers-reduced-motion: reduce) {\n  .ds-btn-ghost {\n    transition-duration: 0.01ms;\n  }\n}"
+    },
+    {
+      "name": "Language Chip",
+      "kind": "chip",
+      "refersTo": "chip-language",
+      "description": "A pill-shaped tag marking a GitHub repository's programming language. Monokai Green tint background with full Monokai Green text. Read-only.",
+      "html": "<span class=\"ds-chip-language\">PHP</span>",
+      "css": ".ds-chip-language {\n  display: inline-flex;\n  align-items: center;\n  padding: 2px 10px;\n  background-color: oklch(80% 0.155 135 / 18%);\n  color: oklch(80% 0.155 135);\n  font-family: 'Albert Sans', ui-sans-serif, system-ui, sans-serif;\n  font-size: 0.6875rem;\n  font-weight: 600;\n  border-radius: 9999px;\n  flex-shrink: 0;\n}"
+    },
+    {
+      "name": "Status Chip",
+      "kind": "chip",
+      "refersTo": "chip-status",
+      "description": "A pill-shaped tag marking a personal project's development status. Warm Subtle background with Warm Steel text. Read-only.",
+      "html": "<span class=\"ds-chip-status\">Active</span>",
+      "css": ".ds-chip-status {\n  display: inline-flex;\n  align-items: center;\n  padding: 2px 10px;\n  background-color: oklch(92% 0.006 65);\n  color: oklch(45% 0.014 65);\n  font-family: 'Albert Sans', ui-sans-serif, system-ui, sans-serif;\n  font-size: 0.6875rem;\n  font-weight: 600;\n  border-radius: 9999px;\n  flex-shrink: 0;\n}"
+    },
+    {
+      "name": "Select Input",
+      "kind": "input",
+      "refersTo": "input-select",
+      "description": "Dropdown select for filter controls on the projects page. Bordered with Monokai Orange focus ring.",
+      "html": "<select class=\"ds-input-select\"><option>All languages</option><option>PHP</option><option>JavaScript</option></select>",
+      "css": ".ds-input-select {\n  padding: 10px 12px;\n  background-color: oklch(95% 0.005 65);\n  color: oklch(17% 0.01 65);\n  font-family: 'Albert Sans', ui-sans-serif, system-ui, sans-serif;\n  font-size: 0.875rem;\n  font-weight: 500;\n  border: 1px solid oklch(90% 0.008 65);\n  border-radius: 8px;\n  cursor: pointer;\n  transition: border-color 150ms cubic-bezier(0.25, 1, 0.5, 1);\n}\n.ds-input-select:focus {\n  outline: none;\n  border-color: oklch(74% 0.175 65);\n  box-shadow: 0 0 0 2px oklch(74% 0.175 65 / 50%);\n}\n@media (prefers-reduced-motion: reduce) {\n  .ds-input-select {\n    transition-duration: 0.01ms;\n  }\n}"
+    },
+    {
+      "name": "Callout Card",
+      "kind": "card",
+      "refersTo": "card-callout",
+      "description": "The Monokai Orange filled card on the home page. Counterweights the display headline in the asymmetric hero layout. Contains title, description, and action buttons.",
+      "html": "<div class=\"ds-card-callout\"><h2>Let's talk</h2><p>Open to freelance and contract work.</p><a class=\"ds-btn-callout\" href=\"#\">Email</a></div>",
+      "css": ".ds-card-callout {\n  padding: 24px;\n  background-color: oklch(74% 0.175 65);\n  border-radius: 16px;\n}\n.ds-card-callout h2 {\n  font-family: 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;\n  font-size: clamp(1.4rem, 3vw + 0.3rem, 2.5rem);\n  font-weight: 700;\n  line-height: 0.9;\n  letter-spacing: -0.025em;\n  color: oklch(17% 0.01 65);\n  margin: 0;\n}\n.ds-card-callout p {\n  font-family: 'Albert Sans', ui-sans-serif, system-ui, sans-serif;\n  font-size: 0.875rem;\n  font-weight: 500;\n  color: oklch(28% 0.08 65);\n  max-width: 24rem;\n  margin: 8px 0 0 0;\n}\n.ds-btn-callout {\n  display: inline-flex;\n  align-items: center;\n  gap: 8px;\n  padding: 12px 16px;\n  background-color: oklch(17% 0.01 65);\n  color: oklch(99% 0.005 65);\n  font-family: 'Albert Sans', ui-sans-serif, system-ui, sans-serif;\n  font-size: 0.875rem;\n  font-weight: 600;\n  border: none;\n  border-radius: 8px;\n  text-decoration: none;\n  cursor: pointer;\n  transition: background-color 150ms cubic-bezier(0.25, 1, 0.5, 1);\n  margin: 16px 8px 0 0;\n}\n.ds-btn-callout:hover {\n  background-color: oklch(28% 0.01 65);\n}\n.ds-btn-callout:focus-visible {\n  outline: 2px solid oklch(74% 0.175 65 / 50%);\n  outline-offset: 2px;\n}\n.ds-btn-callout:active {\n  transform: scale(0.98);\n}\n@media (min-width: 640px) {\n  .ds-card-callout {\n    padding: 32px;\n  }\n}\n@media (prefers-reduced-motion: reduce) {\n  .ds-btn-callout {\n    transition-duration: 0.01ms;\n  }\n}"
+    },
+    {
+      "name": "Repository List Item",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "A clickable row displaying a GitHub repository: name, language chip, description, and stats (stars, forks, last push). Border-bottom dividers instead of card containers.",
+      "html": "<a class=\"ds-repo-item\" href=\"#\"><div><h3>laravel-boost</h3><span class=\"ds-chip-language\">PHP</span></div><p>A Laravel starter kit built with Filament</p><div><span>&#9733; 142</span><span>&#8644; 28</span></div></a>",
+      "css": ".ds-repo-item {\n  display: block;\n  padding: 16px 0;\n  border-bottom: 1px solid oklch(90% 0.008 65);\n  text-decoration: none;\n  transition: background-color 150ms cubic-bezier(0.25, 1, 0.5, 1);\n  margin: 0 -16px;\n  padding-left: 16px;\n  padding-right: 16px;\n}\n.ds-repo-item:hover {\n  background-color: oklch(97% 0.005 65);\n}\n.ds-repo-item h3 {\n  font-family: 'Albert Sans', ui-sans-serif, system-ui, sans-serif;\n  font-size: 1rem;\n  font-weight: 600;\n  color: oklch(17% 0.01 65);\n  transition: color 150ms cubic-bezier(0.25, 1, 0.5, 1);\n  margin: 0;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.ds-repo-item:hover h3 {\n  color: oklch(74% 0.175 65);\n}\n.ds-repo-item p {\n  font-family: 'Albert Sans', ui-sans-serif, system-ui, sans-serif;\n  font-size: 0.875rem;\n  color: oklch(45% 0.014 65);\n  margin: 4px 0 0 0;\n  display: -webkit-box;\n  -webkit-line-clamp: 2;\n  -webkit-box-orient: vertical;\n  overflow: hidden;\n}\n.ds-repo-item .ds-repo-stats {\n  display: flex;\n  align-items: center;\n  gap: 16px;\n  font-family: 'Albert Sans', ui-sans-serif, system-ui, sans-serif;\n  font-size: 0.75rem;\n  font-weight: 500;\n  color: oklch(45% 0.014 65);\n  flex-shrink: 0;\n}\n@media (min-width: 640px) {\n  .ds-repo-item {\n    padding: 20px 0;\n    padding-left: 16px;\n    padding-right: 16px;\n  }\n  .ds-repo-item h3 {\n    font-size: 1rem;\n  }\n}\n@media (prefers-reduced-motion: reduce) {\n  .ds-repo-item,\n  .ds-repo-item h3 {\n    transition-duration: 0.01ms;\n  }\n}"
+    },
+    {
+      "name": "Tab Toggle",
+      "kind": "nav",
+      "refersTo": null,
+      "description": "A pill-shaped tab switcher for alternating between GitHub and personal projects. Active tab lifts forward with background + subtle shadow.",
+      "html": "<div class=\"ds-tab-toggle\" role=\"tablist\"><button class=\"ds-tab-active\" role=\"tab\" aria-selected=\"true\">GitHub</button><button class=\"ds-tab-inactive\" role=\"tab\" aria-selected=\"false\">Personal</button></div>",
+      "css": ".ds-tab-toggle {\n  display: flex;\n  gap: 4px;\n  padding: 4px;\n  background-color: oklch(92% 0.006 65);\n  border-radius: 12px;\n  width: fit-content;\n}\n.ds-tab-toggle button {\n  padding: 10px 20px;\n  font-family: 'Albert Sans', ui-sans-serif, system-ui, sans-serif;\n  font-size: 0.875rem;\n  font-weight: 600;\n  border: none;\n  border-radius: 8px;\n  cursor: pointer;\n  transition: color 150ms cubic-bezier(0.25, 1, 0.5, 1), background-color 150ms cubic-bezier(0.25, 1, 0.5, 1);\n}\n.ds-tab-active {\n  background-color: oklch(99% 0.005 65);\n  color: oklch(17% 0.01 65);\n  box-shadow: 0 1px 3px oklch(0% 0 0 / 8%);\n}\n.ds-tab-inactive {\n  background-color: transparent;\n  color: oklch(45% 0.014 65);\n}\n.ds-tab-inactive:hover {\n  color: oklch(17% 0.01 65);\n}\n.ds-tab-toggle button:focus-visible {\n  outline: 2px solid oklch(74% 0.175 65 / 50%);\n  outline-offset: -2px;\n}\n@media (min-width: 640px) {\n  .ds-tab-toggle button {\n    padding: 10px 20px;\n  }\n}\n@media (prefers-reduced-motion: reduce) {\n  .ds-tab-toggle button {\n    transition-duration: 0.01ms;\n  }\n}"
+    },
+    {
+      "name": "Footer",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Minimal footer with copyright and tagline. 1px top border, label typography tier.",
+      "html": "<footer class=\"ds-footer\"><span>&copy; 2026 notakrista</span><span>Crafted with Laravel</span></footer>",
+      "css": ".ds-footer {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-start;\n  justify-content: space-between;\n  gap: 8px;\n  padding: 16px;\n  border-top: 1px solid oklch(90% 0.008 65);\n  font-family: 'Albert Sans', ui-sans-serif, system-ui, sans-serif;\n  font-size: 0.75rem;\n  color: oklch(45% 0.014 65);\n}\n@media (min-width: 640px) {\n  .ds-footer {\n    flex-direction: row;\n    align-items: center;\n    max-width: 64rem;\n    margin: 0 auto;\n    padding: 16px 24px;\n  }\n}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Signature Block",
+    "overview": "The definitive, personal mark of authorship — like a craftsman's stamp or a developer's commit signature. This system is the visible proof that says \"I built this, and the construction is the evidence.\" It is not a template wearing someone's name. It is the output of deliberate choices, each element existing because it does work.\n\nThe atmosphere is warm and focused — a desk lit by a single task lamp in an otherwise dark room, where the only thing that glows is the work. The palette is derived from Monokai: a committed orange accent (#FD971F) that is confident without being loud, warm without being soft. The neutrals are tinted at hue 65 so they share the orange axis — a cohesive warm family rather than competing temperatures.\n\nWhat this system explicitly rejects: SaaS landing-page clichés (hero metrics, gradient CTAs, feature icon grids), developer portfolio templates (centered headshots, skill bars, identical project cards), and the reflexive AI aesthetic (gradient text, glassmorphism, side-stripe borders).",
+    "keyCharacteristics": [
+      "Light-first, dark mode via user toggle",
+      "Massive display typography as the primary visual element — no decorative imagery needed",
+      "Asymmetric split layout (hero text counterweighted by a solid-color callout card)",
+      "Flat by default — tonal layering conveys hierarchy, not shadows",
+      "One saturated accent (Monokai Orange) applied with intent, not restraint",
+      "Every interactive element feels precisely engineered: crisp transitions, deliberate active states, no fluff"
+    ],
+    "rules": [
+      {
+        "name": "The Monokai Orange Rule",
+        "body": "Monokai Orange is the system's only saturated accent for surfaces and interactions. It must appear on every page in at least one intentional surface role — never as mere decoration, never as a one-pixel stripe. Its presence signals that the page is complete.",
+        "section": "colors"
+      },
+      {
+        "name": "The No-Pure-Black Rule",
+        "body": "Neither #000 nor #fff appear anywhere. Every neutral is tinted toward the 65° hue axis at chroma 0.005–0.014.",
+        "section": "colors"
+      },
+      {
+        "name": "The Monokai Green Rule",
+        "body": "Monokai Green is reserved for code and technology indicators only. It marks programming languages, technical metadata, and code-related UI. It never fills a surface larger than a chip or icon container. Its role is functional identification, not brand expression.",
+        "section": "colors"
+      },
+      {
+        "name": "The Monokai Pink Rule",
+        "body": "Monokai Pink is deployed at most once per page. If two elements on the same page use it, at least one is wrong. Its only permitted use is for rare high-emphasis moments.",
+        "section": "colors"
+      },
+      {
+        "name": "The Weight Jump Rule",
+        "body": "Adjacent typographic steps differ by at least 100 weight units or a 1.25× size ratio. No 500 → 550 weight gaps.",
+        "section": "typography"
+      },
+      {
+        "name": "The Display-Only Rule",
+        "body": "Bricolage Grotesque is reserved for headings. Body copy, labels, and UI chrome use Albert Sans exclusively.",
+        "section": "typography"
+      },
+      {
+        "name": "The No-Shadow Rule",
+        "body": "Shadows are prohibited at all levels. If a surface needs to read as elevated, darken or lighten the background (tonal layering) or use a 1px border.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Press-Feel Rule",
+        "body": "Every interactive element has an active state: either scale(0.98), a brightness shift, or both. If an element is clickable and pressing it produces no tactile feedback, that's a bug.",
+        "section": "components"
+      },
+      {
+        "name": "The No-Glow Rule",
+        "body": "Hover and focus states never use box-shadow glow effects. Focus is always a solid ring. Hover is always a background or text color shift.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "Do use massive display typography (clamp to 9rem) as the primary visual element on hero surfaces. The type IS the visual.",
+      "Do counterweight large text blocks with a solid Monokai Orange surface — asymmetry is the default layout.",
+      "Do use Bricolage Grotesque exclusively for headings and Albert Sans for everything else. Never swap roles.",
+      "Do keep body text at 1rem minimum, capped at 65ch line length for prose.",
+      "Do convey hierarchy through tonal layering (background lightness shifts) rather than borders or shadows.",
+      "Do use scale(0.98) and brightness shifts for all active/pressed states.",
+      "Do use exponential-out easing curves (ease-out-quart, ease-out-expo) for all transitions.",
+      "Do respect prefers-reduced-motion — all animations and transitions collapse to 0.01ms when the user requests reduced motion.",
+      "Do use Monokai Green exclusively for code and technology indicators — language chips, tech metadata, code-related UI.",
+      "Do use Monokai Pink at most once per page, for high-emphasis moments only."
+    ],
+    "donts": [
+      "Don't use box-shadow for elevation. The system is flat. Tonal layering or 1px borders convey depth instead.",
+      "Don't use glassmorphism, gradient text, or side-stripe borders — these are the AI-slush signatures this system rejects.",
+      "Don't use centered hero layouts. The home page is split 55/45. Interior pages are left-aligned.",
+      "Don't create identical card grids — icon + heading + text repeated in same-sized tiles is a template, not a design.",
+      "Don't use #000 or #fff anywhere. All neutrals are tinted toward 65° at chroma ≤0.014.",
+      "Don't add filler UI text — 'Scroll to explore', 'Discover more', scroll arrows, bouncing chevrons.",
+      "Don't use circular loading spinners. Skeletons match the layout shapes they replace.",
+      "Don't exceed one primary CTA button per surface. If everything is a button, nothing is the action.",
+      "Don't use Monokai Green as a surface fill, accent, or brand expression. It is a functional marker only.",
+      "Don't use Monokai Pink more than once per page. It is a punctuation mark, not a theme."
+    ]
+  }
+}

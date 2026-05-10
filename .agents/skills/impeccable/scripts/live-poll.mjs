@@ -8,10 +8,10 @@
  *   npx impeccable poll --reply <id> error "msg" # Reply with error
  */
 
-import { execSync } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
-import os from 'node:os';
 import path from 'node:path';
+import os from 'node:os';
 import { fileURLToPath } from 'node:url';
 
 // Node's built-in fetch (undici under the hood) enforces a 300s headers
@@ -55,7 +55,6 @@ Options:
 
   // Reply mode: npx impeccable poll --reply <id> <status> [--file path] [message]
   const replyIdx = args.indexOf('--reply');
-
   if (replyIdx !== -1) {
     const id = args[replyIdx + 1];
     const status = args[replyIdx + 2] || 'done';
@@ -95,10 +94,8 @@ Options:
       } else {
         console.error('Reply failed:', err.message);
       }
-
       process.exit(1);
     }
-
     return;
   }
 
@@ -111,16 +108,13 @@ Options:
 
   const deadline = Date.now() + totalTimeout;
   let event;
-
   try {
     while (true) {
       const remaining = deadline - Date.now();
-
       if (remaining <= 0) {
         event = { type: 'timeout' };
         break;
       }
-
       const slice = Math.min(remaining, PER_REQUEST_TIMEOUT_MS);
       const res = await fetch(`${base}/poll?token=${info.token}&timeout=${slice}`);
 
@@ -136,14 +130,10 @@ Options:
       }
 
       const next = await res.json();
-
       // Server-side timeout means no browser event arrived in this slice.
       // Loop and re-poll until we get a real event or we hit the user's
       // total deadline.
-      if (next?.type === 'timeout' && Date.now() < deadline) {
-continue;
-}
-
+      if (next?.type === 'timeout' && Date.now() < deadline) continue;
       event = next;
       break;
     }
@@ -155,16 +145,13 @@ continue;
       const scriptArgs = event.type === 'discard'
         ? ['--id', event.id, '--discard']
         : ['--id', event.id, '--variant', event.variantId];
-
       if (event.type === 'accept' && event.paramValues && Object.keys(event.paramValues).length > 0) {
-        // Pass through a JSON blob; the shell-safe wrap uses single quotes because
-        // values are finite {id, number|string|boolean} pairs from a validated payload.
-        scriptArgs.push('--param-values', `'${JSON.stringify(event.paramValues).replace(/'/g, "'\\''")}'`);
+        scriptArgs.push('--param-values', JSON.stringify(event.paramValues));
       }
-
       try {
-        const out = execSync(
-          `node "${acceptScript}" ${scriptArgs.join(' ')}`,
+        const out = execFileSync(
+          'node',
+          [acceptScript, ...scriptArgs],
           { encoding: 'utf-8', cwd: process.cwd(), timeout: 30_000 }
         );
         event._acceptResult = JSON.parse(out.trim());
@@ -188,14 +175,12 @@ continue;
     } else {
       console.error('Poll failed:', err.message);
     }
-
     process.exit(1);
   }
 }
 
 // Auto-execute when run directly
 const _running = process.argv[1];
-
 if (_running?.endsWith('live-poll.mjs') || _running?.endsWith('live-poll.mjs/')) {
   pollCli();
 }

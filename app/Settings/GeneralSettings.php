@@ -22,9 +22,9 @@ final class GeneralSettings extends Settings
 
     public bool $search_engine_indexing;
 
-    public string $pwa_theme_color = '#00CE7C';
+    public string $pwa_theme_color = '#EB880C';
 
-    public string $pwa_background_color = '#001F60';
+    public string $pwa_background_color = '#2B2822';
 
     public ?string $pwa_splash_background_color = null;
 

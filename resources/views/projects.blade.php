@@ -108,7 +108,7 @@
                                 id="repo-language"
                                 x-model="language"
                                 @change="window.location.href = '?' + new URLSearchParams({tab: 'github', language: $event.target.value, sort: sort, limit: limit}).toString()"
-                                class="rounded-lg bg-[oklch(95%_0.005_260)] dark:bg-[oklch(25%_0.08_260)] border border-border-light px-3 py-2.5 text-sm font-medium text-primary-surface focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-surface-light dark:focus:ring-offset-surface-dark">
+                                class="rounded-lg bg-[oklch(95%_0.005_65)] dark:bg-[oklch(25%_0.012_65)] border border-border-light px-3 py-2.5 text-sm font-medium text-primary-surface focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-surface-light dark:focus:ring-offset-surface-dark">
                                 <option value="all" @if(!request()->query('language') || request()->query('language') === 'all') selected @endif>{{ __('projects.filters.all') }}</option>
                                 @foreach($languages as $lang)
                                     <option value="{{ $lang }}" @if(request()->query('language') === $lang) selected @endif>{{ $lang }}</option>
@@ -122,7 +122,7 @@
                                 id="repo-sort"
                                 x-model="sort"
                                 @change="window.location.href = '?' + new URLSearchParams({tab: 'github', language: language, sort: $event.target.value, limit: limit}).toString()"
-                                class="rounded-lg bg-[oklch(95%_0.005_260)] dark:bg-[oklch(25%_0.08_260)] border border-border-light px-3 py-2.5 text-sm font-medium text-primary-surface focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-surface-light dark:focus:ring-offset-surface-dark">
+                                class="rounded-lg bg-[oklch(95%_0.005_65)] dark:bg-[oklch(25%_0.012_65)] border border-border-light px-3 py-2.5 text-sm font-medium text-primary-surface focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-surface-light dark:focus:ring-offset-surface-dark">
                                 <option value="stars" @if(!request()->query('sort') || request()->query('sort') === 'stars') selected @endif>{{ __('projects.sort.stars') }}</option>
                                 <option value="recent" @if(request()->query('sort') === 'recent') selected @endif>{{ __('projects.sort.recent') }}</option>
                                 <option value="name" @if(request()->query('sort') === 'name') selected @endif>{{ __('projects.sort.name') }}</option>
@@ -135,7 +135,7 @@
                                 id="repo-limit"
                                 x-model="limit"
                                 @change="window.location.href = '?' + new URLSearchParams({tab: 'github', language: language, sort: sort, limit: $event.target.value}).toString()"
-                                class="rounded-lg bg-[oklch(95%_0.005_260)] dark:bg-[oklch(25%_0.08_260)] border border-border-light px-3 py-2.5 text-sm font-medium text-primary-surface focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-surface-light dark:focus:ring-offset-surface-dark">
+                                class="rounded-lg bg-[oklch(95%_0.005_65)] dark:bg-[oklch(25%_0.012_65)] border border-border-light px-3 py-2.5 text-sm font-medium text-primary-surface focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-surface-light dark:focus:ring-offset-surface-dark">
                                 <option value="5" @if(request()->query('limit') == 5) selected @endif>5</option>
                                 <option value="10" @if(!request()->query('limit') || request()->query('limit') == 10) selected @endif>10</option>
                                 <option value="20" @if(request()->query('limit') == 20) selected @endif>20</option>
@@ -153,7 +153,7 @@
                 {{-- Repo list --}}
                 @forelse($repos as $repo)
                     <a href="{{ $repo->html_url }}" target="_blank" rel="noopener noreferrer"
-                        class="group block py-4 sm:py-5 border-b border-border-light transition-colors hover:bg-[oklch(97%_0.005_260)] dark:hover:bg-[oklch(20%_0.03_260)] -mx-4 px-4"
+                        class="group block py-4 sm:py-5 border-b border-border-light transition-colors hover:bg-[oklch(97%_0.005_65)] dark:hover:bg-[oklch(22%_0.012_65)] -mx-4 px-4"
                         aria-label="{{ $repo->name }} ({{ __('projects.external_link') }})">
                         <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-4">
                             <div class="min-w-0 flex-1">
@@ -216,7 +216,7 @@
                                 id="project-status"
                                 x-model="status"
                                 @change="window.location.href = '?' + new URLSearchParams({tab: 'personal', status: $event.target.value, project_sort: projectSort}).toString()"
-                                class="rounded-lg bg-[oklch(95%_0.005_260)] dark:bg-[oklch(25%_0.08_260)] border border-border-light px-3 py-2.5 text-sm font-medium text-primary-surface focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-surface-light dark:focus:ring-offset-surface-dark">
+                                class="rounded-lg bg-[oklch(95%_0.005_65)] dark:bg-[oklch(25%_0.012_65)] border border-border-light px-3 py-2.5 text-sm font-medium text-primary-surface focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-surface-light dark:focus:ring-offset-surface-dark">
                                 <option value="all" @if(!request()->query('status') || request()->query('status') === 'all') selected @endif>{{ __('projects.filters.all') }}</option>
                                 @foreach($statuses as $s)
                                     <option value="{{ $s }}" @if(request()->query('status') === $s) selected @endif>{{ __('projects.statuses.' . $s, ucfirst($s)) }}</option>
@@ -230,7 +230,7 @@
                                 id="project-sort"
                                 x-model="projectSort"
                                 @change="window.location.href = '?' + new URLSearchParams({tab: 'personal', status: status, project_sort: $event.target.value}).toString()"
-                                class="rounded-lg bg-[oklch(95%_0.005_260)] dark:bg-[oklch(25%_0.08_260)] border border-border-light px-3 py-2.5 text-sm font-medium text-primary-surface focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-surface-light dark:focus:ring-offset-surface-dark">
+                                class="rounded-lg bg-[oklch(95%_0.005_65)] dark:bg-[oklch(25%_0.012_65)] border border-border-light px-3 py-2.5 text-sm font-medium text-primary-surface focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-surface-light dark:focus:ring-offset-surface-dark">
                                 <option value="recent" @if(!request()->query('project_sort') || request()->query('project_sort') === 'recent') selected @endif>{{ __('projects.sort.recently_added') }}</option>
                                 <option value="name" @if(request()->query('project_sort') === 'name') selected @endif>{{ __('projects.sort.name') }}</option>
                             </select>

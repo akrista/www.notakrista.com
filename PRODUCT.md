@@ -6,33 +6,35 @@ brand
 
 ## Users
 
-Potential clients evaluating whether to work together, friends and peers staying connected, and networking contacts discovering who you are beyond a resume. Business-minded visitors come to assess technical capability and professionalism. Everyone else comes to meet a real person — someone with hobbies, opinions, and projects they care about. Both groups should leave feeling like they actually know you.
+Prospective clients and employers evaluating Jorge Thomas's development work. They arrive to assess capability, see shipped work, and understand what it's like to work with him. The site should answer "can this person build what I need?" through visible craft rather than claims.
 
 ## Product Purpose
 
-A personal portfolio and entrypoint that leads with personality before proving with work. The site showcases projects and repos, personal articles (both blog-style and dedicated per-article routes), miscellaneous personal apps (todo lists, utilities), and hobby statistics (games played, hours coded, and other human metrics). Success means visitors connect with the person first, then explore the work, and either reach out or remember you as someone interesting and capable.
+notakrista.com is Jorge Thomas's personal brand and portfolio — a living demonstration of Laravel development expertise. It functions as both a showcase of past work and a proof of current capability. The site itself is the portfolio item: a Laravel starter kit built on Filament, Inertia, and Livewire that proves the technology stack in production.
 
 ## Brand Personality
 
-Bold, playful, human. High energy and colorful without being chaotic. Personality-forward — the kind of developer who makes you smile before you even see their code. Confident but never arrogant, technical but never cold. The interface should feel like meeting someone at a great party who happens to also build incredible things.
+Expert, precise, opinionated. The site speaks through its craft, not its copy. It favors showing over telling, working code over promises. The tone is confident without arrogance, technical without being inaccessible, and intentionally undecorated — every element exists because it does work, not because it fills space.
 
 ## Anti-references
 
-- Generic SaaS templates with identical card grids, gradient text, and hero-metric layouts
-- Overly flashy or animated pages where motion distracts from substance
-- Cookie-cutter landing pages that look like every other AI-generated site
-- Bootstrap-looking defaults with no personality
-- Sterile "developer portfolio" templates that read like resumes with CSS
-- Corporate LinkedIn energy — everything optimized, nothing alive
+- Generic SaaS landing pages with hero metrics, feature grids, and gradient CTAs
+- Over-designed personal sites that prioritize visual effects over clarity and speed
+- "Developer portfolio" templates with centered headshots, skill bars, and identical project cards
+- Bootstrap-era card grids and generic starter kit aesthetics
+- AI-slush: gradient text, glassmorphism, side-stripe borders, emoji as decoration
 
 ## Design Principles
 
-- **Personality before portfolio.** Lead with who you are, not what you've built. The work proves itself; the person opens the door.
-- **Bold but not loud.** High energy and color used with intention. Playful without being childish, confident without shouting.
-- **Show the human.** Hobbies, stats, quirks — these are not secondary content. They are the reason someone remembers you.
-- **Craft is the proof.** Every interaction, transition, and layout decision should demonstrate technical skill without announcing it.
-- **No walls, no templates.** Break out of card-grid thinking. Use varied layouts, unexpected spacing, and structural choices that feel designed, not generated.
+1. **Show, don't tell.** The site demonstrates capability through its own quality — performance, interactions, typography, and code structure speak louder than any "I build great software" copy.
+2. **Every element earns its place.** Nothing ornamental. If a design element doesn't do work (navigate, communicate, demonstrate), it doesn't belong.
+3. **Expert confidence.** The design is understated because the work speaks. No hype, no over-promising, no visual noise to compensate for substance.
+4. **Living portfolio.** The site itself is perpetually under construction as a demonstration of the starter kit. It evolves as the technology evolves.
 
 ## Accessibility & Inclusion
 
-WCAG AA compliance. Focus management, reduced motion support, color contrast, and semantic structure. The site is playful but never at the expense of usability — reduced motion preferences are respected, color is never the sole carrier of meaning, and keyboard navigation is first-class.
+- WCAG 2.1 AA minimum target
+- Reduced motion respected via `prefers-reduced-motion`
+- Keyboard navigable
+- Dark mode via theme toggle
+- Responsive from mobile (320px) to ultrawide

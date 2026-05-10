@@ -17,8 +17,8 @@
 >
 
 {{-- Theme color for better mobile experience --}}
-<meta name="theme-color" content="#00CE7C" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#001F60" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#EB880C" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#2B2822" media="(prefers-color-scheme: dark)">
 
 {{-- Mobile optimizations --}}
 <meta name="mobile-web-app-capable" content="yes">

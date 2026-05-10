@@ -11,26 +11,18 @@
  */
 (function () {
   'use strict';
-
-  if (typeof window === 'undefined') {
-return;
-}
+  if (typeof window === 'undefined') return;
 
   // Guard against double-init. Bun's HTML loader may process the <script> tag
   // and create a bundled copy alongside the external load, or HMR may re-execute.
   // Check BEFORE reading token/port to catch all cases.
-  if (window.__IMPECCABLE_LIVE_INIT__) {
-return;
-}
-
+  if (window.__IMPECCABLE_LIVE_INIT__) return;
   window.__IMPECCABLE_LIVE_INIT__ = true;
 
   const TOKEN = window.__IMPECCABLE_TOKEN__;
   const PORT = window.__IMPECCABLE_PORT__;
-
   if (!TOKEN || !PORT) {
     window.__IMPECCABLE_LIVE_INIT__ = false; // reset so the real load can init
-
     return;
   }
 
@@ -136,29 +128,18 @@ return;
   // had landed on, typically 0.)
   const SCROLL_KEY_SUFFIX = '-scroll';
   function writeScrollY(y) {
-    try {
- localStorage.setItem(LS_KEY + SCROLL_KEY_SUFFIX, String(y)); 
-} catch {}
+    try { localStorage.setItem(LS_KEY + SCROLL_KEY_SUFFIX, String(y)); } catch {}
   }
   function readScrollY() {
     try {
       const raw = localStorage.getItem(LS_KEY + SCROLL_KEY_SUFFIX);
-
-      if (raw == null) {
-return null;
-}
-
+      if (raw == null) return null;
       const n = parseFloat(raw);
-
       return isFinite(n) ? n : null;
-    } catch {
- return null; 
-}
+    } catch { return null; }
   }
   function clearScrollY() {
-    try {
- localStorage.removeItem(LS_KEY + SCROLL_KEY_SUFFIX); 
-} catch {}
+    try { localStorage.removeItem(LS_KEY + SCROLL_KEY_SUFFIX); } catch {}
   }
 
   // Pre-empt the browser: apply manual scroll restoration and jump to the
@@ -169,7 +150,6 @@ return null;
   try {
     history.scrollRestoration = 'manual';
     const savedY = readScrollY();
-
     if (savedY != null) {
       const apply = () => {
         if (Math.abs(window.scrollY - savedY) > 0.5) {
@@ -178,11 +158,7 @@ return null;
         }
       };
       apply();
-
-      if (document.fonts?.ready) {
-document.fonts.ready.then(apply).catch(() => {});
-}
-
+      if (document.fonts?.ready) document.fonts.ready.then(apply).catch(() => {});
       window.addEventListener('load', apply, { once: true });
     }
   } catch {}
@@ -204,42 +180,61 @@ document.fonts.ready.then(apply).catch(() => {});
   }
 
   function pickable(el) {
-    if (!el || el.nodeType !== 1) {
-return false;
-}
-
-    if (SKIP_TAGS.has(el.tagName.toLowerCase())) {
-return false;
-}
-
-    if (own(el)) {
-return false;
-}
-
+    if (!el || el.nodeType !== 1) return false;
+    if (SKIP_TAGS.has(el.tagName.toLowerCase())) return false;
+    if (own(el)) return false;
     const r = el.getBoundingClientRect();
-
     return r.width >= 20 && r.height >= 20;
   }
 
   function desc(el) {
-    if (!el) {
-return '';
-}
-
+    if (!el) return '';
     let s = el.tagName.toLowerCase();
-
-    if (el.id) {
-s += '#' + el.id;
-} else if (el.classList.length) {
-s += '.' + [...el.classList].slice(0, 2).join('.');
-}
-
+    if (el.id) s += '#' + el.id;
+    else if (el.classList.length) s += '.' + [...el.classList].slice(0, 2).join('.');
     return s;
   }
 
-  function id8() {
- return crypto.randomUUID().replace(/-/g, '').slice(0, 8); 
-}
+  function id8() { return crypto.randomUUID().replace(/-/g, '').slice(0, 8); }
+
+  // Modal-aware chrome: keep our floating UI clickable inside Radix /
+  // Headless UI / vaul portals.
+  //
+  // Two host-page behaviors break us when the picked element lives inside a
+  // modal dialog:
+  //
+  //   1. Modal scroll-lock disables outside pointer events. Radix's
+  //      `DismissableLayer` sets `document.body.style.pointerEvents = 'none'`
+  //      while a modal is open and only restores `auto` on the layer. Our
+  //      chrome inherits `none` from <body> and becomes unclickable.
+  //   2. The dialog's outside-interaction handler (Radix's
+  //      `usePointerDownOutside`) listens at document level and dismisses
+  //      the dialog whenever a `pointerdown` lands outside the layer node.
+  //      Our chrome is a sibling of <body>, so Radix classifies our clicks
+  //      as outside and tears the dialog down mid-task.
+  //
+  // We can't reliably re-parent our chrome into the dialog subtree (z-index
+  // stacking, scroll containers, theming all become host-page concerns), so
+  // we defang both behaviors at our root:
+  //
+  //   - `pointer-events: auto !important` overrides the inherited `none`.
+  //   - Stop `pointerdown` / `mousedown` propagation so the document-level
+  //     dismiss listener never fires for our clicks.
+  //   - Stop `focusin` propagation so any focus shifts inside our chrome
+  //     don't read as "focus moved outside the dialog" to focus traps.
+  //
+  // Click events still bubble normally — only the early pointer/focus
+  // signals that drive outside-interaction detection are silenced.
+  function defangOutsideHandlers(rootEl, { setPointerEvents = true } = {}) {
+    if (!rootEl) return;
+    if (setPointerEvents) {
+      rootEl.style.setProperty('pointer-events', 'auto', 'important');
+    }
+    const stop = (e) => e.stopPropagation();
+    rootEl.addEventListener('pointerdown', stop);
+    rootEl.addEventListener('mousedown', stop);
+    rootEl.addEventListener('focusin', stop);
+  }
 
   // ---------------------------------------------------------------------------
   // Highlight overlay
@@ -273,10 +268,7 @@ s += '.' + [...el.classList].slice(0, 2).join('.');
   }
 
   function showHighlight(el) {
-    if (!el || !highlightEl) {
-return;
-}
-
+    if (!el || !highlightEl) return;
     const r = el.getBoundingClientRect();
     const top = (r.top - 2) + 'px', left = (r.left - 2) + 'px';
     const width = (r.width + 4) + 'px', height = (r.height + 4) + 'px';
@@ -286,7 +278,6 @@ return;
     tooltipEl.textContent = desc(el);
 
     const hiWasHidden = highlightEl.style.display === 'none' || highlightEl.style.opacity === '0';
-
     if (hiWasHidden) {
       // Snap to first target without animating from (0,0), then fade in.
       highlightEl.style.transition = 'none';
@@ -305,13 +296,8 @@ return;
   }
 
   function hideHighlight() {
-    if (highlightEl) {
- highlightEl.style.opacity = '0'; highlightEl.style.display = 'none'; 
-}
-
-    if (tooltipEl) {
- tooltipEl.style.opacity = '0'; tooltipEl.style.display = 'none'; 
-}
+    if (highlightEl) { highlightEl.style.opacity = '0'; highlightEl.style.display = 'none'; }
+    if (tooltipEl) { tooltipEl.style.opacity = '0'; tooltipEl.style.display = 'none'; }
   }
 
   // ---------------------------------------------------------------------------
@@ -389,22 +375,21 @@ return;
     annotOverlayEl.addEventListener('pointerup', onAnnotUp);
     annotOverlayEl.addEventListener('pointercancel', onAnnotUp);
     document.body.appendChild(annotOverlayEl);
+    // Modal-host friendliness: pointer-events is already 'auto' on this
+    // overlay; we only need to silence the host's outside-interaction
+    // listeners. Don't override pointer-events here (the overlay toggles
+    // visibility via display:none, which is fine).
+    defangOutsideHandlers(annotOverlayEl, { setPointerEvents: false });
   }
 
   function updateClearChip() {
-    if (!annotClearChipEl) {
-return;
-}
-
+    if (!annotClearChipEl) return;
     const hasAny = annotState.comments.length > 0 || annotState.strokes.length > 0;
     annotClearChipEl.style.display = hasAny ? 'block' : 'none';
   }
 
   function showAnnotOverlay(el) {
-    if (!annotOverlayEl || !el) {
-return;
-}
-
+    if (!annotOverlayEl || !el) return;
     annotActive = true;
     positionAnnotOverlay(el);
     annotOverlayEl.style.display = 'block';
@@ -412,21 +397,14 @@ return;
 
   function hideAnnotOverlay() {
     annotActive = false;
-
-    if (annotOverlayEl) {
-annotOverlayEl.style.display = 'none';
-}
-
+    if (annotOverlayEl) annotOverlayEl.style.display = 'none';
     // Drop any in-progress edit without touching annotState — clearAnnotations
     // (if the caller is exiting configure mode) handles state reset.
     annotEditing = null;
   }
 
   function positionAnnotOverlay(el) {
-    if (!annotOverlayEl || !el) {
-return;
-}
-
+    if (!annotOverlayEl || !el) return;
     const r = el.getBoundingClientRect();
     Object.assign(annotOverlayEl.style, {
       top: r.top + 'px', left: r.left + 'px',
@@ -438,17 +416,8 @@ return;
   function clearAnnotations() {
     annotState.comments = [];
     annotState.strokes = [];
-
-    if (annotSvgEl) {
-while (annotSvgEl.firstChild) {
-annotSvgEl.removeChild(annotSvgEl.firstChild);
-}
-}
-
-    if (annotPinsEl) {
-annotPinsEl.innerHTML = '';
-}
-
+    if (annotSvgEl) while (annotSvgEl.firstChild) annotSvgEl.removeChild(annotSvgEl.firstChild);
+    if (annotPinsEl) annotPinsEl.innerHTML = '';
     annotPointer = null;
     annotEditing = null;
     annotLastPinClick = { idx: -1, time: 0 };
@@ -458,10 +427,7 @@ annotPinsEl.innerHTML = '';
   // Rebuild the SVG layer. Each stroke gets a wider invisible hit path
   // beneath the visible magenta path so clicks register on thin lines.
   function redrawStrokes() {
-    while (annotSvgEl.firstChild) {
-annotSvgEl.removeChild(annotSvgEl.firstChild);
-}
-
+    while (annotSvgEl.firstChild) annotSvgEl.removeChild(annotSvgEl.firstChild);
     annotState.strokes.forEach((s, idx) => {
       const d = pointsToPath(s.points);
       const hit = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -490,84 +456,55 @@ annotSvgEl.removeChild(annotSvgEl.firstChild);
 
   function localCoords(e) {
     const rect = annotOverlayEl.getBoundingClientRect();
-
     return { x: e.clientX - rect.left, y: e.clientY - rect.top };
   }
 
   function onAnnotDown(e) {
-    if (!annotActive) {
-return;
-}
+    if (!annotActive) return;
 
     // 1) Clear chip → wipe all annotations
     if (e.target.closest?.('[data-annot-clear]')) {
-      if (annotEditing) {
-annotEditing = null;
-}
-
+      if (annotEditing) annotEditing = null;
       clearAnnotations();
       renderAllPins();
       redrawStrokes();
       e.stopPropagation(); e.preventDefault();
-
       return;
     }
 
     // 2) Stroke hit path → delete that stroke
     const strokeHit = e.target.closest?.('[data-annot-stroke]');
-
     if (strokeHit) {
       const idx = parseInt(strokeHit.dataset.annotStroke, 10);
-
       if (Number.isInteger(idx)) {
         annotState.strokes.splice(idx, 1);
         redrawStrokes();
       }
-
       e.stopPropagation(); e.preventDefault();
-
       return;
     }
 
     // 3) Pin → drag, edit, or delete-on-double-click
     const pinWrap = e.target.closest?.('[data-annot-pin]');
-
     if (pinWrap) {
       const idx = parseInt(pinWrap.dataset.annotPin, 10);
-
-      if (!Number.isInteger(idx)) {
-return;
-}
-
+      if (!Number.isInteger(idx)) return;
       // Double-click (two pointerdowns on the same pin within window) → delete.
       const now = Date.now();
-
       if (annotLastPinClick.idx === idx && now - annotLastPinClick.time < PIN_DBL_CLICK_MS) {
-        if (annotEditing && annotEditing.idx === idx) {
-annotEditing = null;
-}
-
+        if (annotEditing && annotEditing.idx === idx) annotEditing = null;
         annotState.comments.splice(idx, 1);
         annotLastPinClick = { idx: -1, time: 0 };
         renderAllPins();
         e.stopPropagation(); e.preventDefault();
-
         return;
       }
-
       annotLastPinClick = { idx, time: now };
-
       // If editing a different pin, commit that edit before starting here.
-      if (annotEditing && annotEditing.idx !== idx) {
-finalizeEditingPin();
-}
-
+      if (annotEditing && annotEditing.idx !== idx) finalizeEditingPin();
       // If already editing THIS pin and the user clicked the dot, let the
       // input keep focus (don't start a drag — the click wasn't meant as one).
-      if (annotEditing && annotEditing.idx === idx) {
-return;
-}
-
+      if (annotEditing && annotEditing.idx === idx) return;
       const p = localCoords(e);
       const pin = annotState.comments[idx];
       annotPointer = {
@@ -576,13 +513,8 @@ return;
         startPin: { x: pin.x, y: pin.y },
         moved: false,
       };
-
-      try {
- annotOverlayEl.setPointerCapture(e.pointerId); 
-} catch {}
-
+      try { annotOverlayEl.setPointerCapture(e.pointerId); } catch {}
       e.stopPropagation(); e.preventDefault();
-
       return;
     }
 
@@ -590,63 +522,38 @@ return;
     if (annotEditing) {
       finalizeEditingPin();
       e.stopPropagation(); e.preventDefault();
-
       return;
     }
-
     const p = localCoords(e);
     annotPointer = { kind: 'new', x0: p.x, y0: p.y, moved: false, strokeEl: null, strokePoints: null };
-
-    try {
- annotOverlayEl.setPointerCapture(e.pointerId); 
-} catch {}
-
+    try { annotOverlayEl.setPointerCapture(e.pointerId); } catch {}
     e.stopPropagation(); e.preventDefault();
   }
 
   function onAnnotMove(e) {
-    if (!annotActive || !annotPointer) {
-return;
-}
-
+    if (!annotActive || !annotPointer) return;
     const p = localCoords(e);
 
     if (annotPointer.kind === 'pin') {
       const dx = p.x - annotPointer.startPointer.x;
       const dy = p.y - annotPointer.startPointer.y;
-
       if (!annotPointer.moved) {
-        if (Math.hypot(dx, dy) < DRAG_THRESHOLD) {
-return;
-}
-
+        if (Math.hypot(dx, dy) < DRAG_THRESHOLD) return;
         annotPointer.moved = true;
       }
-
       const pin = annotState.comments[annotPointer.idx];
-
-      if (!pin) {
- annotPointer = null;
-
- return; 
-}
-
+      if (!pin) { annotPointer = null; return; }
       pin.x = annotPointer.startPin.x + dx;
       pin.y = annotPointer.startPin.y + dy;
       renderAllPins();
       e.stopPropagation();
-
       return;
     }
 
     // kind === 'new'
     const dx = p.x - annotPointer.x0, dy = p.y - annotPointer.y0;
-
     if (!annotPointer.moved) {
-      if (Math.hypot(dx, dy) < DRAG_THRESHOLD) {
-return;
-}
-
+      if (Math.hypot(dx, dy) < DRAG_THRESHOLD) return;
       annotPointer.moved = true;
       const strokeEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       strokeEl.setAttribute('stroke', C.brand);
@@ -659,27 +566,19 @@ return;
       annotPointer.strokeEl = strokeEl;
       annotPointer.strokePoints = [[annotPointer.x0, annotPointer.y0]];
     }
-
     annotPointer.strokePoints.push([p.x, p.y]);
     annotPointer.strokeEl.setAttribute('d', pointsToPath(annotPointer.strokePoints));
     e.stopPropagation();
   }
 
   function onAnnotUp(e) {
-    if (!annotActive || !annotPointer) {
-return;
-}
+    if (!annotActive || !annotPointer) return;
 
     if (annotPointer.kind === 'pin') {
       const wasDrag = annotPointer.moved;
       const idx = annotPointer.idx;
-
-      try {
- annotOverlayEl.releasePointerCapture(e.pointerId); 
-} catch {}
-
+      try { annotOverlayEl.releasePointerCapture(e.pointerId); } catch {}
       annotPointer = null;
-
       if (wasDrag) {
         // A drag is an intentional reposition; a follow-up click shouldn't be
         // interpreted as a double-click-to-delete.
@@ -687,15 +586,12 @@ return;
       } else {
         beginEditPin(idx);
       }
-
       e.stopPropagation();
-
       return;
     }
 
     // kind === 'new'
     const wasDrag = annotPointer.moved;
-
     if (wasDrag) {
       annotState.strokes.push({ points: annotPointer.strokePoints });
       // Swap the temporary preview SVG path for the full render with hit paths.
@@ -706,26 +602,17 @@ return;
       renderAllPins();
       beginEditPin(idx);
     }
-
-    try {
- annotOverlayEl.releasePointerCapture(e.pointerId); 
-} catch {}
-
+    try { annotOverlayEl.releasePointerCapture(e.pointerId); } catch {}
     annotPointer = null;
     e.stopPropagation();
   }
 
   function pointsToPath(points) {
-    if (!points || points.length === 0) {
-return '';
-}
-
+    if (!points || points.length === 0) return '';
     let d = 'M' + points[0][0].toFixed(1) + ' ' + points[0][1].toFixed(1);
-
     for (let i = 1; i < points.length; i++) {
       d += ' L' + points[i][0].toFixed(1) + ' ' + points[i][1].toFixed(1);
     }
-
     return d;
   }
 
@@ -740,11 +627,7 @@ return '';
   function buildPinElement(comment, idx) {
     const interactive = idx >= 0;
     const wrap = document.createElement('div');
-
-    if (interactive) {
-wrap.dataset.annotPin = String(idx);
-}
-
+    if (interactive) wrap.dataset.annotPin = String(idx);
     Object.assign(wrap.style, {
       position: 'absolute',
       left: (comment.x - 7) + 'px', top: (comment.y - 7) + 'px',
@@ -775,17 +658,12 @@ wrap.dataset.annotPin = String(idx);
       });
       wrap.appendChild(bubble);
     }
-
     return wrap;
   }
 
   function beginEditPin(idx) {
     const wrapEl = annotPinsEl.querySelector('[data-annot-pin="' + idx + '"]');
-
-    if (!wrapEl) {
-return;
-}
-
+    if (!wrapEl) return;
     // Strip any existing bubble (but keep the dot)
     wrapEl.querySelectorAll('div:not(:first-child)').forEach(n => n.remove());
     const input = document.createElement('input');
@@ -807,9 +685,7 @@ return;
     input.addEventListener('blur', () => {
       // Fires on both focus-loss and programmatic blur; commit unless we
       // already handled it.
-      if (annotEditing && annotEditing.input === input) {
-finalizeEditingPin();
-}
+      if (annotEditing && annotEditing.input === input) finalizeEditingPin();
     });
     // Stop clicks/pointerdowns inside the input from bubbling to the overlay
     ['pointerdown', 'click'].forEach(ev => {
@@ -832,31 +708,19 @@ finalizeEditingPin();
   }
 
   function finalizeEditingPin() {
-    if (!annotEditing) {
-return;
-}
-
+    if (!annotEditing) return;
     const { idx, input } = annotEditing;
     const text = input.value.trim();
     annotEditing = null;
-
-    if (text) {
-annotState.comments[idx].text = text;
-} else {
-annotState.comments.splice(idx, 1);
-}
-
+    if (text) annotState.comments[idx].text = text;
+    else annotState.comments.splice(idx, 1);
     renderAllPins();
   }
 
   function cancelEditingPin() {
-    if (!annotEditing) {
-return;
-}
-
+    if (!annotEditing) return;
     const { idx, originalText } = annotEditing;
     annotEditing = null;
-
     // If the pin had text before this edit, revert to it. If it was a
     // just-created empty pin, Escape removes it.
     if (originalText) {
@@ -864,7 +728,6 @@ return;
     } else {
       annotState.comments.splice(idx, 1);
     }
-
     renderAllPins();
   }
 
@@ -875,18 +738,13 @@ return;
   function buildAnnotationsForCapture(rect, snapshot) {
     const comments = snapshot ? snapshot.comments : annotState.comments;
     const strokes = snapshot ? snapshot.strokes : annotState.strokes;
-
-    if (comments.length === 0 && strokes.length === 0) {
-return null;
-}
-
+    if (comments.length === 0 && strokes.length === 0) return null;
     const wrap = document.createElement('div');
     Object.assign(wrap.style, {
       position: 'absolute', top: '0', left: '0',
       width: rect.width + 'px', height: rect.height + 'px',
       pointerEvents: 'none', overflow: 'visible',
     });
-
     if (strokes.length > 0) {
       const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
       svg.setAttribute('viewBox', '0 0 ' + rect.width + ' ' + rect.height);
@@ -894,7 +752,6 @@ return null;
         position: 'absolute', top: '0', left: '0',
         width: '100%', height: '100%', overflow: 'visible',
       });
-
       for (const s of strokes) {
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         path.setAttribute('stroke', C.brand);
@@ -905,15 +762,12 @@ return null;
         path.setAttribute('d', pointsToPath(s.points));
         svg.appendChild(path);
       }
-
       wrap.appendChild(svg);
     }
-
     for (const c of comments) {
       // idx=-1 means non-interactive; pointerEvents stay off in the clone
       wrap.appendChild(buildPinElement(c, -1));
     }
-
     return wrap;
   }
 
@@ -925,27 +779,19 @@ return null;
     const cs = getComputedStyle(el);
     const r = el.getBoundingClientRect();
     const props = {};
-
     for (const sheet of document.styleSheets) {
       try {
         for (const rule of sheet.cssRules) {
-          if (rule.style) {
-for (let i = 0; i < rule.style.length; i++) {
+          if (rule.style) for (let i = 0; i < rule.style.length; i++) {
             const p = rule.style[i];
-
             if (p.startsWith('--') && !props[p]) {
               const v = cs.getPropertyValue(p).trim();
-
-              if (v) {
-props[p] = v;
-}
+              if (v) props[p] = v;
             }
           }
-}
         }
       } catch { /* cross-origin */ }
     }
-
     return {
       tagName: el.tagName.toLowerCase(), id: el.id || null,
       classes: [...el.classList],
@@ -1009,13 +855,11 @@ props[p] = v;
       maxWidth: '520px', minWidth: '320px',
     });
     document.body.appendChild(barEl);
+    defangOutsideHandlers(barEl);
   }
 
   function positionBar() {
-    if (!barEl || !selectedElement) {
-return;
-}
-
+    if (!barEl || !selectedElement) return;
     const r = selectedElement.getBoundingClientRect();
     const barH = barEl.offsetHeight || 44;
     const barW = barEl.offsetWidth || 380;
@@ -1028,7 +872,6 @@ return;
     let top;
     const belowTop = r.bottom + GAP;
     const aboveTop = r.top - barH - GAP;
-
     if (belowTop + barH + GAP <= window.innerHeight - GLOBAL_BAR_RESERVE) {
       top = belowTop;
     } else if (aboveTop >= GAP) {
@@ -1038,29 +881,16 @@ return;
     }
 
     let left = r.left + (r.width - barW) / 2;
-
-    if (left < GAP) {
-left = GAP;
-}
-
-    if (left + barW > window.innerWidth - GAP) {
-left = window.innerWidth - barW - GAP;
-}
-
+    if (left < GAP) left = GAP;
+    if (left + barW > window.innerWidth - GAP) left = window.innerWidth - barW - GAP;
     Object.assign(barEl.style, { top: top + 'px', left: left + 'px' });
   }
 
   function showBar(mode) {
     barEl.innerHTML = '';
-
-    if (mode === 'configure') {
-barEl.appendChild(buildConfigureRow());
-} else if (mode === 'generating') {
-barEl.appendChild(buildGeneratingRow());
-} else if (mode === 'cycling') {
-barEl.appendChild(buildCyclingRow());
-}
-
+    if (mode === 'configure') barEl.appendChild(buildConfigureRow());
+    else if (mode === 'generating') barEl.appendChild(buildGeneratingRow());
+    else if (mode === 'cycling') barEl.appendChild(buildCyclingRow());
     barEl.style.display = 'block';
     positionBar();
     requestAnimationFrame(() => {
@@ -1070,40 +900,25 @@ barEl.appendChild(buildCyclingRow());
   }
 
   function hideBar() {
-    if (!barEl) {
-return;
-}
-
+    if (!barEl) return;
     barEl.style.opacity = '0';
     barEl.style.transform = 'translateY(6px)';
-    setTimeout(() => {
- if (barEl) {
-barEl.style.display = 'none';
-} 
-}, 250);
+    setTimeout(() => { if (barEl) barEl.style.display = 'none'; }, 250);
     hideActionPicker();
     closeTunePopover();
   }
 
   function updateBarContent(mode) {
-    if (!barEl || barEl.style.display === 'none') {
-return;
-}
-
+    if (!barEl || barEl.style.display === 'none') return;
     barEl.innerHTML = '';
     // Reset bar styling to the theme-aware palette
     barEl.style.background = BP.surface;
     barEl.style.border = '1px solid ' + BP.hairline;
-
-    if (mode === 'configure') {
-barEl.appendChild(buildConfigureRow());
-} else if (mode === 'generating') {
-barEl.appendChild(buildGeneratingRow());
-} else if (mode === 'cycling') {
-barEl.appendChild(buildCyclingRow());
-} else if (mode === 'saving') {
-barEl.appendChild(buildSavingRow());
-} else if (mode === 'confirmed') {
+    if (mode === 'configure') barEl.appendChild(buildConfigureRow());
+    else if (mode === 'generating') barEl.appendChild(buildGeneratingRow());
+    else if (mode === 'cycling') barEl.appendChild(buildCyclingRow());
+    else if (mode === 'saving') barEl.appendChild(buildSavingRow());
+    else if (mode === 'confirmed') {
       barEl.appendChild(buildConfirmedRow());
       barEl.style.background = 'oklch(95% 0.05 145)';
       barEl.style.border = '1px solid oklch(75% 0.12 145 / 0.4)';
@@ -1132,9 +947,7 @@ barEl.appendChild(buildSavingRow());
     pill.addEventListener('mouseleave', () => pill.style.background = BP.mark);
     pill.addEventListener('mousedown', () => pill.style.transform = 'scale(0.97)');
     pill.addEventListener('mouseup', () => pill.style.transform = 'scale(1)');
-    pill.addEventListener('click', (e) => {
- e.stopPropagation(); toggleActionPicker(); 
-});
+    pill.addEventListener('click', (e) => { e.stopPropagation(); toggleActionPicker(); });
     row.appendChild(pill);
 
     // Freeform input. Focus state shows an accent-colored border only —
@@ -1155,7 +968,6 @@ barEl.appendChild(buildSavingRow());
       outline: 'none',
       transition: 'border-color 0.15s ease',
     });
-
     if (!document.getElementById(PREFIX + '-input-style')) {
       const s = document.createElement('style');
       s.id = PREFIX + '-input-style';
@@ -1163,7 +975,6 @@ barEl.appendChild(buildSavingRow());
         '#' + PREFIX + '-input::placeholder { color: ' + BP.textDim + '; opacity: 1; }';
       document.head.appendChild(s);
     }
-
     input.addEventListener('focus', () => {
       input.style.borderColor = BP.accent;
     });
@@ -1171,23 +982,10 @@ barEl.appendChild(buildSavingRow());
       input.style.borderColor = 'transparent';
     });
     input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
- e.stopPropagation(); e.preventDefault(); handleGo();
-
- return; 
-}
-
-      if (e.key === 'Escape') {
- e.stopPropagation(); e.preventDefault(); input.blur(); hideBar(); state = 'PICKING';
-
- return; 
-}
-
+      if (e.key === 'Enter') { e.stopPropagation(); e.preventDefault(); handleGo(); return; }
+      if (e.key === 'Escape') { e.stopPropagation(); e.preventDefault(); input.blur(); hideBar(); state = 'PICKING'; return; }
       // Let arrow keys pass through to the element picker when the input is empty
-      if ((e.key === 'ArrowUp' || e.key === 'ArrowDown') && !input.value) {
-return;
-}
-
+      if ((e.key === 'ArrowUp' || e.key === 'ArrowDown') && !input.value) return;
       e.stopPropagation();
     });
     row.appendChild(input);
@@ -1203,12 +1001,8 @@ return;
     });
     count.textContent = '\u00D7' + selectedCount;
     count.title = 'Variants: click to change';
-    count.addEventListener('mouseenter', () => {
- count.style.color = BP.text; count.style.borderColor = BP.text; 
-});
-    count.addEventListener('mouseleave', () => {
- count.style.color = BP.textDim; count.style.borderColor = BP.hairline; 
-});
+    count.addEventListener('mouseenter', () => { count.style.color = BP.text; count.style.borderColor = BP.text; });
+    count.addEventListener('mouseleave', () => { count.style.color = BP.textDim; count.style.borderColor = BP.hairline; });
     count.addEventListener('click', (e) => {
       e.stopPropagation();
       selectedCount = selectedCount >= 4 ? 2 : selectedCount + 1;
@@ -1230,14 +1024,11 @@ return;
     go.addEventListener('mouseleave', () => go.style.filter = 'none');
     go.addEventListener('mousedown', () => go.style.transform = 'scale(0.97)');
     go.addEventListener('mouseup', () => go.style.transform = 'scale(1)');
-    go.addEventListener('click', (e) => {
- e.stopPropagation(); handleGo(); 
-});
+    go.addEventListener('click', (e) => { e.stopPropagation(); handleGo(); });
     row.appendChild(go);
 
     // Auto-focus input after a beat
     setTimeout(() => input.focus(), 60);
-
     return row;
   }
 
@@ -1287,14 +1078,8 @@ return;
 
     // Prev
     const prev = navBtn('\u2190');
-    prev.addEventListener('click', (e) => {
- e.stopPropagation(); cycleVariant(-1); 
-});
-
-    if (visibleVariant <= 1) {
-prev.style.opacity = '0.3';
-}
-
+    prev.addEventListener('click', (e) => { e.stopPropagation(); cycleVariant(-1); });
+    if (visibleVariant <= 1) prev.style.opacity = '0.3';
     row.appendChild(prev);
 
     // Dots (clickable)
@@ -1310,20 +1095,13 @@ prev.style.opacity = '0.3';
 
     // Next
     const next = navBtn('\u2192');
-    next.addEventListener('click', (e) => {
- e.stopPropagation(); cycleVariant(1); 
-});
-
-    if (visibleVariant >= arrivedVariants) {
-next.style.opacity = '0.3';
-}
-
+    next.addEventListener('click', (e) => { e.stopPropagation(); cycleVariant(1); });
+    if (visibleVariant >= arrivedVariants) next.style.opacity = '0.3';
     row.appendChild(next);
 
     // Tune chip — only when the visible variant exposes params
     const visParams = parseVariantParams(getVisibleVariantEl());
     const hasParams = visParams.length > 0;
-
     if (hasParams) {
       const tune = el('button', {
         display: 'inline-flex', alignItems: 'center', gap: '6px',
@@ -1355,18 +1133,12 @@ next.style.opacity = '0.3';
       tune.appendChild(tuneBadge);
       tune.title = 'Tune this variant (' + visParams.length + ' knob' + (visParams.length === 1 ? '' : 's') + ')';
       tune.addEventListener('mouseenter', () => {
-        if (!tuneOpen) {
-tune.style.background = BP.accentSoft;
-}
+        if (!tuneOpen) tune.style.background = BP.accentSoft;
       });
       tune.addEventListener('mouseleave', () => {
-        if (!tuneOpen) {
-tune.style.background = 'transparent';
-}
+        if (!tuneOpen) tune.style.background = 'transparent';
       });
-      tune.addEventListener('click', (e) => {
- e.stopPropagation(); toggleTunePopover(); 
-});
+      tune.addEventListener('click', (e) => { e.stopPropagation(); toggleTunePopover(); });
       tune.dataset.iceqTune = '1';
       row.appendChild(tune);
     }
@@ -1388,14 +1160,8 @@ tune.style.background = 'transparent';
     accept.addEventListener('mouseleave', () => accept.style.filter = 'none');
     accept.addEventListener('mousedown', () => accept.style.transform = 'scale(0.97)');
     accept.addEventListener('mouseup', () => accept.style.transform = 'scale(1)');
-    accept.addEventListener('click', (e) => {
- e.stopPropagation(); handleAccept(); 
-});
-
-    if (arrivedVariants === 0) {
- accept.style.opacity = '0.3'; accept.style.pointerEvents = 'none'; 
-}
-
+    accept.addEventListener('click', (e) => { e.stopPropagation(); handleAccept(); });
+    if (arrivedVariants === 0) { accept.style.opacity = '0.3'; accept.style.pointerEvents = 'none'; }
     row.appendChild(accept);
 
     // Discard
@@ -1407,15 +1173,9 @@ tune.style.background = 'transparent';
     });
     discard.textContent = '\u2715';
     discard.title = 'Discard all variants';
-    discard.addEventListener('mouseenter', () => {
- discard.style.color = BP.text; discard.style.borderColor = BP.text; 
-});
-    discard.addEventListener('mouseleave', () => {
- discard.style.color = BP.textDim; discard.style.borderColor = BP.hairline; 
-});
-    discard.addEventListener('click', (e) => {
- e.stopPropagation(); handleDiscard(); 
-});
+    discard.addEventListener('mouseenter', () => { discard.style.color = BP.text; discard.style.borderColor = BP.text; });
+    discard.addEventListener('mouseleave', () => { discard.style.color = BP.textDim; discard.style.borderColor = BP.hairline; });
+    discard.addEventListener('click', (e) => { e.stopPropagation(); handleDiscard(); });
     row.appendChild(discard);
 
     return row;
@@ -1451,7 +1211,6 @@ tune.style.background = 'transparent';
       style.textContent = '@keyframes impeccable-spin { to { transform: rotate(360deg); } }';
       document.head.appendChild(style);
     }
-
     return row;
   }
 
@@ -1473,7 +1232,6 @@ tune.style.background = 'transparent';
     });
     label.textContent = 'Variant applied';
     row.appendChild(label);
-
     return row;
   }
 
@@ -1483,7 +1241,6 @@ tune.style.background = 'transparent';
     const container = el('div', {
       display: 'flex', alignItems: 'center', gap: '4px',
     });
-
     for (let i = 1; i <= expectedVariants; i++) {
       const arrived = i <= arrivedVariants;
       const active = i === visibleVariant;
@@ -1508,7 +1265,6 @@ tune.style.background = 'transparent';
         transform: arrived ? 'scale(1)' : 'scale(0.85)',
         opacity: arrived ? (active ? '1' : '0.6') : '0.4',
       });
-
       if (clickable && arrived) {
         const idx = i;
         dot.addEventListener('click', (e) => {
@@ -1519,10 +1275,8 @@ tune.style.background = 'transparent';
           updateBarContent('cycling');
         });
       }
-
       container.appendChild(dot);
     }
-
     return container;
   }
 
@@ -1536,29 +1290,19 @@ tune.style.background = 'transparent';
       padding: '0', lineHeight: '1',
     });
     b.textContent = text;
-    b.addEventListener('mouseenter', () => {
- b.style.borderColor = BP.text; 
-});
-    b.addEventListener('mouseleave', () => {
- b.style.borderColor = BP.hairline; 
-});
-
+    b.addEventListener('mouseenter', () => { b.style.borderColor = BP.text; });
+    b.addEventListener('mouseleave', () => { b.style.borderColor = BP.hairline; });
     return b;
   }
 
   function actionLabel() {
     const a = ACTIONS.find(a => a.value === selectedAction);
-
     return a ? a.label : 'Freeform';
   }
 
   function el(tag, styles) {
     const e = document.createElement(tag);
-
-    if (styles) {
-Object.assign(e.style, styles);
-}
-
+    if (styles) Object.assign(e.style, styles);
     return e;
   }
 
@@ -1615,9 +1359,7 @@ Object.assign(e.style, styles);
       chip.appendChild(labelEl);
       chip.dataset.action = action.value;
       chip.addEventListener('mouseenter', () => {
-        if (action.value !== selectedAction) {
-chip.style.background = P.accentSoft;
-}
+        if (action.value !== selectedAction) chip.style.background = P.accentSoft;
       });
       chip.addEventListener('mouseleave', () => {
         chip.style.background = action.value === selectedAction ? P.accentSoft : 'transparent';
@@ -1633,6 +1375,7 @@ chip.style.background = P.accentSoft;
 
     pickerEl.appendChild(grid);
     document.body.appendChild(pickerEl);
+    defangOutsideHandlers(pickerEl);
 
     // Cache the palette on the picker so toggleActionPicker's state refresh
     // uses the same theme-aware colors when it repaints chips.
@@ -1640,12 +1383,7 @@ chip.style.background = P.accentSoft;
   }
 
   function toggleActionPicker() {
-    if (pickerEl.style.display !== 'none') {
- hideActionPicker();
-
- return; 
-}
-
+    if (pickerEl.style.display !== 'none') { hideActionPicker(); return; }
     // Rebuild chips to reflect current selection
     const P = pickerEl.__iceq_palette || barPaletteForTheme(detectPageTheme());
     pickerEl.querySelectorAll('button').forEach(chip => {
@@ -1657,11 +1395,7 @@ chip.style.background = P.accentSoft;
     const barRect = barEl.getBoundingClientRect();
     const pickerH = 170; // approximate; grows with icon + label rows
     let top = barRect.top - pickerH - 6;
-
-    if (top < 8) {
-top = barRect.bottom + 6;
-}
-
+    if (top < 8) top = barRect.bottom + 6;
     Object.assign(pickerEl.style, {
       top: top + 'px', left: barRect.left + 'px',
       display: 'block',
@@ -1673,17 +1407,10 @@ top = barRect.bottom + 6;
   }
 
   function hideActionPicker() {
-    if (!pickerEl) {
-return;
-}
-
+    if (!pickerEl) return;
     pickerEl.style.opacity = '0';
     pickerEl.style.transform = 'scale(0.96) translateY(4px)';
-    setTimeout(() => {
- if (pickerEl) {
-pickerEl.style.display = 'none';
-} 
-}, 180);
+    setTimeout(() => { if (pickerEl) pickerEl.style.display = 'none'; }, 180);
   }
 
   // ---------------------------------------------------------------------------
@@ -1762,63 +1489,43 @@ pickerEl.style.display = 'none';
 
     paramsPanelEl.appendChild(paramsPanelBody);
     document.body.appendChild(paramsPanelEl);
+    // Don't override pointer-events: the panel toggles between 'none' (closed,
+    // click-through) and 'auto' (open) on its own. Just silence the host's
+    // outside-interaction listeners while the panel is open.
+    defangOutsideHandlers(paramsPanelEl, { setPointerEvents: false });
     paramsPanelInner = paramsPanelEl; // compatibility alias for the rest of the code
   }
 
   function getVisibleVariantEl() {
-    if (!currentSessionId) {
-return null;
-}
-
+    if (!currentSessionId) return null;
     const wrapper = document.querySelector('[data-impeccable-variants="' + currentSessionId + '"]');
-
-    if (!wrapper) {
-return null;
-}
-
+    if (!wrapper) return null;
     return wrapper.querySelector('[data-impeccable-variant="' + visibleVariant + '"]');
   }
 
   function parseVariantParams(variantEl) {
-    if (!variantEl) {
-return [];
-}
-
+    if (!variantEl) return [];
     const raw = variantEl.getAttribute('data-impeccable-params');
-
-    if (!raw) {
-return [];
-}
-
+    if (!raw) return [];
     try {
       const parsed = JSON.parse(raw);
-
       return Array.isArray(parsed) ? parsed : [];
     } catch (err) {
       console.warn('[impeccable] Invalid data-impeccable-params JSON:', err.message);
-
       return [];
     }
   }
 
   function applyParamValue(variantEl, param, value) {
-    if (!variantEl) {
-return;
-}
-
+    if (!variantEl) return;
     const attr = 'data-p-' + param.id;
-
     if (param.kind === 'range') {
       variantEl.style.setProperty('--p-' + param.id, String(value));
     } else if (param.kind === 'toggle') {
       const on = !!value;
       variantEl.style.setProperty('--p-' + param.id, on ? '1' : '0');
-
-      if (on) {
-variantEl.setAttribute(attr, 'on');
-} else {
-variantEl.removeAttribute(attr);
-}
+      if (on) variantEl.setAttribute(attr, 'on');
+      else variantEl.removeAttribute(attr);
     } else if (param.kind === 'steps') {
       variantEl.setAttribute(attr, String(value));
     }
@@ -1826,7 +1533,6 @@ variantEl.removeAttribute(attr);
 
   function applyParamDefaults(variantEl, params) {
     paramsCurrentValues = {};
-
     for (const p of params) {
       paramsCurrentValues[p.id] = p.default;
       applyParamValue(variantEl, p, p.default);
@@ -1836,18 +1542,13 @@ variantEl.removeAttribute(attr);
   function formatRangeValue(input) {
     const max = parseFloat(input.max), min = parseFloat(input.min);
     const v = parseFloat(input.value);
-
-    if (!isFinite(v)) {
-return input.value;
-}
-
+    if (!isFinite(v)) return input.value;
     return (max - min) <= 2 ? v.toFixed(2) : String(Math.round(v));
   }
 
   function buildParamsPanel(variantEl, params) {
     const P = paramsPanelPalette || barPaletteForTheme(detectPageTheme());
     paramsPanelBody.innerHTML = '';
-
     for (const p of params) {
       const row = el('div', { display: 'flex', flexDirection: 'column', gap: '6px' });
       const labelRow = el('div', {
@@ -1965,13 +1666,9 @@ return input.value;
   // bar landed below the element, popover slides DOWN from the bar's bottom.
   // If the bar landed above, popover slides UP from the bar's top.
   function popoverDirection() {
-    if (!barEl || !selectedElement) {
-return 'below';
-}
-
+    if (!barEl || !selectedElement) return 'below';
     const br = barEl.getBoundingClientRect();
     const er = selectedElement.getBoundingClientRect();
-
     return br.top >= er.bottom - 4 ? 'below' : 'above';
   }
 
@@ -1990,13 +1687,8 @@ return 'below';
 
   function setClipPath(value, withTransition) {
     const saved = paramsPanelEl.style.transition;
-
-    if (!withTransition) {
-paramsPanelEl.style.transition = 'none';
-}
-
+    if (!withTransition) paramsPanelEl.style.transition = 'none';
     paramsPanelEl.style.clipPath = value;
-
     if (!withTransition) {
       void paramsPanelEl.offsetHeight;
       paramsPanelEl.style.transition = saved;
@@ -2004,10 +1696,7 @@ paramsPanelEl.style.transition = 'none';
   }
 
   function positionParamsPanel() {
-    if (!paramsPanelEl || !barEl || barEl.style.display === 'none') {
-return;
-}
-
+    if (!paramsPanelEl || !barEl || barEl.style.display === 'none') return;
     const br = barEl.getBoundingClientRect();
     const direction = popoverDirection();
     const prevDirection = paramsPanelEl.dataset.tuneDirection;
@@ -2028,7 +1717,6 @@ return;
       paramsPanelEl.style.paddingTop = '14px';
       paramsPanelEl.style.paddingBottom = (14 + TUNE_OVERLAP) + 'px';
     }
-
     paramsPanelEl.dataset.tuneDirection = direction;
 
     // If currently closed and direction flipped (or first-time setup),
@@ -2040,10 +1728,7 @@ return;
   }
 
   function showParamsPanel() {
-    if (!paramsPanelEl) {
-return;
-}
-
+    if (!paramsPanelEl) return;
     positionParamsPanel();
     paramsPanelEl.style.pointerEvents = 'auto';
     // rAF so the positioning paint commits before the transition fires.
@@ -2053,10 +1738,7 @@ return;
   }
 
   function hideParamsPanel() {
-    if (!paramsPanelEl) {
-return;
-}
-
+    if (!paramsPanelEl) return;
     paramsPanelEl.style.pointerEvents = 'none';
     const direction = paramsPanelEl.dataset.tuneDirection || 'below';
     setClipPath(closedClipPath(direction), true);
@@ -2070,75 +1752,51 @@ return;
       paramsCurrentValues = {};
       tuneOpen = false;
       hideParamsPanel();
-
       return;
     }
-
     const variantEl = getVisibleVariantEl();
     const params = parseVariantParams(variantEl);
-
     if (!variantEl || params.length === 0) {
       paramsCurrentValues = {};
       tuneOpen = false;
       hideParamsPanel();
-
       return;
     }
-
     applyParamDefaults(variantEl, params);
     buildParamsPanel(variantEl, params);
-
     if (tuneOpen) {
       // If already visible (variant cycled while open), refresh in place
       // instead of re-running the clip-path animation.
       const alreadyVisible = paramsPanelEl.style.display === 'block'
         && paramsPanelEl.style.opacity === '1';
-
-      if (alreadyVisible) {
-positionParamsPanel();
-} else {
-showParamsPanel();
-}
+      if (alreadyVisible) positionParamsPanel();
+      else showParamsPanel();
     } else {
       hideParamsPanel();
     }
   }
 
   function toggleTunePopover() {
-    if (tuneOpen) {
- closeTunePopover();
-
- return; 
-}
-
+    if (tuneOpen) { closeTunePopover(); return; }
     openTunePopover();
   }
 
   function openTunePopover() {
-    if (state !== 'CYCLING') {
-return;
-}
-
+    if (state !== 'CYCLING') return;
     const variantEl = getVisibleVariantEl();
     const params = parseVariantParams(variantEl);
-
-    if (!variantEl || params.length === 0) {
-return;
-}
-
+    if (!variantEl || params.length === 0) return;
     // Build fresh to ensure the current variant's controls are shown.
     applyParamDefaults(variantEl, params);
     buildParamsPanel(variantEl, params);
     tuneOpen = true;
     showParamsPanel();
-
     // Kill the bar's shadow on the popover-facing side so the dark popover
     // doesn't pick up a bright glow line.
     if (barEl) {
       const direction = paramsPanelEl?.dataset.tuneDirection || 'below';
       barEl.style.boxShadow = direction === 'below' ? BAR_SHADOW_UP : BAR_SHADOW_DOWN;
     }
-
     // Re-render the bar so the Tune chip picks up the active styling.
     updateBarContent('cycling');
   }
@@ -2146,11 +1804,7 @@ return;
   function closeTunePopover() {
     tuneOpen = false;
     hideParamsPanel();
-
-    if (barEl) {
-barEl.style.boxShadow = BAR_SHADOW_DEFAULT;
-}
-
+    if (barEl) barEl.style.boxShadow = BAR_SHADOW_DEFAULT;
     if (barEl && barEl.style.display !== 'none' && state === 'CYCLING') {
       updateBarContent('cycling');
     }
@@ -2162,21 +1816,12 @@ barEl.style.boxShadow = BAR_SHADOW_DEFAULT;
 
   function showVariantInDOM(sessionId, num) {
     const wrapper = document.querySelector('[data-impeccable-variants="' + sessionId + '"]');
-
-    if (!wrapper) {
-return;
-}
-
+    if (!wrapper) return;
     for (const child of wrapper.children) {
       const v = child.dataset ? child.dataset.impeccableVariant : null;
-
-      if (!v) {
-continue;
-}
-
+      if (!v) continue;
       child.style.display = (v === String(num)) ? '' : 'none';
     }
-
     // Unconditional refresh — covers first-reveal (no-op if state isn't
     // CYCLING yet, the subsequent CYCLING transition triggers its own
     // refresh) and every cycle step.
@@ -2191,22 +1836,14 @@ continue;
   function injectVariantsFromSource(filePath, sessionId) {
     const url = 'http://localhost:' + PORT + '/source?token=' + TOKEN + '&path=' + encodeURIComponent(filePath);
     fetch(url)
-      .then(r => {
- if (!r.ok) {
-throw new Error(r.status);
-}
-
- return r.text(); 
-})
+      .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
       .then(html => {
         // Parse the raw source HTML
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
         const srcWrapper = doc.querySelector('[data-impeccable-variants="' + sessionId + '"]');
-
         if (!srcWrapper) {
           console.error('[impeccable] Variant wrapper not found in source file.');
-
           return;
         }
 
@@ -2215,31 +1852,23 @@ throw new Error(r.status);
         // corresponding element in the live DOM by matching the first child's
         // tag + classes from the original snapshot.
         const origContent = srcWrapper.querySelector('[data-impeccable-variant="original"] > :first-child');
-
-        if (!origContent) {
-return;
-}
+        if (!origContent) return;
 
         const tag = origContent.tagName.toLowerCase();
         const cls = origContent.className;
         let liveEl = null;
-
         if (origContent.id) {
           liveEl = document.getElementById(origContent.id);
         } else if (cls) {
           // Find by tag + exact class match
           const candidates = document.querySelectorAll(tag + '.' + cls.split(' ')[0]);
-
           for (const c of candidates) {
-            if (c.className === cls && !own(c)) {
- liveEl = c; break; 
-}
+            if (c.className === cls && !own(c)) { liveEl = c; break; }
           }
         }
 
         if (!liveEl) {
           console.error('[impeccable] Could not find original element in live DOM.');
-
           return;
         }
 
@@ -2272,11 +1901,7 @@ return;
 
   function cycleVariant(dir) {
     const next = visibleVariant + dir;
-
-    if (next < 1 || next > arrivedVariants) {
-return;
-}
-
+    if (next < 1 || next > arrivedVariants) return;
     visibleVariant = next;
     showVariantInDOM(currentSessionId, next); // calls refreshParamsPanel itself
     updateSelectedElement();
@@ -2285,21 +1910,11 @@ return;
   }
 
   function updateSelectedElement() {
-    if (!currentSessionId) {
-return;
-}
-
+    if (!currentSessionId) return;
     const wrapper = document.querySelector('[data-impeccable-variants="' + currentSessionId + '"]');
-
-    if (!wrapper) {
-return;
-}
-
+    if (!wrapper) return;
     const visEl = pickVariantContent(wrapper, visibleVariant);
-
-    if (visEl) {
-selectedElement = visEl;
-}
+    if (visEl) selectedElement = visEl;
   }
 
   // Resolve the element that represents the variant's visible content.
@@ -2309,29 +1924,15 @@ selectedElement = visEl;
   // if the variant has multiple element children, use the variant div itself
   // (it wraps all of them and gets correct bounds).
   function pickVariantContent(wrapper, index) {
-    if (!wrapper) {
-return null;
-}
-
+    if (!wrapper) return null;
     const variantDiv = wrapper.querySelector('[data-impeccable-variant="' + index + '"]');
-
-    if (!variantDiv) {
-return null;
-}
-
+    if (!variantDiv) return null;
     const NON_VISUAL = new Set(['STYLE', 'SCRIPT', 'LINK', 'META', 'TEMPLATE']);
     const visual = [];
-
     for (const child of variantDiv.children) {
-      if (!NON_VISUAL.has(child.tagName)) {
-visual.push(child);
-}
+      if (!NON_VISUAL.has(child.tagName)) visual.push(child);
     }
-
-    if (visual.length === 1) {
-return visual[0];
-}
-
+    if (visual.length === 1) return visual[0];
     return variantDiv;
   }
 
@@ -2344,9 +1945,7 @@ return visual[0];
       : window.scrollY;
     console.log('[impeccable.scroll] startScrollLock', { sessionId, scrollY: window.scrollY, targetY: scrollLockTargetY, initialOverride: initialTargetY });
 
-    try {
- history.scrollRestoration = 'manual'; 
-} catch {}
+    try { history.scrollRestoration = 'manual'; } catch {}
 
     const prevHtmlAnchor = document.documentElement.style.overflowAnchor;
     const prevBodyAnchor = document.body.style.overflowAnchor;
@@ -2355,28 +1954,18 @@ return visual[0];
 
     const correct = (why) => {
       scrollLockRaf = null;
-
-      if (scrollLockTargetY == null) {
-return;
-}
-
+      if (scrollLockTargetY == null) return;
       const before = window.scrollY;
       const delta = before - scrollLockTargetY;
-
       if (Math.abs(delta) < 0.5) {
         console.log('[impeccable.scroll] correct noop', { why, scrollY: before, targetY: scrollLockTargetY });
-
         return;
       }
-
       window.scrollTo({ top: scrollLockTargetY, left: window.scrollX, behavior: 'instant' });
       console.log('[impeccable.scroll] corrected', { why, from: before, to: scrollLockTargetY, delta, nowAt: window.scrollY });
     };
     const schedule = (why) => {
-      if (scrollLockRaf != null) {
-return;
-}
-
+      if (scrollLockRaf != null) return;
       scrollLockRaf = requestAnimationFrame(() => correct(why));
     };
 
@@ -2386,15 +1975,12 @@ return;
           const childAdds = Array.from(m.addedNodes).map(n => n.nodeType === 1 ? (n.tagName + (n.dataset?.impeccableVariant ? ('[variant=' + n.dataset.impeccableVariant + ']') : '')) : n.nodeType).join(',');
           console.log('[impeccable.scroll] mutation inside wrapper', { type: m.type, target: m.target?.tagName, adds: childAdds, scrollYBefore: window.scrollY, targetY: scrollLockTargetY });
           schedule('mutation-in-wrapper');
-
           return;
         }
-
         for (const n of m.addedNodes) {
           if (n.nodeType === 1 && (n.matches?.('[data-impeccable-variants="' + sessionId + '"]') || n.querySelector?.('[data-impeccable-variants="' + sessionId + '"]'))) {
             console.log('[impeccable.scroll] wrapper node added', { tag: n.tagName, scrollYBefore: window.scrollY, targetY: scrollLockTargetY });
             schedule('wrapper-added');
-
             return;
           }
         }
@@ -2416,10 +2002,7 @@ return;
     const USER_GESTURE_WINDOW_MS = 250;
 
     const reanchor = (why) => {
-      if (scrollLockRaf != null) {
- cancelAnimationFrame(scrollLockRaf); scrollLockRaf = null; 
-}
-
+      if (scrollLockRaf != null) { cancelAnimationFrame(scrollLockRaf); scrollLockRaf = null; }
       const prevTarget = scrollLockTargetY;
       scrollLockTargetY = window.scrollY;
       writeScrollY(scrollLockTargetY);
@@ -2433,9 +2016,7 @@ return;
     window.addEventListener('touchstart', () => markGesture('touchstart'), { passive: true, ...sig });
     window.addEventListener('touchmove', () => markGesture('touchmove'), { passive: true, ...sig });
     window.addEventListener('keydown', (e) => {
-      if (['PageDown', 'PageUp', ' ', 'End', 'Home', 'ArrowDown', 'ArrowUp'].includes(e.key)) {
-markGesture('key:' + e.key);
-}
+      if (['PageDown', 'PageUp', ' ', 'End', 'Home', 'ArrowDown', 'ArrowUp'].includes(e.key)) markGesture('key:' + e.key);
     }, sig);
 
     // Correct on EVERY scroll event: whether it's the browser's
@@ -2445,24 +2026,13 @@ markGesture('key:' + e.key);
     let lastLoggedScrollY = window.scrollY;
     window.addEventListener('scroll', () => {
       const now = window.scrollY;
-
       if (Math.abs(now - lastLoggedScrollY) > 5) {
         console.log('[impeccable.scroll] scroll event', { from: lastLoggedScrollY, to: now, targetY: scrollLockTargetY });
         lastLoggedScrollY = now;
       }
-
-      if (scrollLockTargetY == null) {
-return;
-}
-
-      if (performance.now() - userGestureAt < USER_GESTURE_WINDOW_MS) {
-return;
-}
-
-      if (Math.abs(now - scrollLockTargetY) < 0.5) {
-return;
-}
-
+      if (scrollLockTargetY == null) return;
+      if (performance.now() - userGestureAt < USER_GESTURE_WINDOW_MS) return;
+      if (Math.abs(now - scrollLockTargetY) < 0.5) return;
       console.log('[impeccable.scroll] scroll-event snap', { from: now, to: scrollLockTargetY });
       window.scrollTo({ top: scrollLockTargetY, left: window.scrollX, behavior: 'instant' });
     }, { passive: true, ...sig });
@@ -2476,18 +2046,9 @@ return;
   }
 
   function stopScrollLock() {
-    if (scrollLockObserver) {
- scrollLockObserver.disconnect(); scrollLockObserver = null; 
-}
-
-    if (scrollLockRaf != null) {
- cancelAnimationFrame(scrollLockRaf); scrollLockRaf = null; 
-}
-
-    if (scrollLockAbort) {
- scrollLockAbort.abort(); scrollLockAbort = null; 
-}
-
+    if (scrollLockObserver) { scrollLockObserver.disconnect(); scrollLockObserver = null; }
+    if (scrollLockRaf != null) { cancelAnimationFrame(scrollLockRaf); scrollLockRaf = null; }
+    if (scrollLockAbort) { scrollLockAbort.abort(); scrollLockAbort = null; }
     scrollLockTargetY = null;
     // NOTE: do NOT clear the persistent scroll key here. startScrollLock
     // calls us as a reset, and clearing the key would nuke the Go-time
@@ -2502,29 +2063,19 @@ return;
     let updating = false; // re-entrancy guard
 
     const obs = new MutationObserver((mutations) => {
-      if (updating) {
-return;
-}
+      if (updating) return;
 
       // Only react to mutations that add nodes with data-impeccable-variant,
       // or mutations inside the variant wrapper. Ignore our own bar/UI changes.
       let dominated = false;
-
       for (const m of mutations) {
-        if (m.target.closest?.('[data-impeccable-variants]')) {
- dominated = true; break; 
-}
-
+        if (m.target.closest?.('[data-impeccable-variants]')) { dominated = true; break; }
         for (const n of m.addedNodes) {
-          if (n.nodeType !== 1) {
-continue;
-}
-
+          if (n.nodeType !== 1) continue;
           // Direct hit: the added node itself is the wrapper or a variant.
           if (n.dataset?.impeccableVariants || n.dataset?.impeccableVariant) {
             dominated = true; break;
           }
-
           // Subtree hit: framework HMR (notably SvelteKit) sometimes replaces
           // a whole subtree where the wrapper is a descendant of the added
           // node. Without this check, the observer ignores those mutations
@@ -2533,21 +2084,12 @@ continue;
             dominated = true; break;
           }
         }
-
-        if (dominated) {
-break;
-}
+        if (dominated) break;
       }
-
-      if (!dominated) {
-return;
-}
+      if (!dominated) return;
 
       const wrapper = document.querySelector('[data-impeccable-variants="' + sessionId + '"]');
-
-      if (!wrapper) {
-return;
-}
+      if (!wrapper) return;
 
       // Re-anchor selectedElement if it was detached by live-wrap's HMR swap.
       // Without this, the shader / highlight / bar track a zero-rect phantom
@@ -2560,13 +2102,10 @@ return;
       const count = variants.length;
 
       // Nothing new
-      if (count <= arrivedVariants) {
-return;
-}
+      if (count <= arrivedVariants) return;
 
       updating = true;
       arrivedVariants = count;
-
       if (visibleVariant === 0 && arrivedVariants > 0) {
         visibleVariant = 1;
         showVariantInDOM(sessionId, 1);
@@ -2574,17 +2113,11 @@ return;
         // anchored to the original's content, its boundingRect is now zero
         // and the bar snaps to (0,0). Re-point at the visible variant instead.
         const visEl = pickVariantContent(wrapper, visibleVariant);
-
-        if (visEl) {
-selectedElement = visEl;
-}
+        if (visEl) selectedElement = visEl;
       }
 
       const expected = parseInt(wrapper.dataset.impeccableVariantCount || '0');
-
-      if (expected > 0) {
-expectedVariants = expected;
-}
+      if (expected > 0) expectedVariants = expected;
 
       if (arrivedVariants >= expectedVariants && expectedVariants > 0) {
         state = 'CYCLING';
@@ -2594,13 +2127,11 @@ expectedVariants = expected;
       } else if (state === 'GENERATING') {
         updateBarContent('generating');
       }
-
       saveSession();
       updating = false;
     });
 
     obs.observe(document.body, { childList: true, subtree: true });
-
     return obs;
   }
 
@@ -2613,31 +2144,19 @@ expectedVariants = expected;
       if (state === 'CONFIGURING' || state === 'GENERATING' || state === 'CYCLING') {
         positionBar();
         showHighlight(selectedElement);
-
-        if (tuneOpen) {
-positionParamsPanel();
-}
+        if (tuneOpen) positionParamsPanel();
       }
-
-      if (annotActive) {
-positionAnnotOverlay(selectedElement);
-}
-
+      if (annotActive) positionAnnotOverlay(selectedElement);
       // Shader overlay (via debug P toggle or generation) is repositioned
       // by its own branch below; debug no longer has a separate overlay.
-      if (shaderState) {
-positionShaderOverlay();
-}
-
+      if (shaderState) positionShaderOverlay();
       scrollRaf = requestAnimationFrame(tick);
     }
     scrollRaf = requestAnimationFrame(tick);
   }
 
   function stopScrollTracking() {
-    if (scrollRaf) {
- cancelAnimationFrame(scrollRaf); scrollRaf = null; 
-}
+    if (scrollRaf) { cancelAnimationFrame(scrollRaf); scrollRaf = null; }
   }
 
   // ---------------------------------------------------------------------------
@@ -2658,28 +2177,13 @@ positionShaderOverlay();
 
     evtSource.onmessage = (e) => {
       sseRetries = 0; // reset on any successful message
-      let msg;
-
- try {
- msg = JSON.parse(e.data); 
-} catch {
- return; 
-}
-
+      let msg; try { msg = JSON.parse(e.data); } catch { return; }
       switch (msg.type) {
         case 'connected':
           hasProjectContext = !!msg.hasProjectContext;
-
-          if (!hasProjectContext) {
-showToast('No PRODUCT.md found. Variants will be brand-agnostic. Run /impeccable teach to generate one.', 7000);
-}
-
+          if (!hasProjectContext) showToast('No PRODUCT.md found. Variants will be brand-agnostic. Run /impeccable teach to generate one.', 7000);
           console.log('[impeccable] Live mode connected.');
-
-          if (state === 'IDLE') {
-state = 'PICKING';
-}
-
+          if (state === 'IDLE') state = 'PICKING';
           break;
         case 'done':
           // Variants already arrived via HMR → normal transition.
@@ -2689,10 +2193,8 @@ state = 'PICKING';
               updateBarContent('cycling');
               refreshParamsPanel();
             }
-
             break;
           }
-
           // Variants are in source but not in the DOM yet. Common when the
           // picked element lived inside conditional render (closed modal,
           // hidden tab, a route the user navigated away from). The variant
@@ -2701,14 +2203,8 @@ state = 'PICKING';
           // that path with a toast — better than the prior force-reload
           // which reset framework state and left the session stuck.
           setTimeout(() => {
-            if (arrivedVariants >= expectedVariants && expectedVariants > 0) {
-return;
-}
-
-            if (state !== 'GENERATING') {
-return;
-}
-
+            if (arrivedVariants >= expectedVariants && expectedVariants > 0) return;
+            if (state !== 'GENERATING') return;
             showToast(
               "Variants ready. If the picked element isn't visible, retrace the path that revealed it — they'll appear automatically.",
               15000,
@@ -2726,13 +2222,10 @@ return;
 
     evtSource.onerror = () => {
       sseRetries++;
-
       if (sseRetries <= SSE_MAX_RETRIES) {
         console.log('[impeccable] SSE connection lost. Retry ' + sseRetries + '/' + SSE_MAX_RETRIES + '...');
-
         return; // EventSource auto-reconnects
       }
-
       // Server is gone. Clean up gracefully.
       console.log('[impeccable] Live server unreachable. Cleaning up UI.');
       evtSource.close();
@@ -2746,17 +2239,12 @@ return;
     if (state === 'GENERATING' || state === 'CYCLING' || state === 'SAVING') {
       showToast('Live server disconnected. Session ended.', 5000);
     }
-
     hideBar();
     hideHighlight();
     hideShaderOverlay();
     hideAnnotOverlay();
     stopScrollTracking();
-
-    if (variantObserver) {
- variantObserver.disconnect(); variantObserver = null; 
-}
-
+    if (variantObserver) { variantObserver.disconnect(); variantObserver = null; }
     stopScrollLock();
     clearScrollY();
     clearSession();
@@ -2780,16 +2268,9 @@ return;
   // ---------------------------------------------------------------------------
 
   function handleMouseMove(e) {
-    if (state !== 'PICKING' || !pickActive) {
-return;
-}
-
+    if (state !== 'PICKING' || !pickActive) return;
     const target = document.elementFromPoint(e.clientX, e.clientY);
-
-    if (!target || !pickable(target) || target === hoveredElement) {
-return;
-}
-
+    if (!target || !pickable(target) || target === hoveredElement) return;
     hoveredElement = target;
     showHighlight(target);
   }
@@ -2799,12 +2280,10 @@ return;
     if (pickerEl?.style.display !== 'none' && !own(e.target)) {
       hideActionPicker();
     }
-
     // Close Tune popover on outside click (anything outside panel + bar)
     if (tuneOpen && paramsPanelEl && !paramsPanelEl.contains(e.target) && barEl && !barEl.contains(e.target)) {
       closeTunePopover();
     }
-
     // In CONFIGURING: click outside the bar and selected element returns to PICKING
     if (state === 'CONFIGURING' && !own(e.target) && selectedElement && !selectedElement.contains(e.target)) {
       hideBar();
@@ -2814,22 +2293,11 @@ return;
       state = 'PICKING';
       hoveredElement = null;
       hideHighlight();
-
       return;
     }
-
-    if (state !== 'PICKING' || !pickActive) {
-return;
-}
-
-    if (own(e.target)) {
-return;
-}
-
-    if (!hoveredElement || !pickable(hoveredElement)) {
-return;
-}
-
+    if (state !== 'PICKING' || !pickActive) return;
+    if (own(e.target)) return;
+    if (!hoveredElement || !pickable(hoveredElement)) return;
     e.preventDefault();
     e.stopPropagation();
     selectedElement = hoveredElement;
@@ -2858,51 +2326,39 @@ return;
   function maybeWarnConditionalAncestor(el) {
     let node = el?.parentElement;
     let depth = 0;
-
     while (node && depth < 12) {
       // 1. Active dialog / modal
       if (node.getAttribute && node.getAttribute('role') === 'dialog'
           && node.getAttribute('aria-modal') === 'true') {
         showToast('Heads up: this element lives inside a dialog. If state resets during generation, you may need to re-open it.', 6000);
-
         return;
       }
-
       // 2. Common Radix / shadcn / headless-ui open-state attribute
       if (node.dataset && node.dataset.state === 'open') {
         showToast('Heads up: this element lives inside an open panel. If state resets during generation, you may need to re-open it.', 6000);
-
         return;
       }
-
       // 3. Tab panel — only meaningful when the page also shows ANOTHER
       // tab as selected. A single tabpanel with no tablist is just a static
       // section in disguise and isn't conditional.
       if (node.getAttribute && node.getAttribute('role') === 'tabpanel') {
         const list = document.querySelector('[role="tablist"]');
-
         if (list) {
           const tabs = list.querySelectorAll('[role="tab"]');
-
           if (tabs.length > 1) {
             showToast('Heads up: this element lives in a tab panel. If state resets during generation, switch back to this tab.', 6000);
-
             return;
           }
         }
       }
-
       // 4. Collapsible: aria-expanded sibling. Look for the trigger button.
       if (node.id) {
         const trigger = document.querySelector(`[aria-controls="${CSS.escape(node.id)}"][aria-expanded="true"]`);
-
         if (trigger) {
           showToast('Heads up: this element lives inside an expandable section. If state resets during generation, re-expand it.', 6000);
-
           return;
         }
       }
-
       node = node.parentElement;
       depth++;
     }
@@ -2922,94 +2378,47 @@ return;
   const PREFETCH_ENABLED = false;
   const prefetchedPaths = new Set();
   function maybePrefetchPage() {
-    if (!PREFETCH_ENABLED) {
-return;
-}
-
+    if (!PREFETCH_ENABLED) return;
     const path = location.pathname;
-
-    if (prefetchedPaths.has(path)) {
-return;
-}
-
+    if (prefetchedPaths.has(path)) return;
     prefetchedPaths.add(path);
     sendEvent({ type: 'prefetch', pageUrl: path });
   }
 
   function handleKeyDown(e) {
     // When the annotation input is focused, let it handle its own keys.
-    if (annotEditing && annotEditing.input && e.target === annotEditing.input) {
-return;
-}
-
+    if (annotEditing && annotEditing.input && e.target === annotEditing.input) return;
     if (e.key === 'Escape') {
       e.preventDefault();
-
-      if (pickerEl?.style.display !== 'none') {
- hideActionPicker();
-
- return; 
-}
-
-      if (state === 'CONFIGURING') {
- hideBar(); stopScrollTracking(); hideAnnotOverlay(); clearAnnotations(); state = 'PICKING';
-
- return; 
-}
-
-      if (state === 'CYCLING') {
- handleDiscard();
-
- return; 
-}
-
-      if (state === 'SAVING' || state === 'CONFIRMED') {
-return;
-} // don't interrupt
-
+      if (pickerEl?.style.display !== 'none') { hideActionPicker(); return; }
+      if (state === 'CONFIGURING') { hideBar(); stopScrollTracking(); hideAnnotOverlay(); clearAnnotations(); state = 'PICKING'; return; }
+      if (state === 'CYCLING') { handleDiscard(); return; }
+      if (state === 'SAVING' || state === 'CONFIRMED') return; // don't interrupt
       if (state === 'PICKING') {
         // Use togglePick so the "Pick" button in the global bar also flips
         // off, otherwise the bar stays lit while nothing else is active.
-        if (pickActive) {
-togglePick();
-} else {
- hideHighlight(); state = 'IDLE'; 
-}
-
+        if (pickActive) togglePick();
+        else { hideHighlight(); state = 'IDLE'; }
         return;
       }
     }
 
     // Arrow/Enter nav works in PICKING (hover) and CONFIGURING (selected, input empty)
     var navEl = (state === 'PICKING') ? hoveredElement : (state === 'CONFIGURING') ? selectedElement : null;
-
     if (navEl && (e.key === 'ArrowUp' || e.key === 'ArrowDown' || (e.key === 'Enter' && state === 'PICKING'))) {
       let next = null;
-
       if (e.key === 'ArrowDown' && !e.shiftKey) {
         next = navEl.nextElementSibling;
-
-        while (next && !pickable(next)) {
-next = next.nextElementSibling;
-}
+        while (next && !pickable(next)) next = next.nextElementSibling;
       } else if (e.key === 'ArrowUp' && !e.shiftKey) {
         next = navEl.previousElementSibling;
-
-        while (next && !pickable(next)) {
-next = next.previousElementSibling;
-}
+        while (next && !pickable(next)) next = next.previousElementSibling;
       } else if (e.key === 'ArrowUp' && e.shiftKey) {
         next = navEl.parentElement;
-
-        if (next && !pickable(next)) {
-next = null;
-}
+        if (next && !pickable(next)) next = null;
       } else if (e.key === 'ArrowDown' && e.shiftKey) {
         next = navEl.firstElementChild;
-
-        while (next && !pickable(next)) {
-next = next.nextElementSibling;
-}
+        while (next && !pickable(next)) next = next.nextElementSibling;
       } else if (e.key === 'Enter') {
         e.preventDefault();
         selectedElement = hoveredElement;
@@ -3019,13 +2428,10 @@ next = next.nextElementSibling;
         showAnnotOverlay(selectedElement);
         showBar('configure');
         startScrollTracking();
-
         return;
       }
-
       if (next) {
         e.preventDefault();
-
         if (state === 'PICKING') {
           hoveredElement = next;
         } else {
@@ -3036,41 +2442,26 @@ next = next.nextElementSibling;
           showBar('configure');
           startScrollTracking();
         }
-
         showHighlight(next);
         next.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
       }
-
       return;
     }
 
     if (state === 'CYCLING') {
-      if (e.key === 'ArrowLeft') {
- e.preventDefault(); cycleVariant(-1); 
-}
-
-      if (e.key === 'ArrowRight') {
- e.preventDefault(); cycleVariant(1); 
-}
-
-      if (e.key === 'Enter') {
- e.preventDefault(); handleAccept(); 
-}
+      if (e.key === 'ArrowLeft') { e.preventDefault(); cycleVariant(-1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); cycleVariant(1); }
+      if (e.key === 'Enter') { e.preventDefault(); handleAccept(); }
     }
   }
 
   function handleGo() {
-    if (!selectedElement || state !== 'CONFIGURING') {
-return;
-}
-
+    if (!selectedElement || state !== 'CONFIGURING') return;
     const input = document.getElementById(PREFIX + '-input');
     const prompt = input ? input.value.trim() : '';
 
     // Commit any pending pin edit BEFORE we snapshot annotations.
-    if (annotEditing) {
-finalizeEditingPin();
-}
+    if (annotEditing) finalizeEditingPin();
 
     currentSessionId = id8();
     expectedVariants = selectedCount;
@@ -3095,14 +2486,8 @@ finalizeEditingPin();
       pageUrl: location.pathname,
       element: extractContext(elForCapture),
     };
-
-    if (snapshot.comments.length > 0) {
-basePayload.comments = snapshot.comments;
-}
-
-    if (snapshot.strokes.length > 0) {
-basePayload.strokes = snapshot.strokes;
-}
+    if (snapshot.comments.length > 0) basePayload.comments = snapshot.comments;
+    if (snapshot.strokes.length > 0) basePayload.strokes = snapshot.strokes;
 
     // Hide the interactive overlay so it doesn't linger during generation.
     hideAnnotOverlay();
@@ -3112,11 +2497,7 @@ basePayload.strokes = snapshot.strokes;
     showBar('generating');
     saveSession();
     writeScrollY(window.scrollY);
-
-    if (variantObserver) {
-variantObserver.disconnect();
-}
-
+    if (variantObserver) variantObserver.disconnect();
     variantObserver = startVariantObserver(currentSessionId);
     console.log('[impeccable.scroll] Go pressed', { scrollY: window.scrollY, sessionId: currentSessionId });
     startScrollLock(currentSessionId);
@@ -3130,24 +2511,15 @@ variantObserver.disconnect();
 
   let msLoadPromise = null;
   function loadModernScreenshot() {
-    if (window.modernScreenshot) {
-return Promise.resolve(window.modernScreenshot);
-}
-
-    if (msLoadPromise) {
-return msLoadPromise;
-}
-
+    if (window.modernScreenshot) return Promise.resolve(window.modernScreenshot);
+    if (msLoadPromise) return msLoadPromise;
     msLoadPromise = new Promise((resolve, reject) => {
       const s = document.createElement('script');
       s.src = 'http://localhost:' + PORT + '/modern-screenshot.js';
       s.onload = () => resolve(window.modernScreenshot);
-      s.onerror = () => {
- msLoadPromise = null; reject(new Error('modern-screenshot failed to load')); 
-};
+      s.onerror = () => { msLoadPromise = null; reject(new Error('modern-screenshot failed to load')); };
       document.head.appendChild(s);
     });
-
     return msLoadPromise;
   }
 
@@ -3168,111 +2540,69 @@ return msLoadPromise;
     const bytes = new Uint8Array(buf);
     let binary = '';
     const CHUNK = 0x8000;
-
     for (let i = 0; i < bytes.length; i += CHUNK) {
       binary += String.fromCharCode.apply(null, bytes.subarray(i, i + CHUNK));
     }
-
     return btoa(binary);
   }
   async function inlineFontUrls(cssText) {
     const urlRe = /url\((['"]?)(https?:\/\/[^'")\s]+)\1\)/g;
     const urls = new Set();
     let m;
-
     while ((m = urlRe.exec(cssText))) {
-      if (FONT_EXT_RE.test(m[2])) {
-urls.add(m[2]);
-}
+      if (FONT_EXT_RE.test(m[2])) urls.add(m[2]);
     }
-
     const map = new Map();
     await Promise.all([...urls].map(async (url) => {
       try {
         const res = await fetch(url);
-
-        if (!res.ok) {
-return;
-}
-
+        if (!res.ok) return;
         const buf = await res.arrayBuffer();
         const ext = url.toLowerCase().match(FONT_EXT_RE)?.[1] || 'woff2';
         const mime = FONT_MIME[ext] || 'application/octet-stream';
         map.set(url, 'data:' + mime + ';base64,' + bufferToBase64(buf));
       } catch { /* skip; fall through to URL */ }
     }));
-
     return cssText.replace(urlRe, (orig, q, url) => {
       const data = map.get(url);
-
       return data ? 'url(' + q + data + q + ')' : orig;
     });
   }
   async function collectFontCssText() {
     const chunks = [];
     const fontFaceRe = /@font-face\s*\{[^}]*\}/g;
-
     for (const sheet of document.styleSheets) {
       try {
         const rules = sheet.cssRules;
-
         for (const rule of rules) {
           if (rule.constructor.name === 'CSSFontFaceRule' || rule.cssText?.startsWith('@font-face')) {
             chunks.push(rule.cssText);
           }
         }
       } catch {
-        if (!sheet.href) {
-continue;
-}
-
+        if (!sheet.href) continue;
         try {
           const res = await fetch(sheet.href);
-
-          if (!res.ok) {
-continue;
-}
-
+          if (!res.ok) continue;
           const text = await res.text();
           let m2;
-
-          while ((m2 = fontFaceRe.exec(text))) {
-chunks.push(m2[0]);
-}
+          while ((m2 = fontFaceRe.exec(text))) chunks.push(m2[0]);
         } catch { /* ignore; capture is best-effort */ }
       }
     }
-
-    if (chunks.length === 0) {
-return '';
-}
-
+    if (chunks.length === 0) return '';
     return inlineFontUrls(chunks.join('\n'));
   }
 
   // True if `s` is a computed color string that renders as nothing
   // (explicit `transparent`, or `rgba(...)` with alpha 0).
   function isTransparentColor(s) {
-    if (!s) {
-return true;
-}
-
-    if (s === 'transparent') {
-return true;
-}
-
+    if (!s) return true;
+    if (s === 'transparent') return true;
     const m = /rgba?\(([^)]+)\)/.exec(s);
-
-    if (!m) {
-return false;
-}
-
+    if (!m) return false;
     const parts = m[1].split(',').map((p) => p.trim());
-
-    if (parts.length === 4) {
-return parseFloat(parts[3]) === 0;
-}
-
+    if (parts.length === 4) return parseFloat(parts[3]) === 0;
     return false;
   }
 
@@ -3284,103 +2614,75 @@ return parseFloat(parts[3]) === 0;
   // sits on the page's real background instead of rendering black.
   function resolveCanvasBackground(el) {
     const own = getComputedStyle(el);
-
-    if (!isTransparentColor(own.backgroundColor)) {
-return null;
-}
-
-    if (own.backgroundImage && own.backgroundImage !== 'none') {
-return null;
-}
-
+    if (!isTransparentColor(own.backgroundColor)) return null;
+    if (own.backgroundImage && own.backgroundImage !== 'none') return null;
     let node = el.parentElement;
-
     while (node) {
       const cs = getComputedStyle(node);
-
-      if (!isTransparentColor(cs.backgroundColor)) {
-return cs.backgroundColor;
-}
-
+      if (!isTransparentColor(cs.backgroundColor)) return cs.backgroundColor;
       node = node.parentElement;
     }
-
-    return (
-      getComputedStyle(document.body).backgroundColor ||
-      getComputedStyle(document.documentElement).backgroundColor ||
-      '#ffffff'
-    );
+    // The walk already passed through <body> and <html>; if they had been
+    // opaque we would have returned. Falling through with the previous
+    // `getComputedStyle(body).backgroundColor || …` chain is a trap: that
+    // call returns the literal string `"rgba(0, 0, 0, 0)"` for a page that
+    // never set its own bg, which is truthy and short-circuits the chain to
+    // transparent-black — modern-screenshot then renders the capture on a
+    // black canvas and the shader overlay flashes solid black during load.
+    // The browser canvas defaults to white, so we do too.
+    return '#ffffff';
   }
 
   // Capture the element (with current annotations baked in) and return a PNG
   // Blob. Shared between the Go flow (uploads it to the server) and the
   // debug toggle (displays it as an overlay for side-by-side comparison).
   async function captureElementToBlob(el, snapshot, rect) {
-    try {
- if (document.fonts?.ready) {
-await document.fonts.ready;
-} 
-} catch {}
-
+    try { if (document.fonts?.ready) await document.fonts.ready; } catch {}
     const hasAnnotations = snapshot && (snapshot.comments.length > 0 || snapshot.strokes.length > 0);
     let annotNode = null;
     let savedPosition = null;
-
     if (hasAnnotations) {
       const pos = getComputedStyle(el).position;
-
       if (pos === 'static') {
         savedPosition = el.style.position;
         el.style.position = 'relative';
       }
-
       annotNode = buildAnnotationsForCapture(rect, snapshot);
       el.appendChild(annotNode);
     }
-
     try {
       const ms = await loadModernScreenshot();
       const fontCssText = await collectFontCssText();
       const backgroundColor = resolveCanvasBackground(el);
-
       return await ms.domToBlob(el, {
         scale: Math.min(window.devicePixelRatio || 1, 2),
         font: fontCssText ? { cssText: fontCssText } : undefined,
         ...(backgroundColor ? { backgroundColor } : {}),
       });
     } finally {
-      if (annotNode) {
-annotNode.remove();
-}
-
-      if (savedPosition !== null) {
-el.style.position = savedPosition;
-}
+      if (annotNode) annotNode.remove();
+      if (savedPosition !== null) el.style.position = savedPosition;
     }
   }
 
   async function captureAndEmit(el, basePayload, snapshot, rect) {
     let screenshotPath;
     let blob;
-
     try {
       blob = await captureElementToBlob(el, snapshot, rect);
     } catch (err) {
       console.warn('[impeccable] capture failed, proceeding without screenshot:', err);
     }
-
     // Light up the shader overlay the moment capture is ready — no reason to
     // wait for the upload to complete before the user sees something alive.
     if (blob && state === 'GENERATING') {
       showShaderOverlay(el, blob, rect);
     }
-
     // Only upload + forward the screenshot when annotations (comments/strokes)
     // are present. Without annotations the image is pure visual anchoring —
     // it biases the model toward the current rendering and works against the
     // three-distinct-directions brief.
     const hasAnnotations = snapshot && (snapshot.comments.length > 0 || snapshot.strokes.length > 0);
-
     if (blob && hasAnnotations) {
       try {
         const uploadRes = await fetch(
@@ -3388,7 +2690,6 @@ el.style.position = savedPosition;
           '&eventId=' + encodeURIComponent(basePayload.id),
           { method: 'POST', headers: { 'Content-Type': 'image/png' }, body: blob },
         );
-
         if (uploadRes.ok) {
           const { path: p } = await uploadRes.json();
           screenshotPath = p;
@@ -3399,7 +2700,6 @@ el.style.position = savedPosition;
         console.warn('[impeccable] annotation upload failed:', err);
       }
     }
-
     sendEvent(screenshotPath ? { ...basePayload, screenshotPath } : basePayload);
   }
 
@@ -3472,22 +2772,16 @@ void main() {
     const sh = gl.createShader(type);
     gl.shaderSource(sh, source);
     gl.compileShader(sh);
-
     if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) {
       const info = gl.getShaderInfoLog(sh);
       gl.deleteShader(sh);
-
       throw new Error('shader compile failed: ' + info);
     }
-
     return sh;
   }
 
   function positionShaderOverlay() {
-    if (!shaderState || !selectedElement) {
-return;
-}
-
+    if (!shaderState || !selectedElement) return;
     const r = selectedElement.getBoundingClientRect();
     Object.assign(shaderState.canvas.style, {
       top: r.top + 'px', left: r.left + 'px',
@@ -3496,34 +2790,17 @@ return;
   }
 
   function hideShaderOverlay() {
-    if (!shaderState) {
-return;
-}
-
-    if (shaderState.rafId) {
-cancelAnimationFrame(shaderState.rafId);
-}
-
-    if (shaderState.canvas) {
-shaderState.canvas.remove();
-}
-
+    if (!shaderState) return;
+    if (shaderState.rafId) cancelAnimationFrame(shaderState.rafId);
+    if (shaderState.canvas) shaderState.canvas.remove();
     const lose = shaderState.gl?.getExtension?.('WEBGL_lose_context');
-
-    try {
- lose?.loseContext(); 
-} catch {}
-
+    try { lose?.loseContext(); } catch {}
     shaderState = null;
   }
 
   async function showShaderOverlay(el, blob, rect) {
     hideShaderOverlay();
-
-    if (!blob || !el) {
-return;
-}
-
+    if (!blob || !el) return;
     const canvas = document.createElement('canvas');
     canvas.id = PREFIX + '-shader';
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -3540,7 +2817,6 @@ return;
 
     const gl = canvas.getContext('webgl', { premultipliedAlpha: false, preserveDrawingBuffer: false })
             || canvas.getContext('experimental-webgl');
-
     if (!gl) {
       // WebGL unavailable — fall back to a plain <img> overlay so the user
       // still sees something meaningful during generation.
@@ -3557,12 +2833,10 @@ return;
       img.style.outlineOffset = '-2px';
       document.body.appendChild(img);
       shaderState = { canvas: img, gl: null, program: null, texture: null, rafId: 0, startTime: 0 };
-
       return;
     }
 
     let program, texture;
-
     try {
       const vs = compileShader(gl, gl.VERTEX_SHADER, SHADER_VS);
       const fs = compileShader(gl, gl.FRAGMENT_SHADER, SHADER_FS);
@@ -3570,11 +2844,9 @@ return;
       gl.attachShader(program, vs);
       gl.attachShader(program, fs);
       gl.linkProgram(program);
-
       if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
         throw new Error('program link failed: ' + gl.getProgramInfoLog(program));
       }
-
       // Full-screen quad
       const buf = gl.createBuffer();
       gl.bindBuffer(gl.ARRAY_BUFFER, buf);
@@ -3595,13 +2867,11 @@ return;
     } catch (err) {
       console.warn('[impeccable] shader setup failed:', err);
       canvas.remove();
-
       return;
     }
 
     // Upload the screenshot as a texture
     let bitmap;
-
     try {
       bitmap = await createImageBitmap(blob);
     } catch {
@@ -3609,13 +2879,10 @@ return;
       const imgUrl = URL.createObjectURL(blob);
       const img = new Image();
       img.src = imgUrl;
-      await new Promise((r, rej) => {
- img.onload = r; img.onerror = rej; 
-});
+      await new Promise((r, rej) => { img.onload = r; img.onerror = rej; });
       bitmap = img;
       URL.revokeObjectURL(imgUrl);
     }
-
     texture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -3624,10 +2891,7 @@ return;
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, bitmap);
-
-    if (bitmap.close) {
-bitmap.close();
-}
+    if (bitmap.close) bitmap.close();
 
     const uTime = gl.getUniformLocation(program, 'u_time');
     const uRes = gl.getUniformLocation(program, 'u_resolution');
@@ -3637,10 +2901,7 @@ bitmap.close();
 
     shaderState = { canvas, gl, program, texture, rafId: 0, startTime: performance.now(), reduced };
     function frame() {
-      if (!shaderState) {
-return;
-}
-
+      if (!shaderState) return;
       const elapsed = (performance.now() - shaderState.startTime) / 1000;
       const t = shaderState.reduced ? 0.0 : elapsed;
       gl.viewport(0, 0, canvas.width, canvas.height);
@@ -3658,16 +2919,11 @@ return;
   }
 
   function handleAccept() {
-    if (!currentSessionId || arrivedVariants === 0) {
-return;
-}
-
+    if (!currentSessionId || arrivedVariants === 0) return;
     const acceptPayload = { type: 'accept', id: currentSessionId, variantId: String(visibleVariant) };
-
     if (Object.keys(paramsCurrentValues).length > 0) {
       acceptPayload.paramValues = { ...paramsCurrentValues };
     }
-
     sendEvent(acceptPayload);
     markSessionHandled();
 
@@ -3686,11 +2942,7 @@ return;
       hideBar();
       hideHighlight();
       stopScrollTracking();
-
-      if (variantObserver) {
- variantObserver.disconnect(); variantObserver = null; 
-}
-
+      if (variantObserver) { variantObserver.disconnect(); variantObserver = null; }
       stopScrollLock();
       clearScrollY();
       clearSession();
@@ -3707,20 +2959,11 @@ return;
     // attribute keep matching until reload replaces it with the carbonize block.
     setTimeout(function() {
       const wrapper = document.querySelector('[data-impeccable-variants="' + acceptedSessionId + '"]');
-
-      if (!wrapper) {
-return;
-}
-
+      if (!wrapper) return;
       const accepted = wrapper.querySelector('[data-impeccable-variant="' + acceptedVariant + '"]');
-
       if (accepted && accepted.firstElementChild) {
         const parent = wrapper.parentElement;
-
-        if (!parent) {
-return;
-}
-
+        if (!parent) return;
         accepted.style.display = 'contents';
         parent.replaceChild(accepted, wrapper);
       }
@@ -3728,10 +2971,7 @@ return;
   }
 
   function handleDiscard() {
-    if (!currentSessionId) {
-return;
-}
-
+    if (!currentSessionId) return;
     sendEvent({ type: 'discard', id: currentSessionId });
     markSessionHandled();
     // Instant DOM restore + fire-and-forget (script handles file cleanup)
@@ -3746,10 +2986,7 @@ return;
   const LS_KEY = PREFIX + '-session';
 
   function saveSession() {
-    if (!currentSessionId) {
-return;
-}
-
+    if (!currentSessionId) return;
     // NOTE: scrollY is stored under a separate key (writeScrollY). Storing
     // it here would overwrite the Go-time value every time state changes.
     try {
@@ -3768,27 +3005,19 @@ return;
   function loadSession() {
     try {
       const raw = localStorage.getItem(LS_KEY);
-
       return raw ? JSON.parse(raw) : null;
-    } catch {
- return null; 
-}
+    } catch { return null; }
   }
 
   function clearSession() {
-    try {
- localStorage.removeItem(LS_KEY); 
-} catch {}
+    try { localStorage.removeItem(LS_KEY); } catch {}
   }
 
   /** Mark session as handled (accepted/discarded). The agent will clean up
    *  the source, but until it does the wrapper is still in the HTML. This
    *  prevents resumeSession from picking it up again after reload. */
   function markSessionHandled() {
-    if (!currentSessionId) {
-return;
-}
-
+    if (!currentSessionId) return;
     try {
       localStorage.setItem(LS_KEY + '-handled', currentSessionId);
     } catch {}
@@ -3797,15 +3026,11 @@ return;
   function isSessionHandled(id) {
     try {
       return localStorage.getItem(LS_KEY + '-handled') === id;
-    } catch {
- return false; 
-}
+    } catch { return false; }
   }
 
   function clearHandled() {
-    try {
- localStorage.removeItem(LS_KEY + '-handled'); 
-} catch {}
+    try { localStorage.removeItem(LS_KEY + '-handled'); } catch {}
   }
 
   function cleanup() {
@@ -3816,48 +3041,28 @@ return;
     // Schedule a 2s fallback that does the manual swap only if HMR hasn't
     // replaced the wrapper by then (keeps static-server / no-HMR flows alive).
     const cleanupSessionId = currentSessionId;
-
     if (cleanupSessionId) {
       const wrapper = document.querySelector('[data-impeccable-variants="' + cleanupSessionId + '"]');
-
-      if (wrapper) {
-wrapper.style.display = 'none';
-}
+      if (wrapper) wrapper.style.display = 'none';
     }
-
     setTimeout(function() {
-      if (!cleanupSessionId) {
-return;
-}
-
+      if (!cleanupSessionId) return;
       const wrapper = document.querySelector('[data-impeccable-variants="' + cleanupSessionId + '"]');
-
-      if (!wrapper) {
-return;
-}
-
+      if (!wrapper) return;
       const orig = wrapper.querySelector('[data-impeccable-variant="original"]');
-
       if (orig) {
         const content = orig.firstElementChild;
-
         if (content) {
           wrapper.parentElement.replaceChild(content, wrapper);
-
           return;
         }
       }
-
       wrapper.remove();
     }, 2000);
     hideBar();
     hideHighlight();
     stopScrollTracking();
-
-    if (variantObserver) {
- variantObserver.disconnect(); variantObserver = null; 
-}
-
+    if (variantObserver) { variantObserver.disconnect(); variantObserver = null; }
     stopScrollLock();
     clearScrollY();
     clearSession();
@@ -3872,12 +3077,17 @@ return;
   // ---------------------------------------------------------------------------
 
   function showToast(message, duration) {
-    if (toastEl) {
-toastEl.remove();
-}
-
+    if (toastEl) toastEl.remove();
+    // Stack the toast above the global bar (which sits at bottom:14px) so
+    // the two never overlap. Read the bar's actual rect — its height varies
+    // with hover-expanded labels — and fall back to a sensible default
+    // when the bar isn't mounted yet.
+    const barRect = globalBarEl?.getBoundingClientRect();
+    const barTopFromBottom = barRect && barRect.height > 0
+      ? Math.max(16, window.innerHeight - barRect.top + 12)
+      : 16;
     toastEl = el('div', {
-      position: 'fixed', bottom: '16px', left: '50%',
+      position: 'fixed', bottom: barTopFromBottom + 'px', left: '50%',
       transform: 'translateX(-50%) translateY(8px)',
       background: C.ink, color: C.white,
       fontFamily: FONT, fontSize: '12px',
@@ -3897,11 +3107,7 @@ toastEl.remove();
       if (toastEl) {
         toastEl.style.opacity = '0';
         toastEl.style.transform = 'translateX(-50%) translateY(8px)';
-        setTimeout(() => {
- if (toastEl) {
- toastEl.remove(); toastEl = null; 
-} 
-}, 250);
+        setTimeout(() => { if (toastEl) { toastEl.remove(); toastEl = null; } }, 250);
       }
     }, duration);
   }
@@ -3915,19 +3121,12 @@ toastEl.remove();
   // variants before HMR fired. Pick up where we left off.
   function resumeSession() {
     const wrapper = document.querySelector('[data-impeccable-variants]');
-
-    if (!wrapper) {
- clearSession(); clearHandled();
-
- return false; 
-}
+    if (!wrapper) { clearSession(); clearHandled(); return false; }
 
     const sessionId = wrapper.dataset.impeccableVariants;
 
     // Don't resume if this session was already accepted/discarded
-    if (isSessionHandled(sessionId)) {
-return false;
-}
+    if (isSessionHandled(sessionId)) return false;
 
     currentSessionId = sessionId;
     expectedVariants = parseInt(wrapper.dataset.impeccableVariantCount || '0');
@@ -3936,17 +3135,10 @@ return false;
 
     // Restore state from localStorage if available
     const saved = loadSession();
-
     if (saved && saved.id === sessionId) {
       visibleVariant = (saved.visible > 0 && saved.visible <= arrivedVariants) ? saved.visible : (arrivedVariants > 0 ? 1 : 0);
-
-      if (saved.action) {
-selectedAction = saved.action;
-}
-
-      if (saved.count) {
-selectedCount = saved.count;
-}
+      if (saved.action) selectedAction = saved.action;
+      if (saved.count) selectedCount = saved.count;
     } else {
       visibleVariant = arrivedVariants > 0 ? 1 : 0;
     }
@@ -3958,29 +3150,20 @@ selectedCount = saved.count;
     selectedElement = visEl || origEl || wrapper.parentElement;
 
     // Set display state BEFORE starting observer (avoid triggering it)
-    if (visibleVariant > 0) {
-showVariantInDOM(currentSessionId, visibleVariant);
-}
+    if (visibleVariant > 0) showVariantInDOM(currentSessionId, visibleVariant);
 
     state = arrivedVariants >= expectedVariants ? 'CYCLING' : 'GENERATING';
     showBar(state === 'CYCLING' ? 'cycling' : 'generating');
     startScrollTracking();
-
     // Build the params panel for the restored visible variant. Previously
     // this was missed on page-reload resume: showVariantInDOM above fires
     // refreshParamsPanel, but state was still IDLE at that moment so it
     // hid. Now that state is CYCLING, re-fire.
-    if (state === 'CYCLING') {
-refreshParamsPanel();
-}
-
+    if (state === 'CYCLING') refreshParamsPanel();
     saveSession();
 
     // Start observing for more variants AFTER initial setup
-    if (variantObserver) {
-variantObserver.disconnect();
-}
-
+    if (variantObserver) variantObserver.disconnect();
     variantObserver = startVariantObserver(currentSessionId);
 
     // Hold the target at its saved viewport top through any subsequent
@@ -3994,13 +3177,8 @@ variantObserver.disconnect();
       (async () => {
         try {
           const rect = origEl.getBoundingClientRect();
-
-          if (rect.width === 0 || rect.height === 0) {
-return;
-}
-
+          if (rect.width === 0 || rect.height === 0) return;
           const blob = await captureElementToBlob(origEl, null, rect);
-
           if (blob && state === 'GENERATING') {
             showShaderOverlay(origEl, blob, rect);
           }
@@ -4009,7 +3187,6 @@ return;
         }
       })();
     }
-
     return true;
   }
 
@@ -4032,27 +3209,36 @@ return;
       // 'dark' to preview the opposite palette without actually changing the
       // page bg. Used for screenshots and theme QA.
       const override = localStorage.getItem('impeccable-dev-theme');
+      if (override === 'light' || override === 'dark') return override;
 
-      if (override === 'light' || override === 'dark') {
-return override;
-}
+      // Walk body → html, taking the first opaque background. The browser's
+      // default body / html background is `rgba(0, 0, 0, 0)`, which a naive
+      // regex would read as black and mislabel a perfectly white page as
+      // dark. Honoring alpha avoids that — and falling through to <html>
+      // catches the common pattern of a bg only on <html> (or only on body).
+      function readOpaque(el) {
+        if (!el) return null;
+        const bg = getComputedStyle(el).backgroundColor;
+        const m = bg.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?\s*\)/);
+        if (!m) return null;
+        const alpha = m[4] == null ? 1 : parseFloat(m[4]);
+        if (alpha < 0.5) return null; // transparent / nearly transparent → skip
+        return [+m[1], +m[2], +m[3]];
+      }
 
-      const bg = getComputedStyle(document.body).backgroundColor
-        || getComputedStyle(document.documentElement).backgroundColor;
-      const m = bg.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/);
-
-      if (!m) {
-return 'light';
-}
-
-      const [, r, g, b] = m;
+      const rgb = readOpaque(document.body) || readOpaque(document.documentElement);
+      // Both transparent → fall back to the browser's effective canvas color.
+      // White is the universal default; only one in a thousand sites swaps it
+      // via `color-scheme: dark` on <html>, and `prefers-color-scheme` lets
+      // us catch that case.
+      if (!rgb) {
+        return matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      const [r, g, b] = rgb;
       // Perceptual luminance (Rec. 709)
-      const L = (0.2126 * +r + 0.7152 * +g + 0.0722 * +b) / 255;
-
+      const L = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
       return L > 0.55 ? 'light' : 'dark';
-    } catch {
- return 'light'; 
-}
+    } catch { return 'light'; }
   }
 
   function barPaletteForTheme(theme) {
@@ -4071,7 +3257,6 @@ return 'light';
         exitHover: 'oklch(85% 0 0 / 0.5)',
       };
     }
-
     // Dark bar on light page. Bar is a warm charcoal, logo slab is much
     // deeper so the rounded-right shape reads as a clear sculpted mark.
     return {
@@ -4179,37 +3364,22 @@ return 'light';
         : '');
       const labelEl = b.querySelector('.icon-btn-label');
       const expand = () => {
-        if (!labelEl) {
-return;
-}
-
+        if (!labelEl) return;
         labelEl.style.maxWidth = '120px'; labelEl.style.opacity = '1'; labelEl.style.marginLeft = '6px';
       };
       const collapse = () => {
-        if (!labelEl || b.dataset.active === 'true') {
-return;
-}
-
+        if (!labelEl || b.dataset.active === 'true') return;
         labelEl.style.maxWidth = '0'; labelEl.style.opacity = '0'; labelEl.style.marginLeft = '0';
       };
       // Per-button hover only changes color (no layout). The label expand/
       // collapse is driven by the bar-level mouseenter/mouseleave so moving
       // the mouse between adjacent buttons doesn't trigger per-button width
       // thrashing — the whole bar grows once and shrinks once.
-      b.addEventListener('mouseenter', () => {
- if (b.dataset.active !== 'true') {
-b.style.color = P.text;
-} 
-});
-      b.addEventListener('mouseleave', () => {
- if (b.dataset.active !== 'true') {
-b.style.color = P.textDim;
-} 
-});
+      b.addEventListener('mouseenter', () => { if (b.dataset.active !== 'true') b.style.color = P.text; });
+      b.addEventListener('mouseleave', () => { if (b.dataset.active !== 'true') b.style.color = P.textDim; });
       b.addEventListener('click', onClick);
       b._expandLabel = expand;
       b._collapseLabel = collapse;
-
       return b;
     }
 
@@ -4269,25 +3439,28 @@ b.style.color = P.textDim;
     });
     inner.appendChild(divider);
 
-    // Exit (subtle × on the right) — SVG for baseline-free centering
+    // Exit × on the right — intentionally subtle (textDim at rest, text on
+    // hover) so it sits behind the active toggles in visual hierarchy.
+    //
+    // Explicit padding + box-sizing here is load-bearing: a host page like
+    // `button { padding: 0.5rem 1rem; }` (very common in resets) would
+    // otherwise inflate this 24x24 button into 56x40 and push the SVG out
+    // of the visible bar — the X stays invisible even though the styles in
+    // DevTools look fine. Every other chrome button sets padding inline;
+    // this one needed it too.
     const exitBtn = el('button', {
       display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-      width: '26px', height: '26px', borderRadius: '6px',
+      padding: '0', boxSizing: 'border-box',
+      width: '24px', height: '24px', borderRadius: '6px',
       border: 'none', background: 'transparent',
       color: P.textDim, fontFamily: FONT, fontSize: '0', lineHeight: '0',
       cursor: 'pointer', transition: 'color 0.12s ease, background 0.12s ease',
     });
-    exitBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="2.5" y1="2.5" x2="9.5" y2="9.5"/><line x1="9.5" y1="2.5" x2="2.5" y2="9.5"/></svg>';
+    exitBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/></svg>';
     exitBtn.title = 'Exit live mode';
-    exitBtn.addEventListener('mouseenter', () => {
- exitBtn.style.color = P.text; exitBtn.style.background = P.exitHover; 
-});
-    exitBtn.addEventListener('mouseleave', () => {
- exitBtn.style.color = P.textDim; exitBtn.style.background = 'transparent'; 
-});
-    exitBtn.addEventListener('click', () => {
- sendEvent({ type: 'exit' }); teardown(); 
-});
+    exitBtn.addEventListener('mouseenter', () => { exitBtn.style.color = P.text; exitBtn.style.background = P.exitHover; });
+    exitBtn.addEventListener('mouseleave', () => { exitBtn.style.color = P.textDim; exitBtn.style.background = 'transparent'; });
+    exitBtn.addEventListener('click', () => { sendEvent({ type: 'exit' }); teardown(); });
     inner.appendChild(exitBtn);
 
     // Bar-level hover: expand every toggle's label at once; collapse on leave.
@@ -4301,6 +3474,7 @@ b.style.color = P.textDim;
     });
 
     document.body.appendChild(globalBarEl);
+    defangOutsideHandlers(globalBarEl);
 
     requestAnimationFrame(() => {
       globalBarEl.style.opacity = '1';
@@ -4321,19 +3495,12 @@ b.style.color = P.textDim;
 
     // Sync one toggle's active state, colors, and slide-label visibility.
     function sync(btn, active) {
-      if (!btn) {
-return;
-}
-
+      if (!btn) return;
       btn.style.background = active ? P.accentSoft : 'transparent';
       btn.style.color = active ? P.accent : P.textDim;
       btn.dataset.active = active ? 'true' : 'false';
-
-      if (active && btn._expandLabel) {
-btn._expandLabel();
-} else if (!active && btn._collapseLabel) {
-btn._collapseLabel();
-}
+      if (active && btn._expandLabel) btn._expandLabel();
+      else if (!active && btn._collapseLabel) btn._collapseLabel();
     }
     sync(pickToggle, pickActive);
     sync(detectToggle, detectActive);
@@ -4392,22 +3559,14 @@ btn._collapseLabel();
       hideBar();
       hideActionPicker();
       selectedElement = null;
-
-      if (state === 'PICKING' || state === 'CONFIGURING') {
-state = 'IDLE';
-}
+      if (state === 'PICKING' || state === 'CONFIGURING') state = 'IDLE';
     } else {
-      if (state === 'IDLE') {
-state = 'PICKING';
-}
+      if (state === 'IDLE') state = 'PICKING';
     }
   }
 
   function loadDetectScript() {
-    if (detectScriptLoaded) {
-return;
-}
-
+    if (detectScriptLoaded) return;
     detectScriptLoaded = true;
     const s = document.createElement('script');
     s.src = 'http://localhost:' + PORT + '/detect.js';
@@ -4416,20 +3575,15 @@ return;
   }
 
   function onDetectMessage(e) {
-    if (!e.data || typeof e.data.source !== 'string') {
-return;
-}
-
+    if (!e.data || typeof e.data.source !== 'string') return;
     // Detection script is loaded and ready
     if (e.data.source === 'impeccable-ready') {
       detectReady = true;
-
       if (detectPendingScan && detectActive) {
         detectPendingScan = false;
         window.postMessage({ source: 'impeccable-command', action: 'scan' }, '*');
       }
     }
-
     // Scan results arrived
     if (e.data.source === 'impeccable-results') {
       detectCount = e.data.count || 0;
@@ -4441,42 +3595,16 @@ return;
   function teardown() {
     cleanup();
     hideBar();
-
     if (globalBarEl) {
       globalBarEl.style.transform = 'translateY(100%)';
-      setTimeout(() => {
- if (globalBarEl) {
-globalBarEl.remove();
-}
-
- globalBarEl = null; 
-}, 300);
+      setTimeout(() => { if (globalBarEl) globalBarEl.remove(); globalBarEl = null; }, 300);
     }
-
-    if (highlightEl) {
- highlightEl.remove(); highlightEl = null; 
-}
-
-    if (tooltipEl) {
- tooltipEl.remove(); tooltipEl = null; 
-}
-
-    if (barEl) {
- barEl.remove(); barEl = null; 
-}
-
-    if (pickerEl) {
- pickerEl.remove(); pickerEl = null; 
-}
-
-    if (paramsPanelEl) {
- paramsPanelEl.remove(); paramsPanelEl = null; paramsPanelInner = null; paramsPanelBody = null; 
-}
-
-    if (evtSource) {
- evtSource.close(); evtSource = null; 
-}
-
+    if (highlightEl) { highlightEl.remove(); highlightEl = null; }
+    if (tooltipEl) { tooltipEl.remove(); tooltipEl = null; }
+    if (barEl) { barEl.remove(); barEl = null; }
+    if (pickerEl) { pickerEl.remove(); pickerEl = null; }
+    if (paramsPanelEl) { paramsPanelEl.remove(); paramsPanelEl = null; paramsPanelInner = null; paramsPanelBody = null; }
+    if (evtSource) { evtSource.close(); evtSource = null; }
     document.removeEventListener('mousemove', handleMouseMove, true);
     document.removeEventListener('click', handleClick, true);
     document.removeEventListener('keydown', handleKeyDown, true);
@@ -4519,17 +3647,9 @@ globalBarEl.remove();
     // so live mode doesn't auto-slide a big panel over the page on startup.
     try {
       const raw = localStorage.getItem(DESIGN_PREFS_KEY);
-
-      if (!raw) {
-return;
-}
-
+      if (!raw) return;
       const prefs = JSON.parse(raw);
-
-      if (prefs.tab === 'visual' || prefs.tab === 'raw') {
-designState.tab = prefs.tab;
-}
-
+      if (prefs.tab === 'visual' || prefs.tab === 'raw') designState.tab = prefs.tab;
       if (prefs.collapsed && typeof prefs.collapsed === 'object') {
         Object.assign(designState.collapsed, prefs.collapsed);
       }
@@ -4567,10 +3687,14 @@ designState.tab = prefs.tab;
     designShadow.appendChild(root);
 
     document.body.appendChild(designHost);
+    // The host is pointer-events: none; the panel inside the shadow DOM
+    // manages its own auto/none. Events bubble through the shadow boundary,
+    // so attaching here silences host-page outside-interaction handlers
+    // without touching the host's click-through behavior.
+    defangOutsideHandlers(designHost, { setPointerEvents: false });
 
     loadDesignPrefs();
     renderDesignChrome();
-
     if (designState.open) {
       fetchDesignSystem();
     }
@@ -4897,28 +4021,22 @@ designState.tab = prefs.tab;
 
     const tabs = document.createElement('div');
     tabs.className = 'tabs';
-
     for (const t of [['visual', 'Visual'], ['raw', 'Raw']]) {
       const btn = document.createElement('button');
       btn.className = 'tab';
       btn.textContent = t[1];
       btn.setAttribute('data-active', designState.tab === t[0] ? 'true' : 'false');
       btn.addEventListener('click', () => {
-        if (designState.tab === t[0]) {
-return;
-}
-
+        if (designState.tab === t[0]) return;
         designState.tab = t[0];
         saveDesignPrefs();
         renderDesignChrome();
-
         if (t[0] === 'raw' && designState.raw === null && !designState.loading) {
           fetchDesignSystem(); // raw is part of the same fetch pair
         }
       });
       tabs.appendChild(btn);
     }
-
     header.appendChild(tabs);
 
     const close = document.createElement('button');
@@ -4935,7 +4053,6 @@ return;
     designState.open = !designState.open;
     renderDesignChrome();
     updateGlobalBarState();
-
     if (designState.open && designState.present === null && !designState.loading) {
       fetchDesignSystem();
     }
@@ -4945,7 +4062,6 @@ return;
     designState.loading = true;
     designState.error = null;
     renderDesignBody();
-
     try {
       const [jsonRes, rawRes] = await Promise.all([
         fetch(`http://localhost:${PORT}/design-system.json?token=${TOKEN}`, { cache: 'no-store' }),
@@ -4970,49 +4086,35 @@ return;
 
   function renderDesignBody() {
     const body = designShadow.querySelector('#panel-body');
-
-    if (!body) {
-return;
-}
-
+    if (!body) return;
     body.innerHTML = '';
 
     if (designState.loading) {
       body.appendChild(msgDiv('loading', 'Loading design system…'));
-
       return;
     }
-
     if (designState.error) {
       body.appendChild(msgDiv('error', designState.error));
-
       return;
     }
-
     if (designState.present === false) {
       const empty = document.createElement('div');
       empty.className = 'empty';
       empty.innerHTML = `<strong>No DESIGN.md yet</strong>Create one by running <code>/impeccable document</code> in your terminal, then re-open this panel.`;
       body.appendChild(empty);
-
       return;
     }
 
     if (designState.tab === 'raw') {
       renderRawTab(body, designState.raw || '');
-
       return;
     }
 
     // Visual tab — single unified render path.
-    if (designState.mdNewerThanJson) {
-body.appendChild(renderStaleHint());
-}
-
+    if (designState.mdNewerThanJson) body.appendChild(renderStaleHint());
     if (designState.hasMd && !designState.hasSidecar) {
       body.appendChild(renderParsedMdCta());
     }
-
     renderDesignVisual(body, designState.parsed, designState.sidecar);
   }
 
@@ -5020,7 +4122,6 @@ body.appendChild(renderStaleHint());
     const d = document.createElement('div');
     d.className = cls;
     d.textContent = text;
-
     return d;
   }
 
@@ -5031,7 +4132,6 @@ body.appendChild(renderStaleHint());
       <span class="stale-dot"></span>
       <span class="stale-text"><strong>DESIGN.md is newer than DESIGN.json.</strong> Run <code>/impeccable document</code> to refresh the sidecar.</span>
     `;
-
     return box;
   }
 
@@ -5039,7 +4139,6 @@ body.appendChild(renderStaleHint());
     const box = document.createElement('div');
     box.className = 'parsed-md-cta';
     box.innerHTML = `<strong>Basic view</strong>This panel reads the tokens in your <code>DESIGN.md</code> frontmatter. Running <code>/impeccable document</code> also generates a <code>DESIGN.json</code> sidecar with your project's actual component snippets (button, input, nav) and tonal ramps, rendered live below the tokens.`;
-
     return box;
   }
 
@@ -5051,45 +4150,24 @@ body.appendChild(renderStaleHint());
     const proseColors = parsed?.colors || null;
 
     const colors = buildColorModels(frontmatter.colors, extensions.colorMeta, proseColors);
-
-    if (colors.length) {
-renderColorTiles(body, colors);
-}
+    if (colors.length) renderColorTiles(body, colors);
 
     const types = buildTypographyModels(frontmatter.typography, extensions.typographyMeta);
-
-    if (types.length) {
-renderTypeTiles(body, types);
-}
+    if (types.length) renderTypeTiles(body, types);
 
     const radii = buildRadiiModels(frontmatter.rounded);
+    if (radii.length) renderRadiiTile(body, radii);
 
-    if (radii.length) {
-renderRadiiTile(body, radii);
-}
-
-    if (extensions.shadows?.length) {
-renderShadowTiles(body, extensions.shadows);
-}
+    if (extensions.shadows?.length) renderShadowTiles(body, extensions.shadows);
 
     const components = sidecar?.components || [];
-
-    if (components.length) {
-renderComponentTiles(body, components);
-}
+    if (components.length) renderComponentTiles(body, components);
 
     // Narrative: sidecar wins if present (richer, agent-curated). Otherwise
     // synthesize from prose sections.
     const narrative = sidecar?.narrative || synthesizeNarrative(parsed);
-
-    if (narrative.rules?.length) {
-body.appendChild(renderRulesCollapsible(narrative.rules));
-}
-
-    if ((narrative.dos?.length || narrative.donts?.length)) {
-body.appendChild(renderDosDontsCollapsible(narrative));
-}
-
+    if (narrative.rules?.length) body.appendChild(renderRulesCollapsible(narrative.rules));
+    if ((narrative.dos?.length || narrative.donts?.length)) body.appendChild(renderDosDontsCollapsible(narrative));
     if (narrative.overview || narrative.northStar || narrative.keyCharacteristics?.length) {
       body.appendChild(renderOverviewCollapsible(narrative));
     }
@@ -5103,15 +4181,10 @@ body.appendChild(renderDosDontsCollapsible(narrative));
   // A matching prose bullet (when the slug sits in the bullet text) supplies
   // description as a last-resort fallback.
   function buildColorModels(fmColors, colorMeta, proseColors) {
-    if (!fmColors) {
-return [];
-}
-
+    if (!fmColors) return [];
     const meta = colorMeta || {};
-
     return Object.entries(fmColors).map(([key, value]) => {
       const m = meta[key] || {};
-
       return {
         role: m.role || humanizeKey(key),
         name: m.displayName || humanizeKey(key),
@@ -5124,16 +4197,11 @@ return [];
   }
 
   function buildTypographyModels(fmTypography, typographyMeta) {
-    if (!fmTypography) {
-return [];
-}
-
+    if (!fmTypography) return [];
     const meta = typographyMeta || {};
-
     return Object.entries(fmTypography).map(([key, spec]) => {
       const m = meta[key] || {};
       const { family, fallback } = splitFontFamily(spec?.fontFamily);
-
       return {
         role: key,
         name: m.displayName || humanizeKey(key),
@@ -5152,20 +4220,13 @@ return [];
   }
 
   function buildRadiiModels(fmRounded) {
-    if (!fmRounded) {
-return [];
-}
-
+    if (!fmRounded) return [];
     return Object.entries(fmRounded).map(([name, value]) => ({ name, value }));
   }
 
   function splitFontFamily(stack) {
-    if (!stack || typeof stack !== 'string') {
-return { family: '', fallback: '' };
-}
-
+    if (!stack || typeof stack !== 'string') return { family: '', fallback: '' };
     const parts = stack.split(',').map((s) => s.trim().replace(/^['"]|['"]$/g, ''));
-
     return { family: parts[0] || '', fallback: parts.slice(1).join(', ') };
   }
 
@@ -5174,32 +4235,22 @@ return { family: '', fallback: '' };
   }
 
   function findProseDescription(proseColors, key, displayName) {
-    if (!proseColors || !proseColors.groups) {
-return null;
-}
-
+    if (!proseColors || !proseColors.groups) return null;
     const needles = [key, displayName].filter(Boolean).map((s) => s.toLowerCase());
-
     for (const g of proseColors.groups) {
       for (const c of g.colors || []) {
         const hay = String(c.name || '').toLowerCase();
-
         if (hay && needles.some((n) => hay.includes(n) || n.includes(hay))) {
           return c.description || null;
         }
       }
     }
-
     return null;
   }
 
   function synthesizeNarrative(parsed) {
-    if (!parsed) {
-return {};
-}
-
+    if (!parsed) return {};
     const md = parsed;
-
     return {
       northStar: md.overview?.creativeNorthStar,
       overview: (md.overview?.philosophy || []).join(' '),
@@ -5232,7 +4283,6 @@ return {};
       tile.appendChild(hero);
 
       const ramp = synthesizeRamp(c);
-
       if (ramp.length) {
         const r = document.createElement('div');
         r.className = 'c-ramp';
@@ -5246,26 +4296,17 @@ return {};
         d.textContent = c.description;
         tile.appendChild(d);
       }
-
       body.appendChild(tile);
     }
   }
 
   function synthesizeRamp(c) {
-    if (c.tonalRamp?.length) {
-return c.tonalRamp;
-}
-
+    if (c.tonalRamp?.length) return c.tonalRamp;
     // If base value is OKLCH, synthesize an 8-step ramp across lightness.
     const m = typeof c.value === 'string' && c.value.match(/^oklch\(\s*([\d.]+)%\s+([\d.]+)\s+([\d.]+)\s*(?:\/\s*([\d.]+))?\s*\)$/i);
-
-    if (!m) {
-return [];
-}
-
+    if (!m) return [];
     const [, , chroma, hue] = m;
     const steps = [20, 32, 44, 56, 68, 80, 90, 96];
-
     return steps.map((l) => `oklch(${l}% ${chroma} ${hue})`);
   }
 
@@ -5309,7 +4350,6 @@ return [];
         p.textContent = t.purpose;
         tile.appendChild(p);
       }
-
       body.appendChild(tile);
     }
   }
@@ -5317,11 +4357,9 @@ return [];
   function fontStack(t) {
     const fam = t.family || '';
     const fb = t.fallback || '';
-
     if (fam && /[,\s]/.test(fam) && !fam.includes("'") && !fam.includes('"')) {
       return `"${fam}", ${fb}`;
     }
-
     return fam && fb ? `"${fam}", ${fb}` : (fam || fb);
   }
 
@@ -5335,7 +4373,6 @@ return [];
 
     const strip = document.createElement('div');
     strip.className = 'r-strip';
-
     for (const r of radii) {
       const item = document.createElement('div');
       item.className = 'r-item';
@@ -5353,7 +4390,6 @@ return [];
       item.appendChild(val);
       strip.appendChild(item);
     }
-
     tile.appendChild(strip);
     body.appendChild(tile);
   }
@@ -5384,7 +4420,6 @@ return [];
         p.textContent = sh.purpose;
         tile.appendChild(p);
       }
-
       body.appendChild(tile);
     }
   }
@@ -5425,14 +4460,12 @@ return [];
         // Show component name as a sublabel only when the tile groups >1 item,
         // or when the component's display name differs from its kind.
         const showSublabel = group.length > 1;
-
         if (showSublabel) {
           const lbl = document.createElement('div');
           lbl.className = 'cmp-sublabel';
           lbl.textContent = c.name || '';
           stage.appendChild(lbl);
         }
-
         tile.appendChild(stage);
       }
 
@@ -5444,24 +4477,20 @@ return [];
         d.textContent = group[0].description;
         tile.appendChild(d);
       }
-
       body.appendChild(tile);
     }
   }
 
   function groupByKind(components) {
     const groups = [];
-
     for (const c of components) {
       const last = groups[groups.length - 1];
-
       if (last && last[0].kind && c.kind === last[0].kind) {
         last.push(c);
       } else {
         groups.push([c]);
       }
     }
-
     return groups;
   }
 
@@ -5474,7 +4503,6 @@ return [];
       card: 'Cards',
       custom: 'Components',
     };
-
     return labels[kind] || (kind ? kind.charAt(0).toUpperCase() + kind.slice(1) + 's' : 'Components');
   }
 
@@ -5502,13 +4530,11 @@ return [];
     const body = document.createElement('div');
     body.className = 'coll-body';
     wrap.appendChild(body);
-
     return { wrap, body };
   }
 
   function renderRulesCollapsible(rules) {
     const { wrap, body } = buildCollapsible('rules', 'Named Rules', rules.length);
-
     for (const r of rules) {
       const card = document.createElement('div');
       card.className = 'rule-card';
@@ -5522,7 +4548,6 @@ return [];
       card.appendChild(b);
       body.appendChild(card);
     }
-
     return wrap;
   }
 
@@ -5531,23 +4556,19 @@ return [];
     const { wrap, body } = buildCollapsible('dosdonts', "Do's and Don'ts", total);
     const grid = document.createElement('div');
     grid.className = 'dos';
-
     for (const d of n.dos || []) {
       const el = document.createElement('div');
       el.className = 'do';
       el.innerHTML = inlineMd(d);
       grid.appendChild(el);
     }
-
     for (const d of n.donts || []) {
       const el = document.createElement('div');
       el.className = 'dont';
       el.innerHTML = inlineMd(d);
       grid.appendChild(el);
     }
-
     body.appendChild(grid);
-
     return wrap;
   }
 
@@ -5555,28 +4576,23 @@ return [];
     const { wrap, body } = buildCollapsible('overview', 'Overview', null);
     const ov = document.createElement('div');
     ov.className = 'overview-body';
-
     if (n.northStar) {
       const star = document.createElement('span');
       star.className = 'north-star';
       star.textContent = '“' + n.northStar + '”';
       ov.appendChild(star);
     }
-
     if (n.overview) {
       const p = document.createElement('p');
       p.innerHTML = inlineMd(n.overview);
       ov.appendChild(p);
     }
-
     if (n.keyCharacteristics?.length) {
       const ul = document.createElement('ul');
       ul.innerHTML = n.keyCharacteristics.map((k) => `<li>${inlineMd(k)}</li>`).join('');
       ov.appendChild(ul);
     }
-
     body.appendChild(ov);
-
     return wrap;
   }
 
@@ -5618,43 +4634,29 @@ return [];
         listType = null;
       }
     };
-    const flushAll = () => {
- flushPara(); flushList(); 
-};
+    const flushAll = () => { flushPara(); flushList(); };
 
     for (; i < lines.length; i++) {
       const line = lines[i];
 
       // Code fence
       const fence = line.match(/^```(\w*)\s*$/);
-
       if (fence) {
-        if (!inCode) {
- flushAll(); inCode = true; codeBuf = []; 
-} else {
+        if (!inCode) { flushAll(); inCode = true; codeBuf = []; }
+        else {
           out.push(`<pre><code>${escapeHtml(codeBuf.join('\n'))}</code></pre>`);
           inCode = false;
         }
-
         continue;
       }
+      if (inCode) { codeBuf.push(line); continue; }
 
-      if (inCode) {
- codeBuf.push(line); continue; 
-}
-
-      if (line.trim() === '') {
- flushAll(); continue; 
-}
+      if (line.trim() === '') { flushAll(); continue; }
 
       const hr = line.match(/^\s*(?:---+|\*\*\*+)\s*$/);
-
-      if (hr) {
- flushAll(); out.push('<hr />'); continue; 
-}
+      if (hr) { flushAll(); out.push('<hr />'); continue; }
 
       const heading = line.match(/^(#{1,4})\s+(.+)$/);
-
       if (heading) {
         flushAll();
         const lvl = heading[1].length;
@@ -5664,17 +4666,12 @@ return [];
 
       const bullet = line.match(/^(\s*)([-*])\s+(.+)$/);
       const ordered = line.match(/^(\s*)(\d+)\.\s+(.+)$/);
-
       if (bullet || ordered) {
         flushPara();
         const m = bullet || ordered;
         const indent = Math.floor(m[1].length / 2);
         const t = bullet ? 'ul' : 'ol';
-
-        if (listType && listType !== t) {
-flushList();
-}
-
+        if (listType && listType !== t) flushList();
         listType = t;
         listBuf.push({ indent, html: inlineMd(m[3]) });
         continue;
@@ -5682,13 +4679,10 @@ flushList();
 
       paraBuf.push(line);
     }
-
     flushAll();
-
     if (inCode && codeBuf.length) {
       out.push(`<pre><code>${escapeHtml(codeBuf.join('\n'))}</code></pre>`);
     }
-
     return out.join('\n');
   }
 
@@ -5696,20 +4690,13 @@ flushList();
     // Nest by indent (one level deep is plenty for DESIGN.md).
     let html = `<${type}>`;
     let lastIndent = 0;
-
     for (const it of items) {
-      if (it.indent > lastIndent) {
-html += `<${type}>`;
-} else if (it.indent < lastIndent) {
-html += `</${type}>`.repeat(lastIndent - it.indent);
-}
-
+      if (it.indent > lastIndent) html += `<${type}>`;
+      else if (it.indent < lastIndent) html += `</${type}>`.repeat(lastIndent - it.indent);
       html += `<li>${it.html}</li>`;
       lastIndent = it.indent;
     }
-
     html += `</${type}>`.repeat(lastIndent + 1);
-
     return html;
   }
 
@@ -5724,7 +4711,6 @@ html += `</${type}>`.repeat(lastIndent - it.indent);
     s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
     // Italic (only single *…*, skip if inside bold already handled)
     s = s.replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, '$1<em>$2</em>');
-
     return s;
   }
 
@@ -5742,10 +4728,7 @@ html += `</${type}>`.repeat(lastIndent - it.indent);
   }
 
   function copyToClipboard(text) {
-    if (!text) {
-return;
-}
-
+    if (!text) return;
     try {
       navigator.clipboard.writeText(text);
       showToast('Copied: ' + text);
@@ -5757,10 +4740,7 @@ return;
   // ---------------------------------------------------------------------------
 
   function init() {
-    try {
- history.scrollRestoration = 'manual'; 
-} catch {}
-
+    try { history.scrollRestoration = 'manual'; } catch {}
     initHighlight();
     initAnnotOverlay();
     initBar();
@@ -5781,13 +4761,8 @@ return;
       // once it appears. Disconnect on first hit.
       const scout = new MutationObserver(() => {
         const wrapper = document.querySelector('[data-impeccable-variants]');
-
-        if (!wrapper) {
-return;
-}
-
+        if (!wrapper) return;
         scout.disconnect();
-
         if (resumeSession()) {
           console.log('[impeccable] Resumed deferred session ' + currentSessionId + ' (post-hydration).');
         }

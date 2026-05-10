@@ -75,7 +75,6 @@ const SKILL_FINGERPRINTS = {
 export function findProjectRoot(startDir = process.cwd()) {
   let dir = resolve(startDir);
   const { root } = { root: '/' };
-
   while (dir !== root) {
     if (
       existsSync(join(dir, 'package.json')) ||
@@ -84,16 +83,10 @@ export function findProjectRoot(startDir = process.cwd()) {
     ) {
       return dir;
     }
-
     const parent = resolve(dir, '..');
-
-    if (parent === dir) {
-break;
-}
-
+    if (parent === dir) break;
     dir = parent;
   }
-
   return resolve(startDir);
 }
 
@@ -102,11 +95,7 @@ break;
  */
 export function loadLock(projectRoot) {
   const lockPath = join(projectRoot, 'skills-lock.json');
-
-  if (!existsSync(lockPath)) {
-return null;
-}
-
+  if (!existsSync(lockPath)) return null;
   try {
     return JSON.parse(readFileSync(lockPath, 'utf-8'));
   } catch {
@@ -127,36 +116,22 @@ export function isImpeccableSkill(skillDir, { skillName, lock } = {}) {
   if (skillName && lock?.skills?.[skillName]?.source === 'pbakaus/impeccable') {
     return true;
   }
-
   const skillMd = join(skillDir, 'SKILL.md');
-
-  if (!existsSync(skillMd)) {
-return false;
-}
-
+  if (!existsSync(skillMd)) return false;
   let content;
-
   try {
     content = readFileSync(skillMd, 'utf-8');
   } catch {
     return false;
   }
-
   // 2. Word-level content heuristic.
-  if (/impeccable/i.test(content)) {
-return true;
-}
-
+  if (/impeccable/i.test(content)) return true;
   // 3. Per-skill fingerprint for old skills that never mentioned the pack.
   //    Strip the i- prefix so both `harden` and `i-harden` resolve to the
   //    same fingerprint entry.
   const unprefixed = skillName?.startsWith('i-') ? skillName.slice(2) : skillName;
   const fingerprint = unprefixed && SKILL_FINGERPRINTS[unprefixed];
-
-  if (fingerprint && content.includes(fingerprint)) {
-return true;
-}
-
+  if (fingerprint && content.includes(fingerprint)) return true;
   return false;
 }
 
@@ -166,12 +141,10 @@ return true;
  */
 export function buildTargetNames() {
   const names = [];
-
   for (const name of DEPRECATED_NAMES) {
     names.push(name);
     names.push(`i-${name}`);
   }
-
   return names;
 }
 
@@ -181,15 +154,12 @@ export function buildTargetNames() {
  */
 export function findSkillsDirs(projectRoot) {
   const dirs = [];
-
   for (const harness of HARNESS_DIRS) {
     const candidate = join(projectRoot, harness, 'skills');
-
     if (existsSync(candidate)) {
       dirs.push(candidate);
     }
   }
-
   return dirs;
 }
 
@@ -200,10 +170,7 @@ export function findSkillsDirs(projectRoot) {
  * Returns an array of paths that were deleted.
  */
 export function removeDeprecatedSkills(projectRoot, lock) {
-  if (lock === undefined) {
-lock = loadLock(projectRoot);
-}
-
+  if (lock === undefined) lock = loadLock(projectRoot);
   const targets = buildTargetNames();
   const skillsDirs = findSkillsDirs(projectRoot);
   const deleted = [];
@@ -215,7 +182,6 @@ lock = loadLock(projectRoot);
       // Use lstat to detect symlinks (existsSync follows symlinks and
       // returns false for dangling ones).
       let stat;
-
       try {
         stat = lstatSync(skillPath);
       } catch {
@@ -229,12 +195,10 @@ lock = loadLock(projectRoot);
         const isMatch = targetAlive
           ? isImpeccableSkill(skillPath, { skillName: name, lock })
           : true;
-
         if (isMatch) {
           unlinkSync(skillPath);
           deleted.push(skillPath);
         }
-
         continue;
       }
 
@@ -256,33 +220,23 @@ lock = loadLock(projectRoot);
  */
 export function cleanSkillsLock(projectRoot) {
   const lockPath = join(projectRoot, 'skills-lock.json');
-
-  if (!existsSync(lockPath)) {
-return [];
-}
+  if (!existsSync(lockPath)) return [];
 
   let lock;
-
   try {
     lock = JSON.parse(readFileSync(lockPath, 'utf-8'));
   } catch {
     return [];
   }
 
-  if (!lock.skills || typeof lock.skills !== 'object') {
-return [];
-}
+  if (!lock.skills || typeof lock.skills !== 'object') return [];
 
   const targets = buildTargetNames();
   const removed = [];
 
   for (const name of targets) {
     const entry = lock.skills[name];
-
-    if (!entry) {
-continue;
-}
-
+    if (!entry) continue;
     // Only remove if it belongs to impeccable
     if (entry.source === 'pbakaus/impeccable') {
       delete lock.skills[name];
@@ -309,31 +263,22 @@ export function cleanup(projectRoot) {
   const lock = loadLock(root);
   const deletedPaths = removeDeprecatedSkills(root, lock);
   const removedLockEntries = cleanSkillsLock(root);
-
   return { deletedPaths, removedLockEntries, projectRoot: root };
 }
 
 // CLI entry point
 if (process.argv[1] && resolve(process.argv[1]) === resolve(new URL(import.meta.url).pathname)) {
   const result = cleanup();
-
   if (result.deletedPaths.length === 0 && result.removedLockEntries.length === 0) {
     console.log('No deprecated Impeccable skills found. Nothing to clean up.');
   } else {
     if (result.deletedPaths.length > 0) {
       console.log(`Removed ${result.deletedPaths.length} deprecated skill(s):`);
-
-      for (const p of result.deletedPaths) {
-console.log(`  - ${p}`);
-}
+      for (const p of result.deletedPaths) console.log(`  - ${p}`);
     }
-
     if (result.removedLockEntries.length > 0) {
       console.log(`Cleaned ${result.removedLockEntries.length} entry/entries from skills-lock.json:`);
-
-      for (const name of result.removedLockEntries) {
-console.log(`  - ${name}`);
-}
+      for (const name of result.removedLockEntries) console.log(`  - ${name}`);
     }
   }
 }

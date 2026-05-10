@@ -22,33 +22,33 @@
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
         'Noto Color Emoji';
 
-    --color-brand-primary: oklch(72% 0.19 155);
-    --color-brand-secondary: oklch(25% 0.08 260);
-    --color-brand-warm: oklch(70% 0.18 30);
+    --color-brand-primary: oklch(74% 0.175 65);
+    --color-brand-secondary: oklch(80% 0.155 135);
+    --color-brand-accent: oklch(62% 0.21 8);
 
-    --color-surface-light: oklch(99% 0.005 260);
-    --color-surface-dark: oklch(15% 0.02 260);
+    --color-surface-light: oklch(99% 0.005 65);
+    --color-surface-dark: oklch(18% 0.01 65);
 
-    --color-text-primary-light: oklch(18% 0.02 260);
-    --color-text-secondary-light: oklch(45% 0.02 260);
-    --color-text-muted-light: oklch(60% 0.015 260);
-    --color-text-primary-dark: oklch(95% 0.005 260);
-    --color-text-secondary-dark: oklch(75% 0.01 260);
-    --color-text-muted-dark: oklch(55% 0.01 260);
+    --color-text-primary-light: oklch(17% 0.01 65);
+    --color-text-secondary-light: oklch(45% 0.014 65);
+    --color-text-muted-light: oklch(60% 0.01 65);
+    --color-text-primary-dark: oklch(95% 0.005 65);
+    --color-text-secondary-dark: oklch(75% 0.008 65);
+    --color-text-muted-dark: oklch(55% 0.008 65);
 
-    --color-border-light: oklch(90% 0.01 260);
-    --color-border-dark: oklch(30% 0.02 260);
+    --color-border-light: oklch(90% 0.008 65);
+    --color-border-dark: oklch(30% 0.014 65);
 
-    --color-focus-ring: oklch(72% 0.19 155 / 50%);
-    --color-focus-ring-solid: oklch(72% 0.19 155);
+    --color-focus-ring: oklch(74% 0.175 65 / 50%);
+    --color-focus-ring-solid: oklch(74% 0.175 65);
 
-    --color-skeleton-light: oklch(92% 0.008 260);
-    --color-skeleton-dark: oklch(25% 0.015 260);
+    --color-skeleton-light: oklch(92% 0.006 65);
+    --color-skeleton-dark: oklch(24% 0.012 65);
 
-    --color-print-text: oklch(15% 0.01 260);
-    --color-print-muted: oklch(45% 0.01 260);
-    --color-print-border: oklch(85% 0.005 260);
-    --color-print-bg-subtle: oklch(97% 0.003 260);
+    --color-print-text: oklch(15% 0.008 65);
+    --color-print-muted: oklch(45% 0.008 65);
+    --color-print-border: oklch(85% 0.005 65);
+    --color-print-bg-subtle: oklch(97% 0.003 65);
 
     --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
     --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -826,7 +826,7 @@
         button,
         a,
         [role='button'] {
-            -webkit-tap-highlight-color: oklch(25% 0.08 260 / 15%);
+            -webkit-tap-highlight-color: oklch(25% 0.08 65 / 15%);
         }
     }
 

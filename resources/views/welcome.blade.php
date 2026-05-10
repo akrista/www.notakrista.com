@@ -30,7 +30,7 @@
                     <h2 class="font-display font-bold text-[clamp(1.4rem,3vw+0.3rem,2.5rem)] leading-[0.9] tracking-tight text-primary-surface break-words">
                         {{ __('welcome.lets_talk') }}
                     </h2>
-                    <p class="mt-2 sm:mt-3 text-sm font-medium text-[oklch(28%_0.12_155)] max-w-sm break-words">
+                    <p class="mt-2 sm:mt-3 text-sm font-medium text-[oklch(28%_0.08_65)] max-w-sm break-words">
                         {{ __('welcome.lets_talk_sub') }}
                     </p>
                     <div class="mt-4 sm:mt-5 flex flex-wrap gap-2">
@@ -60,20 +60,20 @@
                             <span class="break-words">{{ __('welcome.linkedin') }}</span>
                         </a>
                     </div>
-                    <div class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-sm font-medium text-[oklch(35%_0.14_155)]">
+                    <div class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-sm font-medium text-[oklch(35%_0.08_65)]">
                         <a href="https://discordapp.com/users/Akrista#1410/" target="_blank"
                             rel="noopener noreferrer"
                             class="transition-colors hover:text-primary-surface break-words"
                             aria-label="{{ __('welcome.discord') }} ({{ __('app.external_link') }})">{{ __('welcome.discord') }}</a>
-                        <span class="text-[oklch(45%_0.14_155)]">&middot;</span>
+                        <span class="text-[oklch(45%_0.08_65)]">&middot;</span>
                         <a href="https://steamcommunity.com/id/akrista" target="_blank" rel="noopener noreferrer"
                             class="transition-colors hover:text-primary-surface break-words"
                             aria-label="{{ __('welcome.steam') }} ({{ __('app.external_link') }})">{{ __('welcome.steam') }}</a>
-                        <span class="text-[oklch(45%_0.14_155)]">&middot;</span>
+                        <span class="text-[oklch(45%_0.08_65)]">&middot;</span>
                         <a href="https://instagram.com/notakrista" target="_blank" rel="noopener noreferrer"
                             class="transition-colors hover:text-primary-surface break-words"
                             aria-label="{{ __('welcome.instagram') }} ({{ __('app.external_link') }})">{{ __('welcome.instagram') }}</a>
-                        <span class="text-[oklch(45%_0.14_155)]">&middot;</span>
+                        <span class="text-[oklch(45%_0.08_65)]">&middot;</span>
                         <a href="https://x.com/notakrista" target="_blank" rel="noopener noreferrer"
                             class="transition-colors hover:text-primary-surface break-words"
                             aria-label="{{ __('welcome.twitter') }} ({{ __('app.external_link') }})">{{ __('welcome.twitter') }}</a>
