@@ -36,9 +36,6 @@ opencode.json
 AGENTS.md
 CLAUDE.md
 GEMINI.md
-DESIGN.md
-PRODUCT.md
-.impeccable
 /tmp
 _ide_helper*
 .phpstorm.meta.php
@@ -46,3 +43,4 @@ _ide_helper*
 frankenphp
 frankenphp-worker.php
 compose.yml
+.impeccable/cache/

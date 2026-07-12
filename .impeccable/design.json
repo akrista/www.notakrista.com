@@ -1,0 +1,303 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-12T00:00:00Z",
+  "title": "Design System: www.notakrista.com",
+  "extensions": {
+    "colorMeta": {
+      "bg": {
+        "role": "neutral",
+        "displayName": "Workshop Floor",
+        "canonical": "oklch(0.270 0.005 65)",
+        "tonalRamp": [
+          "oklch(0.18 0.004 65)",
+          "oklch(0.22 0.004 65)",
+          "oklch(0.27 0.005 65)",
+          "oklch(0.32 0.005 65)",
+          "oklch(0.38 0.008 60)",
+          "oklch(0.45 0.012 60)",
+          "oklch(0.53 0.013 65)",
+          "oklch(0.65 0.020 80)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Bench Surface",
+        "canonical": "oklch(0.320 0.005 65)"
+      },
+      "surface-raised": {
+        "role": "neutral",
+        "displayName": "Bench Raised",
+        "canonical": "oklch(0.380 0.008 60)"
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Iron Ink",
+        "canonical": "oklch(0.910 0.030 88)"
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Bolt Muted",
+        "canonical": "oklch(0.650 0.020 80)"
+      },
+      "primary": {
+        "role": "primary",
+        "displayName": "Signal Orange",
+        "canonical": "oklch(0.700 0.180 50)",
+        "tonalRamp": [
+          "oklch(0.32 0.090 50)",
+          "oklch(0.42 0.130 48)",
+          "oklch(0.52 0.165 47)",
+          "oklch(0.62 0.180 48)",
+          "oklch(0.70 0.180 50)",
+          "oklch(0.78 0.160 55)",
+          "oklch(0.86 0.110 60)",
+          "oklch(0.94 0.060 70)"
+        ]
+      },
+      "primary-ink": {
+        "role": "neutral",
+        "displayName": "Primary Ink (on Signal Orange)",
+        "canonical": "oklch(0.270 0.005 65)"
+      },
+      "accent": {
+        "role": "secondary",
+        "displayName": "Moss Aqua",
+        "canonical": "oklch(0.760 0.090 145)",
+        "tonalRamp": [
+          "oklch(0.30 0.040 145)",
+          "oklch(0.40 0.060 145)",
+          "oklch(0.50 0.080 150)",
+          "oklch(0.60 0.090 148)",
+          "oklch(0.68 0.095 145)",
+          "oklch(0.76 0.090 145)",
+          "oklch(0.85 0.060 140)",
+          "oklch(0.94 0.030 135)"
+        ]
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Bench Edge",
+        "canonical": "oklch(0.380 0.008 60)"
+      },
+      "bg-business": {
+        "role": "neutral",
+        "displayName": "Workshop Floor (Business)",
+        "canonical": "oklch(0.955 0.030 95)"
+      },
+      "surface-business": {
+        "role": "neutral",
+        "displayName": "Bench Surface (Business)",
+        "canonical": "oklch(0.905 0.030 90)"
+      },
+      "ink-business": {
+        "role": "neutral",
+        "displayName": "Iron Ink (Business)",
+        "canonical": "oklch(0.230 0.005 70)"
+      },
+      "muted-business": {
+        "role": "neutral",
+        "displayName": "Bolt Muted (Business)",
+        "canonical": "oklch(0.530 0.013 65)"
+      },
+      "primary-business": {
+        "role": "primary",
+        "displayName": "Signal Orange (Business)",
+        "canonical": "oklch(0.490 0.180 45)"
+      },
+      "accent-business": {
+        "role": "secondary",
+        "displayName": "Moss Aqua (Business)",
+        "canonical": "oklch(0.510 0.080 150)"
+      },
+      "border-business": {
+        "role": "neutral",
+        "displayName": "Bench Edge (Business)",
+        "canonical": "oklch(0.810 0.040 85)"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero statement on the landing. Use once per surface."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Work, projects, section anchors."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Card headings, modal titles, the contact form."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Paragraphs, descriptions, the 'about' copy. 65–75ch line length."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Switchers, section labels, badges. Uppercase, +0.08em."
+      },
+      "mono": {
+        "displayName": "Mono",
+        "purpose": "Code, dates, times, streak counts, terminal-feel elements."
+      }
+    },
+    "shadows": [
+      {
+        "name": "none-at-rest",
+        "value": "none",
+        "purpose": "Default resting state for every surface. The system reads as flat."
+      },
+      {
+        "name": "focus-ring",
+        "value": "0 0 0 2px var(--color-bg), 0 0 0 4px var(--color-primary)",
+        "purpose": "Focus state on every interactive element. Two-ring pattern is the brand's interaction language."
+      },
+      {
+        "name": "modal-lift",
+        "value": "0 12px 32px oklch(0 0 0 / 0.45)",
+        "purpose": "Modals, popovers, calendar date picker, donation confirm. Personal view only."
+      },
+      {
+        "name": "dropdown-lift",
+        "value": "0 6px 20px oklch(0 0 0 / 0.35)",
+        "purpose": "Switcher menu, user menu, team picker."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-quart",
+        "value": "cubic-bezier(0.25, 1, 0.5, 1)",
+        "purpose": "Default easing for state transitions, the switcher, and the sheet slide."
+      },
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Reveal animations, the modal-lift entrance. Slow tail, never bounce."
+      },
+      {
+        "name": "duration-state",
+        "value": "180ms",
+        "purpose": "Hover, active, focus, the switcher toggle. State changes only."
+      },
+      {
+        "name": "duration-reveal",
+        "value": "420ms",
+        "purpose": "Reveal animations, the sheet slide, the modal-lift entrance."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" },
+      { "name": "2xl", "value": "1536px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Button Primary (Personal)",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The default primary action. Signal Orange fill, dark text, uppercase label.",
+      "html": "<button class=\"ds-btn-primary\">Get in touch</button>",
+      "css": ".ds-btn-primary { background: oklch(0.700 0.180 50); color: oklch(0.270 0.005 65); font: 600 0.75rem/1.2 'Instrument Sans', ui-sans-serif, system-ui, sans-serif; letter-spacing: 0.08em; text-transform: uppercase; border: none; border-radius: 8px; padding: 12px 24px; cursor: pointer; transition: background 180ms cubic-bezier(0.25, 1, 0.5, 1); } .ds-btn-primary:hover { background: oklch(0.780 0.160 55); } .ds-btn-primary:active { background: oklch(0.620 0.180 48); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px oklch(0.270 0.005 65), 0 0 0 4px oklch(0.700 0.180 50); }"
+    },
+    {
+      "name": "Button Primary (Business)",
+      "kind": "button",
+      "refersTo": "button-primary-business",
+      "description": "Business view variant. Deeper orange, white text, same uppercase label.",
+      "html": "<button class=\"ds-btn-primary-business\">Get in touch</button>",
+      "css": ".ds-btn-primary-business { background: oklch(0.490 0.180 45); color: #ffffff; font: 600 0.75rem/1.2 'Instrument Sans', ui-sans-serif, system-ui, sans-serif; letter-spacing: 0.08em; text-transform: uppercase; border: none; border-radius: 8px; padding: 12px 24px; cursor: pointer; transition: background 180ms cubic-bezier(0.25, 1, 0.5, 1); } .ds-btn-primary-business:hover { background: oklch(0.420 0.165 47); } .ds-btn-primary-business:active { background: oklch(0.380 0.150 50); } .ds-btn-primary-business:focus-visible { outline: none; box-shadow: 0 0 0 2px oklch(0.955 0.030 95), 0 0 0 4px oklch(0.490 0.180 45); }"
+    },
+    {
+      "name": "Button Ghost",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Secondary action. Transparent at rest, 1px border on hover.",
+      "html": "<button class=\"ds-btn-ghost\">View GitHub</button>",
+      "css": ".ds-btn-ghost { background: transparent; color: oklch(0.910 0.030 88); font: 600 0.75rem/1.2 'Instrument Sans', ui-sans-serif, system-ui, sans-serif; letter-spacing: 0.08em; text-transform: uppercase; border: 1px solid transparent; border-radius: 8px; padding: 12px 24px; cursor: pointer; transition: border-color 180ms cubic-bezier(0.25, 1, 0.5, 1), color 180ms cubic-bezier(0.25, 1, 0.5, 1); } .ds-btn-ghost:hover { border-color: oklch(0.380 0.008 60); } .ds-btn-ghost:focus-visible { outline: none; box-shadow: 0 0 0 2px oklch(0.270 0.005 65), 0 0 0 4px oklch(0.760 0.090 145); }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Surface container. Tonal step up from bg, no shadow at rest.",
+      "html": "<div class=\"ds-card\"><h3>Project title</h3><p>One-line description of what the project does.</p></div>",
+      "css": ".ds-card { background: oklch(0.320 0.005 65); color: oklch(0.910 0.030 88); border-radius: 12px; padding: 24px; } .ds-card h3 { font: 500 1.25rem/1.3 'Instrument Sans', ui-sans-serif, system-ui, sans-serif; letter-spacing: -0.01em; margin: 0 0 8px; } .ds-card p { font: 400 1rem/1.6 'Instrument Sans', ui-sans-serif, system-ui, sans-serif; margin: 0; color: oklch(0.650 0.020 80); }"
+    },
+    {
+      "name": "Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Text field. Transparent fill so bg shows through, 1px border, mono opt-in for date/code fields.",
+      "html": "<input class=\"ds-input\" type=\"text\" placeholder=\"you@email.com\" />",
+      "css": ".ds-input { background: oklch(0.270 0.005 65); color: oklch(0.910 0.030 88); font: 400 1rem/1.6 'Instrument Sans', ui-sans-serif, system-ui, sans-serif; border: 1px solid oklch(0.380 0.008 60); border-radius: 8px; padding: 12px 16px; width: 100%; transition: border-color 180ms cubic-bezier(0.25, 1, 0.5, 1); } .ds-input::placeholder { color: oklch(0.650 0.020 80); } .ds-input:hover { border-color: oklch(0.450 0.012 60); } .ds-input:focus { outline: none; border-color: oklch(0.700 0.180 50); box-shadow: 0 0 0 2px oklch(0.270 0.005 65), 0 0 0 4px oklch(0.700 0.180 50); } .ds-input[aria-invalid='true'] { border-color: oklch(0.640 0.220 25); }"
+    },
+    {
+      "name": "Streak Chip",
+      "kind": "chip",
+      "refersTo": "streak-chip",
+      "description": "Pill-shaped streak counter. Mono font, primary fill when active.",
+      "html": "<span class=\"ds-streak-chip\">1423 hrs this year</span>",
+      "css": ".ds-streak-chip { display: inline-flex; align-items: center; gap: 6px; background: oklch(0.380 0.008 60); color: oklch(0.910 0.030 88); font: 400 0.75rem/1.2 ui-monospace, SFMono-Regular, Menlo, monospace; border-radius: 9999px; padding: 4px 10px; } .ds-streak-chip[data-active='true'] { background: oklch(0.700 0.180 50); color: oklch(0.270 0.005 65); }"
+    },
+    {
+      "name": "Top Navigation",
+      "kind": "nav",
+      "refersTo": "nav-top",
+      "description": "Top bar with brand, switcher, and contact CTA. 64px tall, 1px bottom border (personal).",
+      "html": "<nav class=\"ds-nav-top\"><span class=\"ds-nav-brand\">nk.</span><div class=\"ds-nav-switcher\"><button class=\"ds-nav-pill\" data-active=\"false\">Business</button><button class=\"ds-nav-pill\" data-active=\"true\">Personal</button></div><a class=\"ds-nav-cta\" href=\"#contact\">Get in touch</a></nav>",
+      "css": ".ds-nav-top { display: flex; align-items: center; justify-content: space-between; height: 64px; padding: 0 24px; background: oklch(0.270 0.005 65); border-bottom: 1px solid oklch(0.380 0.008 60); } .ds-nav-brand { font: 700 1.25rem/1 'Instrument Sans', ui-sans-serif, system-ui, sans-serif; color: oklch(0.700 0.180 50); letter-spacing: -0.02em; } .ds-nav-switcher { display: inline-flex; gap: 4px; padding: 4px; background: oklch(0.320 0.005 65); border-radius: 8px; } .ds-nav-pill { background: transparent; border: none; color: oklch(0.650 0.020 80); font: 600 0.75rem/1 'Instrument Sans', ui-sans-serif, system-ui, sans-serif; letter-spacing: 0.08em; text-transform: uppercase; padding: 6px 12px; border-radius: 6px; cursor: pointer; } .ds-nav-pill[data-active='true'] { background: oklch(0.380 0.008 60); color: oklch(0.910 0.030 88); box-shadow: inset 0 0 0 1px oklch(0.700 0.180 50); } .ds-nav-cta { background: oklch(0.700 0.180 50); color: oklch(0.270 0.005 65); font: 600 0.75rem/1.2 'Instrument Sans', ui-sans-serif, system-ui, sans-serif; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 8px; padding: 10px 20px; text-decoration: none; }"
+    },
+    {
+      "name": "Section Heading",
+      "kind": "custom",
+      "refersTo": "section-heading",
+      "description": "Headline + label, used at the top of each work section. No eyebrow kicker unless the section IS a sequence.",
+      "html": "<header class=\"ds-section-heading\"><span class=\"ds-section-label\">Work</span><h2>Things I've shipped, things I'm shipping.</h2></header>",
+      "css": ".ds-section-heading { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; } .ds-section-label { font: 600 0.75rem/1.2 'Instrument Sans', ui-sans-serif, system-ui, sans-serif; letter-spacing: 0.08em; text-transform: uppercase; color: oklch(0.700 0.180 50); } .ds-section-heading h2 { font: 600 clamp(1.75rem, 3vw, 2.5rem)/1.15 'Instrument Sans', ui-sans-serif, system-ui, sans-serif; letter-spacing: -0.02em; color: oklch(0.910 0.030 88); margin: 0; text-wrap: balance; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Working Bench",
+    "overview": "A working engineer's bench, not a brand showroom. Tools laid out within reach, surfaces that age well, a single window letting in light. The site is the bench — measured, deliberate, real. Visitors leave with the sense that a person works here, not that a team performed here. The system is built on the Gruvbox palette: earthy, warm, low-chroma, terminal-native. Two views share one identity spine. The personal view (default) is Gruvbox Dark: full chroma, retro-tech energy, the same bench at 1 AM with a project on the second monitor. The business view is Gruvbox Light: same colors, lower chroma, more breathing room — the bench at 10 AM with the windows open. A single switcher toggles between them, the way a developer toggles a vim colorscheme.",
+    "keyCharacteristics": [
+      "One identity, two modes. The personal view (Gruvbox Dark) and the business view (Gruvbox Light) are the same system tuned to two registers. No second brand, no 'playful vs. serious' split.",
+      "The site is a tool, not a brochure. The calendar, wishlist, donations, streaks, and relief are real working features, not decorative widgets. The product is its own proof.",
+      "Direct, warm, capable. Show the work and the life plainly. The tone never overclaims and never underplays.",
+      "Flat by default. Surfaces convey depth with tonal layering, not drop shadows. Lift appears only on state — focus, hover, modal, dropdown."
+    ],
+    "rules": [
+      { "name": "The Gruvbox Rule", "body": "Use only the gruvbox palette. No off-palette colors. No blue tailwind-500 because 'we need a blue.' No emerald-400 because 'the chart needs green.' If a status is needed, the gruvbox blue, yellow, or red exists for that. The discipline is the brand.", "section": "colors" },
+      { "name": "The One Orange Rule", "body": "Signal Orange is the only saturated color allowed on a filled button or a brand mark. Other elements that need emphasis use weight, size, or a tonal shift — never a second saturated color. The rarity of orange on the page is what makes it signal.", "section": "colors" },
+      { "name": "The Same-Hue Neutrals Rule", "body": "Neutrals carry chroma 0.005–0.030 toward the brand hue (warm dark, warm cream), not toward warmth-by-default. A pure-neutral surface would feel like a different brand; the chroma is what makes the system gruvbox.", "section": "colors" },
+      { "name": "The One-Family Rule", "body": "One sans family in multiple weights. No second display face, no serif. The mono stack is the only other family, used for code, dates, and the gruvbox tell.", "section": "typography" },
+      { "name": "The Mono Tell Rule", "body": "Anywhere a code-feeling element appears (date, time, version, count, status), the mono stack is mandatory. Anywhere a system element reads as 'I am a label, not a sentence,' the label treatment (uppercase, +0.08em) is mandatory. The two together are what makes the system read as a working tool.", "section": "typography" },
+      { "name": "The Flat-By-Default Rule", "body": "No shadow on a resting surface. No exception. The system reads as flat, deliberate, and confident. The moment a shadow appears, the user knows the state changed.", "section": "elevation" },
+      { "name": "The Focus-Ring-First Rule", "body": "A focused interactive element gets a focus-ring, not a shadow. The two-ring pattern (bg → primary) is the brand's interaction language. Hover, active, and disabled all use the same ring, not a different visual treatment.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use Gruvbox. The palette is the brand. No off-palette colors. No tailwind blue-500 because 'we need a blue.'",
+      "Do keep the personal view (dark) as the default. The brand lives there; the business view is a tonal shift, not a separate brand.",
+      "Do use the focus-ring for any interactive element. Two rings, `bg → primary`. No single-ring focus. No outline-offset 0.",
+      "Do use the mono stack for anything that reads as a code-feeling element: dates, times, counts, versions, statuses, the switcher labels.",
+      "Do show the work and the life plainly. The calendar, wishlist, donations, streaks, and relief are real working features. The product is its own proof.",
+      "Do respect `prefers-reduced-motion`. Every animation gets a crossfade or instant transition on reduced motion. No exception.",
+      "Do treat the switcher as a feature for everyone, not a flourish. Recruiters on the personal view are on the wrong surface; the switcher is an accessibility consideration, not a brand one."
+    ],
+    "donts": [
+      "Don't use a corporate resume or LinkedIn-style profile. No 'Hi, I'm John, passionate about...' copy, no stock photo, no Skills grid.",
+      "Don't use SaaS / indie hacker grammar. No big gradient metrics, no eyebrow kickers above every section, no 'ship faster' energy, no testimonials marquee.",
+      "Don't use a default-Laravel / Bootstrap-era portfolio. No 'Let's get started' placeholder, no two-card split, no logo wall.",
+      "Don't use a maximalist dev-ornament portfolio. No animated background grids, no feTurbulence paper grain, no decoration-on-decoration.",
+      "Don't use `border-left` or `border-right` greater than 1px as a colored accent on cards, list items, or callouts. The brand rail is a different element; the rest is full borders or nothing.",
+      "Don't use gradient text. `background-clip: text` is decorative, never meaningful. Use a single solid color and let weight or size do the emphasis.",
+      "Don't use `border-radius: 32px+` on cards. 12px cap. Pills only for tags and badges.",
+      "Don't use paired `border + box-shadow` on the same element. Pick one. The brand uses tonal layering, not borders + shadows.",
+      "Don't gate content visibility on a class-triggered transition. Reveals must enhance an already-visible default; if the class doesn't fire, the section is still readable.",
+      "Don't include numbered section markers (01 / 02 / 03) above every section. Use them only when the section actually IS a sequence and the order carries information.",
+      "Don't use a saturated AI attractor. No cream-bg + dusty-brown primary. No forest-green-on-cream. No AI-purple-on-white. The gruvbox palette is the answer; deviations are not."
+    ]
+  }
+}

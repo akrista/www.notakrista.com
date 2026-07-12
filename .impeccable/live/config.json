@@ -1,0 +1,18 @@
+{
+  "files": [
+    "resources/views/welcome.blade.php",
+    "resources/views/dashboard.blade.php"
+  ],
+  "exclude": [
+    "resources/views/vendor/**",
+    "resources/views/flux/**",
+    "resources/views/components/**",
+    "resources/views/layouts/**",
+    "resources/views/partials/**",
+    "resources/views/pages/**",
+    "resources/views/errors/**"
+  ],
+  "insertBefore": "</body>",
+  "commentSyntax": "html",
+  "cspChecked": true
+}

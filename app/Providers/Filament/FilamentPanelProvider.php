@@ -39,10 +39,10 @@ final class FilamentPanelProvider extends PanelProvider
             ->default()
             ->id('filament')
             ->path(FilamentMode::fromConfig()->panelPath())
-            ->registration(
-                action: Register::class
-            )
-            ->registrationRouteSlug('register')
+            // ->registration(
+            //     action: Register::class
+            // )
+            // ->registrationRouteSlug('register')
             ->login(
                 action: Login::class
             )

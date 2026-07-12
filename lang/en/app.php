@@ -14,7 +14,7 @@ return [
     'first_name' => 'First name',
     'last_name' => 'Last name',
 
-    'app_logo_name' => 'Laravel Starter Kit',
+    'app_logo_name' => 'notakrista.com',
 
     'role_owner' => 'Owner',
     'role_admin' => 'Admin',

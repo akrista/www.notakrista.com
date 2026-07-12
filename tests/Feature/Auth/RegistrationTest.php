@@ -3,23 +3,23 @@
 declare(strict_types=1);
 
 use App\Models\User;
+use Illuminate\Support\Facades\Route;
 
-test('registration screen can be rendered', function (): void {
-    $response = $this->get(route('register'));
-
-    $response->assertOk();
+test('registration routes do not exist', function (): void {
+    $this->assertFalse(Route::has('register'));
+    $this->assertFalse(Route::has('filament.filament.auth.register'));
 });
 
-test('registration screen has defaults in non-production environment', function (): void {
-    $response = $this->get(route('register'));
+test('registration screen cannot be rendered', function (): void {
+    $response = $this->get('/register');
+    $response->assertNotFound();
 
-    $response->assertOk();
-    $response->assertSee('devuser');
-    $response->assertSee('dev@example.com');
+    $response = $this->get('/admin/register');
+    $this->assertTrue($response->isNotFound() || $response->isRedirect());
 });
 
-test('new users can register', function (): void {
-    $response = $this->post(route('register.store'), [
+test('new users cannot register', function (): void {
+    $response = $this->post('/register', [
         'username' => 'johndoe',
         'firstname' => 'John',
         'lastname' => 'Doe',
@@ -28,10 +28,9 @@ test('new users can register', function (): void {
         'password_confirmation' => 'password',
     ]);
 
-    $user = User::query()->where('email', 'test@example.com')->first();
+    $response->assertNotFound();
 
-    $response->assertSessionHasNoErrors()
-        ->assertRedirect(route('dashboard', absolute: false));
-
-    $this->assertAuthenticated();
+    $this->assertDatabaseMissing(User::class, [
+        'email' => 'test@example.com',
+    ]);
 });
