@@ -1,0 +1,63 @@
+# Bizkit MariaDB server overrides
+#
+# Mounted at /etc/mysql/conf.d/custom.cnf (auto-included by MariaDB).
+# This template is tuned for a HIGH-END host:
+#   - 256GB RAM
+#   - 64-thread CPU
+#   - RAID 1 NVMe SSDs
+#
+# For low-end / mid-end hosts, scale these down:
+#   innodb_buffer_pool_size     128G -> 256M (low) / 1G (mid)
+#   innodb_log_file_size          4G ->  64M (low) / 256M (mid)
+#   max_connections              500 ->  50 (low) / 150 (mid)
+#   thread_handling          pool-of-threads -> one-thread-per-connection (low/mid)
+
+[mysqld]
+# --- Buffer Pool & Memory Optimization ---
+# With 256GB RAM, we can dedicate 128GB to MariaDB.
+innodb_buffer_pool_size = 128G
+
+# --- Redo Log Optimization ---
+# Larger redo logs prevent checkpoint bottlenecks. Size of 4G.
+innodb_log_file_size = 4G
+# Keep 1 for full ACID compliance. Change to 2 if you want to trade crash durability for speed.
+innodb_flush_log_at_trx_commit = 1
+innodb_flush_method = O_DIRECT
+
+# --- I/O Optimization ---
+# Tuned for your RAID 1 NVMe SSDs.
+innodb_io_capacity = 10000
+innodb_io_capacity_max = 20000
+# Parallel background I/O threads.
+innodb_write_io_threads = 16
+innodb_read_io_threads = 16
+
+# --- Thread Pool & Concurrency ---
+# Enables MariaDB's thread pool, scaling much better on your 64-thread CPU.
+thread_handling = pool-of-threads
+# Max connections can be set higher with thread pool.
+max_connections = 500
+thread_cache_size = 100
+
+# --- Query & Session Buffers ---
+join_buffer_size = 4M
+sort_buffer_size = 4M
+read_buffer_size = 1M
+read_rnd_buffer_size = 1M
+tmp_table_size = 256M
+max_heap_table_size = 256M
+
+# --- Cache Sizes ---
+table_open_cache = 8000
+table_definition_cache = 4000
+open_files_limit = 20000
+
+# --- Key Buffer & Binlog ---
+key_buffer_size = 32M
+binlog_expire_logs_seconds = 604800
+max_binlog_size = 100M
+# innodb_flush_log_at_trx_commit = 0
+# innodb_doublewrite = 0
+# skip-log-bin
+# max_allowed_packet = 1G
+# net_buffer_length = 1M

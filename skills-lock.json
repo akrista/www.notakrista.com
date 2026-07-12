@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "skills": {
+    "agent-browser": {
+      "source": "vercel-labs/agent-browser",
+      "sourceType": "github",
+      "skillPath": "skills/agent-browser/SKILL.md",
+      "computedHash": "ecc7641aea05f85ca3b11e7759d32aaf52fe05946ab4b63739c7bf78a41237a2"
+    },
+    "configure-nightwatch": {
+      "source": "laravel/agent-skills",
+      "ref": "main",
+      "sourceType": "github",
+      "skillPath": "laravel-nightwatch/skills/configure-nightwatch/SKILL.md",
+      "computedHash": "87a409d0398016223a9b4e0249b8c74afe6d2c42c7b7b4a2dec5643526756998"
+    },
+    "deploying-laravel-cloud": {
+      "source": "laravel/agent-skills",
+      "ref": "main",
+      "sourceType": "github",
+      "skillPath": "laravel-cloud/skills/deploying-laravel-cloud/SKILL.md",
+      "computedHash": "3b446e6e48f403897f7a163b8a57db6495ca018413957a26121b3e38f2b9ee54"
+    },
+    "impeccable": {
+      "source": "pbakaus/impeccable",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/impeccable/SKILL.md",
+      "computedHash": "a0de0cab25a37c9a1a787aa4b690b1f7cfaa6d7ac83a8424f66863b457d9d668"
+    },
+    "no-ai-slop": {
+      "source": "realrossmanngroup/no_ai_slop_writing_rules",
+      "sourceType": "github",
+      "skillPath": "skills/no-ai-slop/SKILL.md",
+      "computedHash": "4236336f28ec17941ed36217ced0f1452328cc8f2d1e476ddf9b054cb17fd670"
+    },
+    "rossmann-voice": {
+      "source": "realrossmanngroup/no_ai_slop_writing_rules",
+      "sourceType": "github",
+      "skillPath": "skills/rossmann-voice/SKILL.md",
+      "computedHash": "2fb42bd6bf43fea7705a509e4a8c92543d4f794359fa1b39449f08866ed72a41"
+    },
+    "starter-kit-upgrade": {
+      "source": "laravel/agent-skills",
+      "ref": "main",
+      "sourceType": "github",
+      "skillPath": "laravel/skills/starter-kit-upgrade/SKILL.md",
+      "computedHash": "84eafa9dd365f27f2d1841a5b4040987c21d833df65abdfe87a5755cd2554229"
+    },
+    "svg-animations": {
+      "source": "supermemoryai/skills",
+      "sourceType": "github",
+      "skillPath": "svg-animations/SKILL.md",
+      "computedHash": "f25711af04ba7a0f8e662f41cdf707423102eef303dfd3dc7d48d35bb83c7ec4"
+    }
+  }
+}

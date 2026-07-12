@@ -1,14 +1,273 @@
-name: ${STACK_NAME:-www.notakrista.com}
+name: ${STACK_NAME:-bizkit}
+x-logging: &default-logging
+  driver: 'json-file'
+  options:
+    max-size: "50m"
+    max-file: "10"
+    compress: "true"
+
+x-healthcheck: &default-healthcheck
+  interval: 10s
+  retries: 3
+  timeout: 5s
+
+x-base: &base
+  profiles: [ app ]
+  env_file:
+    - .env
+  build:
+    context: .
+    dockerfile: Dockerfile
+    cache_from:
+      - 'akrista/bizkit:latest'
+    args:
+      USER_ID: ${HOST_UID:-1000}
+      GROUP_ID: ${HOST_GID:-1000}
+  image: 'akrista/bizkit:latest'
+  user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
+  ulimits:
+    nofile:
+      soft: 65536
+      hard: 65536
+  security_opt:
+    - no-new-privileges:true
+  volumes:
+        - '.:/var/www/html'
+  logging: *default-logging
+  restart: unless-stopped
+# ---------------------------------------------------------------------------
+# External networks — create them once, before the first `docker compose up`:
+#
+#   docker network create proxy    --subnet 10.10.3.0/24 --gateway 10.10.3.1
+#   docker network create database --subnet 10.10.4.0/24 --gateway 10.10.4.1
+#
+# Drop `--subnet` / `--gateway` if you don't need fixed addressing.
+# Rename via SERVICE_NETWORK / DATABASE_NETWORK in your .env if the defaults
+# (service / database) collide with another stack on the host.
+# ---------------------------------------------------------------------------
 networks:
   proxy:
-    name: ${PROXY_NETWORK:-proxy}
+    name: ${SERVICE_NETWORK:-service}
     external: true
+  database:
+    name: ${DATABASE_NETWORK:-database}
+    external: true
+# volumes:
+#   stack-postgis:
+#     driver: local
+#   stack-mariadb:
+#     driver: local
+#   stack-valkey:
+#     driver: local
+#   stack-rustfs:
+#     driver: local
+# ---------------------------------------------------------------------------
+# Resource sizing guide — `deploy.resources.limits` for heavy services
+# (databases, cache, S3). Pick the tier that matches your host.
+#
+#   Tier       cpus    memory   Typical use
+#   ---------  ------  -------  -------------------------------------------
+#   low-end    0.25    512M     Personal dev, CI runners
+#   mid-end    1-2     2-4G     Small prod, staging                (default)
+#   high-end   4-8     8-16G    Production, heavy spatial / S3 load
+#
+# The commented services below use mid-end limits as the baseline. Swap
+# the values to retune; treat them as *limits* (not reservations) — they
+# protect the host from runaway containers.
+# ---------------------------------------------------------------------------
 services:
-  notakrista.com:
-    image: ghcr.io/akrista/www.notakrista.com:latest
-    container_name: notakrista
-    build: .
+  app:
+    <<: *base
+    container_name: bizkit-app
+    ports:
+      - "8000:8000"
     networks:
       - proxy
-    ports:
-      - 8000:8000
+      - database
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--max-time", "10", "localhost:8000/up"]
+      <<: *default-healthcheck
+    stop_grace_period: 35s
+  # horizon:
+  #   <<: *base
+  #   container_name: bizkit-horizon
+  #   environment:
+  #     CONTAINER_MODE: horizon
+  #   networks:
+  #     - database
+  scheduler:
+    <<: *base
+    container_name: bizkit-scheduler
+    environment:
+      CONTAINER_MODE: scheduler
+    networks:
+      - database
+  # inertia:
+  #   <<: *base
+  #   container_name: bizkit-inertia
+  #   environment:
+  #     CONTAINER_MODE: ssr
+  #   networks:
+  #     - proxy
+  # reverb:
+  #   <<: *base
+  #   container_name: bizkit-reverb
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     CONTAINER_MODE: reverb
+  #   networks:
+  #     - proxy
+  # valkey:
+  #   profiles: [ app ]
+  #   image: 'valkey/valkey'
+  #   container_name: valkey
+  #   ulimits:
+  #     nofile:
+  #       soft: 65536
+  #       hard: 65536
+  #   command: [
+  #     "valkey-server",
+  #     "--requirepass", "${REDIS_PASSWORD}",
+  #     "--maxmemory", "${REDIS_MAXMEMORY:-2gb}",
+  #     "--maxmemory-policy", "allkeys-lru",
+  #     "--appendonly", "yes",
+  #     "--appendfsync", "everysec"
+  #   ]
+  #   security_opt:
+  #     - no-new-privileges:true
+  #   volumes:
+  #     - 'stack-valkey:/data'
+  #   networks:
+  #     - database
+  #   logging: *default-logging
+  #   healthcheck:
+  #     test: ["CMD", "valkey-cli", "--pass", "${REDIS_PASSWORD}", "--raw", "incr", "ping"]
+  #     <<: *default-healthcheck
+  #   restart: unless-stopped
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         # low-end:  cpus: "0.25" memory: 512M
+  #         # mid-end:  cpus: "1"    memory: 2G    <-- current
+  #         # high-end: cpus: "4"    memory: 8G
+  #         cpus: "1"
+  #         memory: 2G
+
+  # postgis:
+  #   profiles: [ app ]
+  #   image: 'postgis/postgis:18-3.6-alpine'
+  #   container_name: postgis
+  #   ulimits:
+  #     nofile:
+  #       soft: 65536
+  #       hard: 65536
+  #   command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
+  #   security_opt:
+  #     - no-new-privileges:true
+  #   environment:
+  #     TZ: ${TZ:-America/Caracas}
+  #     PGPASSWORD: '${DB_PASSWORD}'
+  #     POSTGRES_DB: '${DB_DATABASE}'
+  #     POSTGRES_USER: '${DB_USERNAME}'
+  #     POSTGRES_PASSWORD: '${DB_PASSWORD}'
+  #     POSTGRES_INITDB_ARGS: '--data-checksums'
+  #   volumes:
+  #     - 'stack-postgis:/var/lib/postgresql'
+  #     - './deployment/postgresql.conf:/etc/postgresql/postgresql.conf:ro'
+  #   networks:
+  #     - database
+  #   healthcheck:
+  #     test: ["CMD", "pg_isready", "-U", "${DB_USERNAME}", "-d", "${DB_DATABASE}"]
+  #     start_period: 1m
+  #     start_interval: 10s
+  #     <<: *default-healthcheck
+  #   restart: unless-stopped
+  #   logging: *default-logging
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         # low-end:  cpus: "0.5"  memory: 1G
+  #         # mid-end:  cpus: "2"    memory: 4G   <-- current
+  #         # high-end: cpus: "8"    memory: 16G
+  #         cpus: "2"
+  #         memory: 4G
+
+  # mariadb:
+  #   profiles: [ app ]
+  #   image: 'mariadb'
+  #   container_name: mariadb
+  #   ulimits:
+  #     nofile:
+  #       soft: 65536
+  #       hard: 65536
+  #   security_opt:
+  #     - no-new-privileges:true
+  #   environment:
+  #     TZ: ${TZ:-America/Caracas}
+  #     MARIADB_ROOT_PASSWORD: '${DB_PASSWORD}'
+  #     MARIADB_DATABASE: '${DB_DATABASE}'
+  #     # Optional: create a non-root app user
+  #     # MARIADB_USER: '${DB_USERNAME}'
+  #     # MARIADB_PASSWORD: '${DB_PASSWORD}'
+  #   volumes:
+  #     - 'stack-mariadb:/var/lib/mysql'
+  #     - './deployment/custom.cnf:/etc/mysql/conf.d/custom.cnf:ro'
+  #   networks:
+  #     - database
+  #   healthcheck:
+  #     test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+  #     start_period: 1m
+  #     start_interval: 10s
+  #     <<: *default-healthcheck
+  #   restart: unless-stopped
+  #   logging: *default-logging
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         # low-end:  cpus: "0.5"  memory: 1G
+  #         # mid-end:  cpus: "2"    memory: 4G   <-- current
+  #         # high-end: cpus: "8"    memory: 16G
+  #         cpus: "2"
+  #         memory: 4G
+
+  # rustfs:
+  #   profiles: [ app ]
+  #   image: 'rustfs/rustfs:latest'
+  #   security_opt:
+  #     - no-new-privileges:true
+  #   ports:
+  #     - "9000:9000"
+  #     - "9001:9001"
+  #   environment:
+  #     RUSTFS_VOLUMES: '/data'
+  #     RUSTFS_ADDRESS: '0.0.0.0:9000'
+  #     RUSTFS_CONSOLE_ADDRESS: '0.0.0.0:9001'
+  #     RUSTFS_CONSOLE_ENABLE: 'true'
+  #     RUSTFS_EXTERNAL_ADDRESS: ':9000'
+  #     RUSTFS_CORS_ALLOWED_ORIGINS: '*'
+  #     RUSTFS_CONSOLE_CORS_ALLOWED_ORIGINS: '*'
+  #     RUSTFS_ACCESS_KEY: '${RUSTFS_ACCESS_KEY}'
+  #     RUSTFS_SECRET_KEY: '${RUSTFS_SECRET_KEY}'
+  #     RUSTFS_LOG_LEVEL: 'info'
+  #   volumes:
+  #     - 'stack-rustfs:/data'
+  #   networks:
+  #     - proxy
+  #   restart: unless-stopped
+  #   logging: *default-logging
+  #   healthcheck:
+  #     test: [
+  #       "CMD",
+  #       "sh", "-c",
+  #       "curl -f http://127.0.0.1:9000/health && curl -f http://127.0.0.1:9001/health"
+  #     ]
+  #     <<: *default-healthcheck
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         # low-end:  cpus: "0.25" memory: 512M
+  #         # mid-end:  cpus: "1"    memory: 2G    <-- current
+  #         # high-end: cpus: "4"    memory: 8G
+  #         cpus: "1"
+  #         memory: 2G
