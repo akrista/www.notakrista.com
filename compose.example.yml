@@ -1,4 +1,4 @@
-name: ${STACK_NAME:-bizkit}
+name: ${STACK_NAME:-notakrista}
 x-logging: &default-logging
   driver: 'json-file'
   options:
@@ -19,11 +19,11 @@ x-base: &base
     context: .
     dockerfile: Dockerfile
     cache_from:
-      - 'akrista/bizkit:latest'
+      - 'akrista/notakrista:latest'
     args:
       USER_ID: ${HOST_UID:-1000}
       GROUP_ID: ${HOST_GID:-1000}
-  image: 'akrista/bizkit:latest'
+  image: 'akrista/notakrista:latest'
   user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
   ulimits:
     nofile:
@@ -32,7 +32,7 @@ x-base: &base
   security_opt:
     - no-new-privileges:true
   volumes:
-        - '.:/var/www/html'
+    - '.:/var/www/html'
   logging: *default-logging
   restart: unless-stopped
 # ---------------------------------------------------------------------------
@@ -42,12 +42,12 @@ x-base: &base
 #   docker network create database --subnet 10.10.4.0/24 --gateway 10.10.4.1
 #
 # Drop `--subnet` / `--gateway` if you don't need fixed addressing.
-# Rename via SERVICE_NETWORK / DATABASE_NETWORK in your .env if the defaults
+# Rename via PROXY_NETWORK / DATABASE_NETWORK in your .env if the defaults
 # (service / database) collide with another stack on the host.
 # ---------------------------------------------------------------------------
 networks:
   proxy:
-    name: ${SERVICE_NETWORK:-service}
+    name: ${PROXY_NETWORK:-service}
     external: true
   database:
     name: ${DATABASE_NETWORK:-database}
@@ -78,40 +78,48 @@ networks:
 services:
   app:
     <<: *base
-    container_name: bizkit-app
-    ports:
-      - "8000:8000"
+    container_name: notakrista-app
+    # ports:
+    #   - "8000:8000"
     networks:
       - proxy
       - database
     healthcheck:
-      test: ["CMD", "curl", "--fail", "--max-time", "10", "localhost:8000/up"]
+      test:
+        [
+          "CMD",
+          "curl",
+          "--fail",
+          "--max-time",
+          "10",
+          "localhost:8000/up"
+        ]
       <<: *default-healthcheck
     stop_grace_period: 35s
   # horizon:
   #   <<: *base
-  #   container_name: bizkit-horizon
+  #   container_name: notakrista-horizon
   #   environment:
   #     CONTAINER_MODE: horizon
   #   networks:
   #     - database
   scheduler:
     <<: *base
-    container_name: bizkit-scheduler
+    container_name: notakrista-scheduler
     environment:
       CONTAINER_MODE: scheduler
     networks:
       - database
   # inertia:
   #   <<: *base
-  #   container_name: bizkit-inertia
+  #   container_name: notakrista-inertia
   #   environment:
   #     CONTAINER_MODE: ssr
   #   networks:
   #     - proxy
   # reverb:
   #   <<: *base
-  #   container_name: bizkit-reverb
+  #   container_name: notakrista-reverb
   #   ports:
   #     - "8080:8080"
   #   environment:

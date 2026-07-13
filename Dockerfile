@@ -79,7 +79,7 @@ RUN apk update; \
     mbstring \
     bcmath \
     sockets \
-    # pdo_pgsql \
+    pdo_pgsql \
     opcache \
     # exif \
     # pdo_mysql \
