@@ -12,45 +12,45 @@
       "ref": "main",
       "sourceType": "github",
       "skillPath": "laravel-nightwatch/skills/configure-nightwatch/SKILL.md",
-      "computedHash": "87a409d0398016223a9b4e0249b8c74afe6d2c42c7b7b4a2dec5643526756998"
+      "computedHash": "c47f582081a7ec6b9fc4ea72c863fddada67e3d55e2b9b95f979bc536eb9e674"
     },
     "deploying-laravel-cloud": {
       "source": "laravel/agent-skills",
       "ref": "main",
       "sourceType": "github",
       "skillPath": "laravel-cloud/skills/deploying-laravel-cloud/SKILL.md",
-      "computedHash": "3b446e6e48f403897f7a163b8a57db6495ca018413957a26121b3e38f2b9ee54"
+      "computedHash": "fcb1682a17a6423f5dc10796619dc9f4358fb7cbfe138391d89950742aa154f0"
     },
     "impeccable": {
       "source": "pbakaus/impeccable",
       "sourceType": "github",
       "skillPath": ".agents/skills/impeccable/SKILL.md",
-      "computedHash": "a0de0cab25a37c9a1a787aa4b690b1f7cfaa6d7ac83a8424f66863b457d9d668"
+      "computedHash": "e07098370ad7fd4605b67d305d8c06623a5c7d7737d2364e30932294ef880ff6"
     },
     "no-ai-slop": {
       "source": "realrossmanngroup/no_ai_slop_writing_rules",
       "sourceType": "github",
       "skillPath": "skills/no-ai-slop/SKILL.md",
-      "computedHash": "4236336f28ec17941ed36217ced0f1452328cc8f2d1e476ddf9b054cb17fd670"
+      "computedHash": "7d70bdd2c4b8536e720438005e79751024ba1b9d84f1e6e01d8ede2468721ae1"
     },
     "rossmann-voice": {
       "source": "realrossmanngroup/no_ai_slop_writing_rules",
       "sourceType": "github",
       "skillPath": "skills/rossmann-voice/SKILL.md",
-      "computedHash": "2fb42bd6bf43fea7705a509e4a8c92543d4f794359fa1b39449f08866ed72a41"
+      "computedHash": "40a6bbc3241a8abd3d3f0b496edf58832a1ce7c73dd7a53484dbf802f59713c1"
     },
     "starter-kit-upgrade": {
       "source": "laravel/agent-skills",
       "ref": "main",
       "sourceType": "github",
       "skillPath": "laravel/skills/starter-kit-upgrade/SKILL.md",
-      "computedHash": "84eafa9dd365f27f2d1841a5b4040987c21d833df65abdfe87a5755cd2554229"
+      "computedHash": "263cd806eab03b15af59bc6c7b46058425c31e9df4204572f5743ceae28d3a1b"
     },
     "svg-animations": {
       "source": "supermemoryai/skills",
       "sourceType": "github",
       "skillPath": "svg-animations/SKILL.md",
-      "computedHash": "f25711af04ba7a0f8e662f41cdf707423102eef303dfd3dc7d48d35bb83c7ec4"
+      "computedHash": "9be4b3e0afe9d3cbb1bcf238f8504f9a23552f742350fbef9483070112ac1977"
     }
   }
 }
