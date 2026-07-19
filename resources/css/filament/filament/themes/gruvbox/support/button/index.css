@@ -1,0 +1,143 @@
+/*
+ * Buttons — gentle rounding (8px), no shadow, brand focus ring, white text
+ * on the orange primary fill. The text color is forced to white because
+ * Filament's color picker would otherwise pick an orange-tinted shade
+ * from the same ramp — which reads as muddy on a deep orange fill.
+ *
+ * The brand has two rules:
+ *   - Personal (dark) view: dark text on the orange (high contrast, L=0.7 bg)
+ *   - Business (light) view: white text on the orange (avoids muddy dark
+ *     text on the L=0.49 deep orange per the Helmholtz-Kohlrausch rule)
+ *
+ * In the Filament panel, white text is the consistent default — the panel
+ * is functional UI, the brand identity is in the surface, type, and
+ * palette, not in the button text color.
+ */
+
+.fi-btn {
+    border-radius: 0.5rem;
+    box-shadow: none;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    transition: background-color 150ms ease-out, color 150ms ease-out, border-color 150ms ease-out, box-shadow 150ms ease-out;
+}
+
+.fi-btn:focus-visible,
+.fi-icon-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--primary);
+}
+
+.fi-btn.fi-color-primary {
+    color: oklch(1 0 0);
+}
+
+.dark .fi-btn.fi-color-primary {
+    color: oklch(1 0 0);
+}
+
+.fi-btn.fi-color-gray {
+    color: var(--ink);
+}
+
+.fi-btn:not(.fi-outlined) {
+    box-shadow: none;
+}
+
+.fi-btn.fi-outlined {
+    box-shadow: none;
+    background-color: transparent;
+    border: 1px solid var(--border);
+    color: var(--ink);
+}
+
+.fi-btn.fi-outlined:hover:not(:disabled):not(.fi-disabled),
+.fi-btn.fi-outlined:focus-visible {
+    background-color: var(--surface);
+    border-color: var(--primary);
+}
+
+.fi-btn.fi-outlined.fi-color-primary {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.fi-btn.fi-outlined.fi-color-primary:hover:not(:disabled):not(.fi-disabled) {
+    background-color: var(--surface);
+    color: var(--primary);
+}
+
+.fi-btn-group {
+    border-radius: 0.5rem;
+    box-shadow: none;
+    border: 1px solid var(--border);
+    background-color: var(--surface);
+}
+
+.fi-btn-group > .fi-btn {
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.fi-btn-group > .fi-btn:nth-child(1 of .fi-btn) {
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+}
+
+.fi-btn-group > .fi-btn:nth-last-child(1 of .fi-btn) {
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+}
+
+.fi-btn-group > .fi-btn:not(:nth-child(1 of .fi-btn)) {
+    box-shadow: inset 1px 0 0 var(--border);
+}
+
+.fi-btn-group > .fi-btn:not(:nth-last-child(1 of .fi-btn)) {
+    margin-inline-end: 0;
+}
+
+/* Destructive button — Terminal Red, white text. */
+.fi-btn.fi-color-danger {
+    color: oklch(1 0 0);
+}
+
+.dark .fi-btn.fi-color-danger {
+    color: oklch(1 0 0);
+}
+
+.fi-btn.fi-color-danger.fi-outlined {
+    color: var(--red);
+    border-color: var(--red);
+    background-color: transparent;
+}
+
+.fi-btn.fi-color-danger.fi-outlined:hover:not(:disabled):not(.fi-disabled) {
+    background-color: var(--surface);
+    color: var(--red);
+}
+
+/* Toggle button group — primary fill on the checked state. */
+div.fi-fo-toggle-buttons-btn-ctn > input:checked + label {
+    background-color: var(--primary);
+    color: oklch(1 0 0);
+}
+
+div.fi-fo-toggle-buttons-btn-ctn > input:checked + label > .fi-icon {
+    color: oklch(1 0 0);
+}
+
+/* Icon button — same focus-ring as the regular button. */
+.fi-icon-btn {
+    border-radius: 0.5rem;
+    transition: background-color 150ms ease-out, color 150ms ease-out, box-shadow 150ms ease-out;
+}
+
+.fi-icon-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--primary);
+}
+
+.fi-icon-btn-badge-ctn {
+    background-color: transparent !important;
+}

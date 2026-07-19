@@ -96,13 +96,13 @@ services:
         ]
       <<: *default-healthcheck
     stop_grace_period: 35s
-  # horizon:
-  #   <<: *base
-  #   container_name: notakrista-horizon
-  #   environment:
-  #     CONTAINER_MODE: horizon
-  #   networks:
-  #     - database
+  horizon:
+    <<: *base
+    container_name: notakrista-horizon
+    environment:
+      CONTAINER_MODE: horizon
+    networks:
+      - database
   scheduler:
     <<: *base
     container_name: notakrista-scheduler

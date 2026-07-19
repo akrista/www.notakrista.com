@@ -1,0 +1,59 @@
+/*
+ * Global search — flat input with brand border. Focus state uses the
+ * two-ring pattern (bg → primary) per the brand focus signature.
+ */
+
+.fi-global-search-field {
+    border-radius: 0.5rem;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--ink);
+    box-shadow: none;
+    transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+}
+
+.fi-global-search-field:hover {
+    border-color: var(--muted);
+}
+
+.fi-global-search-field:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--primary);
+    outline: none;
+}
+
+.fi-global-search-input {
+    color: var(--ink);
+}
+
+.fi-global-search-input::placeholder {
+    color: var(--muted);
+}
+
+.fi-global-search-input-clear-btn,
+.fi-global-search-kbd {
+    color: var(--muted);
+}
+
+.fi-global-search-no-results-message,
+.fi-global-search-results-empty-message {
+    color: var(--muted);
+}
+
+.fi-global-search-result {
+    border-radius: 0.5rem;
+    color: var(--ink);
+}
+
+.fi-global-search-result.fi-active,
+.fi-global-search-result:hover {
+    background-color: var(--surface-raised);
+}
+
+.fi-global-search-result-group-label {
+    color: var(--muted);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}

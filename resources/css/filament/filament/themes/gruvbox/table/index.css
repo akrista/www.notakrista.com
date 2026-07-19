@@ -1,0 +1,171 @@
+/*
+ * Tables — flat, brand border, mono font for tabular numerals (the
+ * gruvbox tell). Row hover is the surface-raised tone, no zebra striping.
+ * The brand says: a table is a working tool; the rows are the data.
+ */
+
+.fi-ta-ctn {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    box-shadow: none;
+    overflow: hidden;
+}
+
+.dark .fi-ta-ctn {
+    background-color: var(--surface);
+    border-color: var(--border);
+}
+
+.fi-ta-content-ctn,
+.fi-ta-content {
+    max-height: 65vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.fi-ta-header {
+    background-color: var(--surface);
+    border-bottom: 1px solid var(--border);
+}
+
+.fi-ta-header-toolbar {
+    border-bottom: 1px solid var(--border);
+}
+
+.fi-ta-header-cell {
+    color: var(--muted);
+    font-family: var(--mono-font-family), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background-color: var(--bg);
+}
+
+.fi-ta-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--bg);
+    border-bottom: 1px solid var(--border);
+}
+
+.fi-ta-header-cell-ctn {
+    padding-block: 0.625rem;
+    padding-inline: 0.875rem;
+}
+
+.fi-ta-row {
+    background-color: var(--surface);
+    border-bottom: 1px solid var(--border);
+    transition: background-color 150ms ease-out;
+}
+
+.fi-ta-row:last-child {
+    border-bottom: 0;
+}
+
+.fi-ta-row:hover {
+    background-color: var(--surface-raised);
+}
+
+.fi-ta-cell {
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    padding-block: 0.625rem;
+    padding-inline: 0.875rem;
+}
+
+.fi-ta-cell.fi-align-center,
+.fi-ta-header-cell.fi-align-center {
+    text-align: center;
+}
+
+.fi-ta-cell.fi-align-end,
+.fi-ta-header-cell.fi-align-end {
+    text-align: end;
+}
+
+.fi-ta-actions-cell {
+    color: var(--muted);
+}
+
+.fi-ta-empty-state {
+    color: var(--muted);
+    background-color: var(--surface);
+}
+
+.fi-ta-empty-state-icon-bg {
+    background-color: var(--bg);
+    border: 1px solid var(--border);
+}
+
+.fi-ta-pagination {
+    border-top: 1px solid var(--border);
+    background-color: var(--surface);
+    color: var(--muted);
+    font-family: var(--mono-font-family), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    font-size: 0.75rem;
+}
+
+.fi-ta-pagination-btn {
+    color: var(--ink);
+    border-radius: 0.375rem;
+}
+
+.fi-ta-pagination-btn:hover,
+.fi-ta-pagination-btn:focus-visible {
+    background-color: var(--surface-raised);
+    color: var(--primary);
+}
+
+.fi-ta-pagination-btn.fi-active {
+    background-color: var(--primary);
+    color: oklch(1 0 0);
+}
+
+/* Filters — single soft shadow, brand surface. */
+.fi-ta-filters {
+    background-color: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow-dropdown);
+    color: var(--ink);
+}
+
+.fi-ta-filters-header {
+    border-bottom: 1px solid var(--border);
+}
+
+.fi-ta-filters-label {
+    color: var(--ink);
+    font-weight: 600;
+}
+
+/* Reorder, selection, row action icons. */
+.fi-ta-row-checkbox,
+.fi-ta-header-checkbox {
+    color: var(--muted);
+}
+
+.fi-ta-row-checkbox:checked,
+.fi-ta-header-checkbox:checked {
+    color: var(--primary);
+}
+
+.fi-ta-row-action {
+    color: var(--muted);
+    border-radius: 0.375rem;
+}
+
+.fi-ta-row-action:hover,
+.fi-ta-row-action:focus-visible {
+    color: var(--ink);
+    background-color: var(--surface-raised);
+}
+
+.fi-ta-row-action.fi-color-danger:hover,
+.fi-ta-row-action.fi-color-danger:focus-visible {
+    color: var(--red);
+}

@@ -1,0 +1,22 @@
+/*
+ * Theme switcher — flat, brand border, segmented control with primary rail.
+ */
+
+.fi-theme-switcher-btn {
+    border-radius: 0.5rem;
+    color: var(--muted);
+    background-color: transparent;
+    border: 1px solid var(--border);
+    transition: background-color 150ms ease-out, color 150ms ease-out;
+}
+
+.fi-theme-switcher-btn:hover,
+.fi-theme-switcher-btn:focus-visible {
+    background-color: var(--surface);
+    color: var(--ink);
+}
+
+.fi-theme-switcher-btn.fi-active {
+    background-color: var(--surface);
+    color: var(--primary);
+}

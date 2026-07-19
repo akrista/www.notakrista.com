@@ -1,0 +1,66 @@
+/*
+ * Gruvbox theme — the brand visual system, applied to the Filament panel.
+ *
+ * Anchors the Filament v5 panel on the same identity as the public site:
+ * Gruvbox palette in OKLCH, Instrument Sans, flat-by-default elevation,
+ * focus-ring (two rings, bg → primary) as the only interaction state, and
+ * a single identity shared between the personal (dark) and business (light)
+ * views.
+ *
+ * The personal view is the default; the business view is a tonal shift.
+ * Filament's own <html class="dark"> toggle matches the public site's
+ * <html class="dark"> for the personal view, so the Gruvbox dark and
+ * light ramps both line up with the public site.
+ *
+ * Tables, sections, modals, sidebars, and inputs lose their default
+ * shadows and rings. The brand rail is replaced by tonal layering
+ * (bg → surface → surface-raised) plus a 1px border in the brand
+ * border color where a separation is needed.
+ */
+
+@import './tokens.css';
+
+@layer base {
+    :root {
+        --bg: oklch(0.955 0.030 95);
+        --surface: oklch(0.905 0.030 90);
+        --surface-raised: oklch(0.905 0.030 90);
+        --ink: oklch(0.230 0.005 70);
+        --muted: oklch(0.530 0.013 65);
+        --primary: oklch(0.490 0.180 45);
+        --primary-ink: oklch(0.955 0.030 95);
+        --accent: oklch(0.510 0.080 150);
+        --border: oklch(0.810 0.040 85);
+        --yellow: oklch(0.620 0.140 70);
+        --red: oklch(0.380 0.180 28);
+        --blue: oklch(0.450 0.090 230);
+
+        --shadow-modal: 0 12px 32px oklch(0 0 0 / 0.18);
+        --shadow-dropdown: 0 6px 20px oklch(0 0 0 / 0.12);
+    }
+
+    .dark {
+        --bg: oklch(0.270 0.005 65);
+        --surface: oklch(0.320 0.005 65);
+        --surface-raised: oklch(0.380 0.008 60);
+        --ink: oklch(0.910 0.030 88);
+        --muted: oklch(0.650 0.020 80);
+        --primary: oklch(0.700 0.180 50);
+        --primary-ink: oklch(0.270 0.005 65);
+        --accent: oklch(0.760 0.090 145);
+        --border: oklch(0.380 0.008 60);
+        --yellow: oklch(0.810 0.150 80);
+        --red: oklch(0.640 0.220 25);
+        --blue: oklch(0.680 0.050 200);
+
+        --shadow-modal: 0 12px 32px oklch(0 0 0 / 0.45);
+        --shadow-dropdown: 0 6px 20px oklch(0 0 0 / 0.35);
+    }
+}
+
+@import './form/index.css';
+@import './notifications/index.css';
+@import './panel/index.css';
+@import './support/index.css';
+@import './table/index.css';
+@import './widget/index.css';

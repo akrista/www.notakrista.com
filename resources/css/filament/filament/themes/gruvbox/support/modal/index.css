@@ -1,0 +1,75 @@
+/*
+ * Modals — single soft long shadow, brand surface, 12px corner radius.
+ * The brand rule: shadow appears on lift, not at rest. A modal is the
+ * single biggest lift on the page, so it earns the modal-lift shadow.
+ */
+
+.fi-modal-window {
+    background-color: var(--surface-raised);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-modal);
+    border-radius: 0.75rem;
+}
+
+.dark .fi-modal-window {
+    background-color: var(--surface-raised);
+    border-color: var(--border);
+}
+
+.fi-modal-header {
+    border-bottom: 1px solid var(--border);
+    color: var(--ink);
+}
+
+.fi-modal-heading {
+    color: var(--ink);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.fi-modal-description {
+    color: var(--muted);
+}
+
+.fi-modal-content {
+    color: var(--ink);
+}
+
+.fi-modal-footer {
+    border-top: 1px solid var(--border);
+    background-color: var(--surface-raised);
+}
+
+.fi-modal-close-btn {
+    color: var(--muted);
+    border-radius: 0.5rem;
+}
+
+.fi-modal-close-btn:hover,
+.fi-modal-close-btn:focus-visible {
+    color: var(--ink);
+    background-color: var(--surface);
+}
+
+.fi-modal-icon-bg {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+}
+
+.fi-modal-icon-bg > .fi-icon {
+    color: var(--primary);
+}
+
+.fi-modal-close-overlay {
+    background-color: oklch(0 0 0 / 0.5);
+}
+
+.dark .fi-modal-close-overlay {
+    background-color: oklch(0 0 0 / 0.7);
+}
+
+/* Slide-over panel */
+.fi-modal.fi-modal-slide-over .fi-modal-window {
+    border-radius: 0;
+    border-inline-start: 1px solid var(--border);
+}

@@ -1,0 +1,136 @@
+/*
+ * Sidebar — flat, no shadow, brand border, primary-tinted active state.
+ *
+ * The active sidebar item reads as a single tonal step up from the sidebar
+ * surface, with a primary-tinted left rail (2px) instead of an icon swap.
+ * Hover and focus use the same surface-raised tone so the active item is
+ * the only state that reads as "here".
+ */
+
+.fi-sidebar {
+    background-color: var(--bg);
+    border-inline-end: 1px solid var(--border);
+    box-shadow: none;
+}
+
+.fi-sidebar.fi-sidebar-open {
+    box-shadow: none;
+}
+
+.fi-sidebar-header {
+    background-color: var(--bg);
+    border-bottom: 1px solid var(--border);
+    box-shadow: none;
+}
+
+.fi-sidebar-nav {
+    padding-inline: 0.75rem;
+}
+
+.fi-sidebar-item-btn {
+    border-radius: 0.5rem;
+    color: var(--muted);
+    transition: background-color 150ms ease-out, color 150ms ease-out;
+}
+
+.fi-sidebar-item-btn > .fi-icon {
+    color: var(--muted);
+    transition: color 150ms ease-out;
+}
+
+.fi-sidebar-item:hover .fi-sidebar-item-btn,
+.fi-sidebar-item.fi-sidebar-item-has-url .fi-sidebar-item-btn:hover,
+.fi-sidebar-item.fi-sidebar-item-has-url .fi-sidebar-item-btn:focus-visible {
+    background-color: var(--surface);
+    color: var(--ink);
+}
+
+.fi-sidebar-item:hover .fi-sidebar-item-btn > .fi-icon,
+.fi-sidebar-item.fi-sidebar-item-has-url .fi-sidebar-item-btn:hover > .fi-icon,
+.fi-sidebar-item.fi-sidebar-item-has-url .fi-sidebar-item-btn:focus-visible > .fi-icon {
+    color: var(--ink);
+}
+
+.fi-sidebar-item.fi-active .fi-sidebar-item-btn {
+    background-color: var(--surface);
+    color: var(--primary);
+}
+
+.fi-sidebar-item.fi-active .fi-sidebar-item-btn > .fi-icon {
+    color: var(--primary);
+}
+
+.fi-sidebar-item.fi-active .fi-sidebar-item-label {
+    color: var(--primary);
+    font-weight: 500;
+}
+
+/* Active item rail — 2px primary bar at the inline-start edge, visible on
+ * active state only. This is the brand rail, not a side-stripe border on
+ * a card. */
+.fi-sidebar-item.fi-active .fi-sidebar-item-btn::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: -0.75rem;
+    inset-block: 0.5rem;
+    width: 2px;
+    background-color: var(--primary);
+    border-radius: 9999px;
+}
+
+.fi-sidebar-item.fi-sidebar-item-has-active-child-items .fi-sidebar-item-btn {
+    color: var(--ink);
+}
+
+.fi-sidebar-item.fi-sidebar-item-has-active-child-items .fi-sidebar-item-btn > .fi-icon {
+    color: var(--ink);
+}
+
+.fi-sidebar-item-label {
+    color: var(--muted);
+    font-weight: 400;
+}
+
+.fi-sidebar-group-btn > .fi-icon {
+    color: var(--muted);
+}
+
+.fi-sidebar-group-label {
+    color: var(--muted);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding-inline: 0.5rem;
+}
+
+.fi-sidebar-group-dropdown-trigger-btn {
+    border-radius: 0.5rem;
+    color: var(--muted);
+}
+
+.fi-sidebar-group-dropdown-trigger-btn:hover,
+.fi-sidebar-group-dropdown-trigger-btn:focus-visible {
+    background-color: var(--surface);
+    color: var(--ink);
+}
+
+.fi-sidebar-database-notifications-btn {
+    border-radius: 0.5rem;
+    color: var(--muted);
+}
+
+.fi-sidebar-database-notifications-btn:hover,
+.fi-sidebar-database-notifications-btn:focus-visible {
+    background-color: var(--surface);
+    color: var(--ink);
+}
+
+.fi-sidebar-item-grouped-border-part {
+    background-color: var(--border);
+}
+
+.fi-sidebar-item-grouped-border-part-not-first,
+.fi-sidebar-item-grouped-border-part-not-last {
+    background-color: var(--border);
+}

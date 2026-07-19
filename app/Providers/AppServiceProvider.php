@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Models\LanguageLine;
 use App\Models\User;
 use Carbon\CarbonImmutable;
 use Filament\Actions\CreateAction;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Sleep;
@@ -45,6 +47,10 @@ final class AppServiceProvider extends ServiceProvider
         $this->configureGates();
 
         Feature::define('example-beta-access', fn(User $user): bool => str_ends_with($user->email, '@example.com'));
+
+        View::composer(['layouts.guest', 'layouts::guest', 'welcome'], function (\Illuminate\View\View $view): void {
+            $view->with('homePhrases', LanguageLine::getActivePhrasesByLocaleForGroup(LanguageLine::HOME_PHRASES_GROUP));
+        });
     }
 
     /**
@@ -193,7 +199,7 @@ final class AppServiceProvider extends ServiceProvider
                 ])
                 ->striped()
                 ->poll('10s')
-                ->defaultPaginationPageOption(6)
+                ->defaultPaginationPageOption(86)
                 ->paginated([6, 24, 64, 86, 'all'])
                 ->extremePaginationLinks()
                 ->deferLoading()

@@ -1,0 +1,125 @@
+/*
+ * Mobile + accessibility overrides — breakpoint-driven surface rules and
+ * the skip link. Mirrors the brisk theme's mobile handling but uses the
+ * brand border + surface tones instead of Filament's white-on-gray.
+ */
+
+@media (max-width: 1023px) {
+    .fi-sidebar {
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+    }
+
+    .fi-modal-content {
+        max-width: calc(100vw - 2rem) !important;
+        margin: 1rem;
+    }
+
+    .fi-modal.fi-modal-slide-over .fi-modal-content {
+        max-width: min(32rem, 100vw) !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .fi-header-actions {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .fi-header-actions > .fi-btn {
+        flex: 1 1 auto;
+        justify-content: center;
+    }
+
+    .fi-ta-header {
+        padding: 0.75rem;
+    }
+
+    .fi-modal-content {
+        margin: 0.5rem;
+        max-width: calc(100vw - 1rem) !important;
+        max-height: calc(100dvh - 1rem) !important;
+    }
+}
+
+@media (pointer: coarse) {
+    .fi-btn {
+        min-height: 2.75rem;
+        padding-inline: 1rem;
+    }
+
+    .fi-icon-btn {
+        min-height: 2.75rem;
+        min-width: 2.75rem;
+    }
+
+    .fi-input,
+    .fi-select-input,
+    .fi-textarea {
+        min-height: 2.75rem;
+        padding-block: 0.625rem;
+    }
+
+    .fi-dropdown-list-item {
+        min-height: 2.75rem;
+        padding-block: 0.625rem;
+    }
+
+    .fi-ta-row-action {
+        min-height: 2.75rem;
+        min-width: 2.75rem;
+    }
+
+    .fi-checkbox-input,
+    .fi-radio-input {
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+
+    .fi-ta-cell {
+        padding-block: 0.75rem;
+    }
+}
+
+/* Skip link — the brand surface + primary text. */
+.fi-skip-link {
+    position: absolute;
+    top: -9999px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    padding: 0.75rem 1.5rem;
+    background-color: var(--surface-raised);
+    color: var(--ink);
+    border: 1px solid var(--primary);
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: top 150ms ease-out;
+}
+
+.fi-skip-link:focus {
+    top: 1rem;
+    box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--primary);
+}
+
+/* Reduced motion — crossfade or instant transition for the animation reflex. */
+@media (prefers-reduced-motion: reduce) {
+    .fi-btn,
+    .fi-icon-btn,
+    .fi-link,
+    .fi-badge,
+    .fi-dropdown-trigger,
+    .fi-sidebar-item,
+    .fi-ta-row,
+    .fi-tab,
+    .fi-input-wrp,
+    .fi-global-search-field {
+        transition: none !important;
+    }
+
+    .fi-modal,
+    .fi-sidebar,
+    .fi-dropdown-panel {
+        transition: none !important;
+    }
+}

@@ -1,0 +1,48 @@
+/*
+ * Tabs — underline as the active rail, brand surface for the tab list
+ * background. No buttons-as-tabs affordance; the brand reads tabs as
+ * text-with-rail, the way a terminal shows file paths.
+ */
+
+.fi-tabs {
+    border-bottom: 1px solid var(--border);
+    gap: 0.25rem;
+}
+
+.fi-tab {
+    border-radius: 0.5rem 0.5rem 0 0;
+    color: var(--muted);
+    padding-inline: 0.875rem;
+    padding-block: 0.5rem;
+    font-weight: 500;
+    transition: color 150ms ease-out, background-color 150ms ease-out;
+}
+
+.fi-tab:hover {
+    color: var(--ink);
+    background-color: var(--surface);
+}
+
+.fi-tab.fi-active {
+    color: var(--primary);
+    background-color: var(--surface);
+    box-shadow: inset 0 -2px 0 0 var(--primary);
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.fi-tab.fi-active:hover {
+    color: var(--primary);
+    background-color: var(--surface);
+}
+
+.fi-tab-icon {
+    color: var(--muted);
+}
+
+.fi-tab.fi-active .fi-tab-icon {
+    color: var(--primary);
+}
+
+.fi-tab-badge-ctn .fi-badge {
+    margin-inline-start: 0.25rem;
+}

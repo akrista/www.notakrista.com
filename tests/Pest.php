@@ -2,7 +2,12 @@
 
 declare(strict_types=1);
 
+use App\Models\Permission;
+use App\Models\Role;
+use App\Models\User;
+use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 /*
@@ -35,6 +40,25 @@ expect()->extend('toBeOne', fn () => $this->toBe(1));
 
 /*
 |--------------------------------------------------------------------------
+| Test Hooks
+|--------------------------------------------------------------------------
+*/
+
+// Force every Feature test to use an isolated in-memory SQLite database,
+// regardless of what `.env` or the host shell sets. This keeps feature tests
+// hermetic so the dev file is never mutated by tests.
+beforeEach(function (): void {
+    config([
+        'database.default' => 'sqlite',
+        'database.connections.sqlite.database' => ':memory:',
+    ]);
+    app()->forgetInstance('db');
+    app()->forgetInstance('db.connection');
+    DB::purge('sqlite');
+});
+
+/*
+|--------------------------------------------------------------------------
 | Functions
 |--------------------------------------------------------------------------
 |
@@ -47,4 +71,41 @@ expect()->extend('toBeOne', fn () => $this->toBe(1));
 function something(): void
 {
     // ..
+}
+
+/**
+ * Create an admin user on a personal team with the given Spatie permissions
+ * and authenticate them against the Filament panel. Used across the
+ * budget/account/transaction/schedule Filament resource tests.
+ */
+function budgetAdmin(array $permissions = []): User
+{
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    setPermissionsTeamId($team->id);
+    $role = Role::query()->firstOrCreate([
+        'name' => 'admin',
+        'guard_name' => 'web',
+        'team_id' => $team->id,
+    ]);
+
+    $perms = collect($permissions)->map(
+        fn (string $name): Permission => Permission::query()->firstOrCreate([
+            'name' => $name,
+            'guard_name' => 'web',
+        ]),
+    );
+
+    if ($perms->isNotEmpty()) {
+        $role->givePermissionTo($perms->all());
+        $user->assignRole($role);
+    }
+
+    test()->actingAs($user);
+
+    Filament::setCurrentPanel(Filament::getPanel('filament'));
+    Filament::setTenant($team);
+
+    return $user;
 }

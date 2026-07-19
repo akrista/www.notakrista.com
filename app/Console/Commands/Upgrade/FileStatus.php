@@ -6,16 +6,16 @@ namespace App\Console\Commands\Upgrade;
 
 enum FileStatus: string
 {
-    /** File does not exist locally — safe to add automatically. */
+    /** File does not exist locally; it is safe to add automatically. */
     case New = 'new';
 
-    /** File exists and is byte-identical to upstream — nothing to do. */
+    /** File exists and is byte-identical to upstream; no action is required. */
     case AlreadyPresent = 'already-present';
 
-    /** File exists locally but content differs from upstream — requires user decision. */
+    /** File exists locally but content differs from upstream; requires user decision. */
     case Differs = 'differs';
 
-    /** File exists locally but upstream has removed it — surface to user. */
+    /** File exists locally but upstream has removed it; surface to user. */
     case DeletedUpstream = 'deleted-upstream';
 
     /**

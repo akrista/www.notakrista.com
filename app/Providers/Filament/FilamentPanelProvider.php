@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Providers\Filament;
 
 use App\Enums\FilamentMode;
+use App\Filament\Colors\Gruvbox;
 use App\Filament\Pages\Auth\EditProfile;
 use App\Filament\Pages\Auth\Login;
-use App\Filament\Pages\Auth\Register;
 use App\Filament\Pages\Tenancy\RegisterTeam;
 use App\Http\Middleware\SyncSpatiePermissionsWithFilamentTenants;
 use App\Models\Team;
@@ -20,7 +20,6 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
-use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Platform;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
@@ -29,6 +28,7 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\HtmlString;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 final class FilamentPanelProvider extends PanelProvider
@@ -83,9 +83,12 @@ final class FilamentPanelProvider extends PanelProvider
             ], isPersistent: true)
             // ->font()
             ->viteTheme('resources/css/filament/filament/theme.css')
-            ->colors([
-                'primary' => Color::Amber,
-            ])
+            ->colors(Gruvbox::palette())
+            ->font('Instrument Sans')
+            ->brandName('studio')
+            ->brandLogo(fn (): HtmlString => $this->resolveBrandLogo())
+            ->darkModeBrandLogo(fn (): HtmlString => $this->resolveBrandLogo())
+            ->favicon(asset('favicon.png'))
             ->globalSearchKeyBindings(['command+shift+f', 'ctrl+shift+f'])
             ->globalSearchFieldSuffix(
                 fn(): string => match (Platform::detect()) {
@@ -119,5 +122,17 @@ final class FilamentPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ]);
+    }
+
+    private function resolveBrandLogo(): HtmlString
+    {
+        $monoStack = "var(--mono-font-family), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace";
+
+        return new HtmlString(
+            '<span style="display: flex; align-items: center; gap: 0.625rem; height: 100%;">'
+            . '<span style="font-size: 2.25rem; font-weight: 700; letter-spacing: -0.03em; color: var(--primary); line-height: 1;">nk.</span>'
+            . '<span style="font-family: ' . $monoStack . '; font-size: 1.125rem; font-weight: 500; letter-spacing: 0.04em; color: var(--muted); text-transform: lowercase; line-height: 1;">studio</span>'
+            . '</span>'
+        );
     }
 }

@@ -81,7 +81,7 @@ RUN apk update; \
     sockets \
     pdo_pgsql \
     opcache \
-    # exif \
+    exif \
     # pdo_mysql \
     zip \
     # uv \

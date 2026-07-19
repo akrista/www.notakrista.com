@@ -1,0 +1,24 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Filament\Resources\Categories\Pages;
+
+use App\Filament\Resources\Categories\CategoryResource;
+use Filament\Actions\CreateAction;
+use Filament\Resources\Pages\ListRecords;
+use Override;
+
+final class ListCategories extends ListRecords
+{
+    #[Override]
+    protected static string $resource = CategoryResource::class;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            CreateAction::make()
+                ->label(__('app.create_category')),
+        ];
+    }
+}

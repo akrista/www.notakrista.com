@@ -1,0 +1,71 @@
+/*
+ * Topbar — flat, brand border, no shadow. Active item is the only state
+ * that reads as "here"; the rest of the topbar sits flush against the body.
+ */
+
+.fi-topbar {
+    background-color: var(--bg);
+    border-bottom: 1px solid var(--border);
+    box-shadow: none;
+}
+
+.dark .fi-topbar {
+    background-color: var(--bg);
+    border-bottom-color: var(--border);
+}
+
+.fi-topbar-item-btn {
+    border-radius: 0.5rem;
+    color: var(--muted);
+    transition: background-color 150ms ease-out, color 150ms ease-out;
+}
+
+.fi-topbar-item-btn > .fi-icon {
+    color: var(--muted);
+    transition: color 150ms ease-out;
+}
+
+.fi-topbar-item-btn:hover,
+.fi-topbar-item-btn:focus-visible {
+    background-color: var(--surface);
+    color: var(--ink);
+}
+
+.fi-topbar-item-btn:hover > .fi-icon,
+.fi-topbar-item-btn:focus-visible > .fi-icon {
+    color: var(--ink);
+}
+
+.fi-topbar-item.fi-active .fi-topbar-item-btn {
+    background-color: var(--surface);
+    color: var(--primary);
+}
+
+.fi-topbar-item.fi-active .fi-topbar-item-btn > .fi-icon {
+    color: var(--primary);
+}
+
+.fi-topbar-item.fi-active .fi-topbar-item-label {
+    color: var(--primary);
+    font-weight: 500;
+}
+
+.fi-topbar-item-label {
+    color: var(--muted);
+    font-weight: 400;
+}
+
+.fi-topbar-group-toggle-icon {
+    color: var(--muted);
+}
+
+.fi-topbar-group-dropdown-trigger-btn {
+    border-radius: 0.5rem;
+    color: var(--muted);
+}
+
+.fi-topbar-group-dropdown-trigger-btn:hover,
+.fi-topbar-group-dropdown-trigger-btn:focus-visible {
+    background-color: var(--surface);
+    color: var(--ink);
+}

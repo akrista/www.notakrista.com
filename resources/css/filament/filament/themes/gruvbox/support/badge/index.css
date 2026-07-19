@@ -1,0 +1,69 @@
+/*
+ * Badges — pill-shaped, 1px border in the brand border color, mono font
+ * for that "I am a status, not a sentence" reading. The brand uses chips
+ * with mono font (0.75rem, 4px/10px padding, rounded-pill) on the public
+ * site; the same shape carries here.
+ */
+
+.fi-badge {
+    border-radius: 9999px;
+    background-color: var(--surface-raised);
+    color: var(--ink);
+    border: 1px solid var(--border);
+    font-family: var(--mono-font-family), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    padding-inline: 0.625rem;
+    padding-block: 0.25rem;
+}
+
+.fi-badge.fi-color {
+    background-color: var(--surface-raised);
+    color: var(--ink);
+    border: 1px solid var(--border);
+}
+
+.fi-badge.fi-color-primary {
+    background-color: var(--primary);
+    color: oklch(1 0 0);
+    border-color: var(--primary);
+}
+
+.fi-badge.fi-color-success {
+    background-color: var(--accent);
+    color: oklch(0.150 0.005 65);
+    border-color: var(--accent);
+}
+
+.fi-badge.fi-color-warning {
+    background-color: var(--yellow);
+    color: oklch(0.150 0.005 65);
+    border-color: var(--yellow);
+}
+
+.fi-badge.fi-color-danger {
+    background-color: var(--red);
+    color: oklch(1 0 0);
+    border-color: var(--red);
+}
+
+.fi-badge.fi-color-info {
+    background-color: var(--blue);
+    color: oklch(1 0 0);
+    border-color: var(--blue);
+}
+
+.fi-badge > .fi-icon {
+    color: inherit;
+}
+
+.fi-badge-delete-btn > .fi-icon {
+    color: inherit;
+    opacity: 0.5;
+}
+
+.fi-badge-delete-btn:hover > .fi-icon,
+.fi-badge-delete-btn:focus-visible > .fi-icon {
+    opacity: 0.9;
+}

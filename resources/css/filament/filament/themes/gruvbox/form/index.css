@@ -1,0 +1,244 @@
+/*
+ * Forms — inputs, selects, textareas, checkboxes, radios, toggles. Flat
+ * with brand border, focus-ring on focus, no shadow at rest. The input
+ * reads as a rectangle with a hairline border; focus lifts to the
+ * two-ring signature.
+ */
+
+.fi-input-wrp {
+    border-radius: 0.5rem;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--ink);
+    box-shadow: none;
+    transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+}
+
+.fi-input-wrp:hover {
+    border-color: var(--muted);
+}
+
+.fi-input-wrp:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--primary);
+    outline: none;
+}
+
+.fi-input,
+.fi-select-input,
+.fi-textarea {
+    color: var(--ink);
+    background-color: transparent;
+    font-family: inherit;
+}
+
+.fi-input::placeholder,
+.fi-select-input::placeholder,
+.fi-textarea::placeholder {
+    color: var(--muted);
+    opacity: 1;
+}
+
+.fi-input-wrp-prefix,
+.fi-input-wrp-suffix,
+.fi-select-input-prefix,
+.fi-select-input-suffix {
+    color: var(--muted);
+}
+
+.fi-select-input-input {
+    color: var(--ink);
+}
+
+.fi-select-input-option {
+    color: var(--ink);
+    background-color: var(--surface-raised);
+}
+
+.fi-select-input-option:hover,
+.fi-select-input-option.fi-selected {
+    background-color: var(--surface);
+    color: var(--primary);
+}
+
+/* Checkbox and radio — primary fill when checked. */
+.fi-checkbox-input,
+.fi-radio-input {
+    border-radius: 0.375rem;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--primary);
+    box-shadow: none;
+    transition: background-color 150ms ease-out, border-color 150ms ease-out;
+}
+
+.fi-radio-input {
+    border-radius: 9999px;
+}
+
+.fi-checkbox-input:hover,
+.fi-radio-input:hover {
+    border-color: var(--muted);
+}
+
+.fi-checkbox-input:checked,
+.fi-radio-input:checked {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.fi-checkbox-input:focus-visible,
+.fi-radio-input:focus-visible {
+    box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--primary);
+    outline: none;
+}
+
+.dark .fi-checkbox-input:checked,
+.dark .fi-radio-input:checked {
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='black' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+}
+
+.dark .fi-radio-input:checked {
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='black' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e");
+}
+
+/* Toggle — primary fill on, muted off, white knob in both states. */
+.fi-toggle {
+    border-radius: 9999px;
+    background-color: var(--surface-raised);
+    border: 1px solid var(--border);
+    box-shadow: none;
+    transition: background-color 150ms ease-out, border-color 150ms ease-out;
+}
+
+.fi-toggle.fi-toggle-on {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.fi-toggle.fi-toggle-off {
+    background-color: var(--surface-raised);
+    border-color: var(--border);
+}
+
+.fi-toggle > div > div:first-child {
+    background-color: oklch(1 0 0);
+    border-radius: 9999px;
+}
+
+.dark .fi-toggle.fi-toggle-on {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.dark .fi-toggle.fi-toggle-off {
+    background-color: var(--surface-raised);
+    border-color: var(--border);
+}
+
+/* Field wrapper — label and helper text. */
+.fi-fo-field-wrp-label {
+    color: var(--ink);
+    font-weight: 500;
+}
+
+.fi-fo-field-wrp-helper-text,
+.fi-fo-field-wrp-description {
+    color: var(--muted);
+}
+
+.fi-fo-field-wrp-error-message {
+    color: var(--red);
+    font-weight: 500;
+}
+
+/* Validation — primary border shifts to red, helper is red. */
+.fi-input-wrp.fi-invalid {
+    border-color: var(--red);
+}
+
+.fi-input-wrp.fi-invalid:focus-within {
+    border-color: var(--red);
+    box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--red);
+}
+
+.fi-fo-field-wrp.fi-has-error .fi-fo-field-wrp-label {
+    color: var(--red);
+}
+
+/* Color picker swatch */
+.fi-color-picker-swatch {
+    border-radius: 0.375rem;
+    border: 1px solid var(--border);
+    box-shadow: none;
+}
+
+/* File upload */
+.fi-fo-file-upload {
+    background-color: var(--surface);
+    border: 1px dashed var(--border);
+    border-radius: 0.5rem;
+    color: var(--muted);
+    transition: border-color 150ms ease-out, background-color 150ms ease-out;
+}
+
+.fi-fo-file-upload:hover {
+    border-color: var(--primary);
+    color: var(--ink);
+}
+
+.fi-fo-file-upload.fi-active {
+    border-color: var(--primary);
+    background-color: var(--surface-raised);
+    color: var(--primary);
+}
+
+/* Rich editor */
+.fi-fo-rich-editor {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    color: var(--ink);
+    box-shadow: none;
+}
+
+.fi-fo-rich-editor:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--primary);
+}
+
+.fi-fo-rich-editor-toolbar {
+    border-bottom: 1px solid var(--border);
+}
+
+/* Code editor (mono tell) */
+.fi-fo-code-editor {
+    background-color: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    font-family: var(--mono-font-family), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    color: var(--ink);
+    box-shadow: none;
+}
+
+.fi-fo-code-editor:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--primary);
+}
+
+/* Date / time picker */
+.fi-fo-date-time-picker,
+.fi-fo-date-picker,
+.fi-fo-time-picker {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    color: var(--ink);
+}
+
+.fi-fo-date-time-picker:focus-within,
+.fi-fo-date-picker:focus-within,
+.fi-fo-time-picker:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--primary);
+}

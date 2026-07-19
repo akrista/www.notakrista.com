@@ -1,0 +1,86 @@
+/*
+ * Widgets — flat, brand border, brand surface. Stats overviews read as
+ * a row of equal-weight data blocks; the value gets a mono treatment
+ * (the gruvbox tell) and the label is the small uppercase mono kicker.
+ */
+
+.fi-wi-stats-overview-stat {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    box-shadow: none;
+    color: var(--ink);
+}
+
+.fi-wi-stats-overview-stat-icon-bg {
+    background-color: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+}
+
+.fi-wi-stats-overview-stat-icon-bg > .fi-icon {
+    color: var(--primary);
+}
+
+.fi-wi-stats-overview-stat-label {
+    color: var(--muted);
+    font-family: var(--mono-font-family), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.fi-wi-stats-overview-stat-value {
+    color: var(--ink);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+}
+
+.fi-wi-stats-overview-stat-description {
+    color: var(--muted);
+}
+
+.fi-wi-stats-overview-stat-change {
+    color: var(--muted);
+    font-family: var(--mono-font-family), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    font-size: 0.75rem;
+}
+
+.fi-wi-stats-overview-stat-change.fi-positive {
+    color: var(--accent);
+}
+
+.fi-wi-stats-overview-stat-change.fi-negative {
+    color: var(--red);
+}
+
+/* Chart widget — flat, brand border. */
+.fi-wi-chart {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    box-shadow: none;
+    color: var(--ink);
+}
+
+/* Account widget */
+.fi-account-widget {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    box-shadow: none;
+    color: var(--ink);
+}
+
+.fi-account-widget-name {
+    color: var(--ink);
+    font-weight: 600;
+}
+
+.fi-account-widget-email {
+    color: var(--muted);
+    font-family: var(--mono-font-family), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    font-size: 0.75rem;
+}

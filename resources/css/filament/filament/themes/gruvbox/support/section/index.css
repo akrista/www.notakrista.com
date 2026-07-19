@@ -1,0 +1,60 @@
+/*
+ * Sections — flat, brand border, brand surface. No shadow at rest. The
+ * brand rule: cards are the lazy answer; sections earn the surface lift
+ * only when they're a real grouping affordance.
+ */
+
+.fi-section:not(.fi-section-not-contained):not(.fi-aside) {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    box-shadow: none;
+}
+
+.dark .fi-section:not(.fi-section-not-contained):not(.fi-aside) {
+    background-color: var(--surface);
+    border-color: var(--border);
+}
+
+.fi-section.fi-secondary:not(.fi-section-not-contained):not(.fi-aside) {
+    background-color: var(--bg);
+}
+
+.fi-section:not(.fi-section-not-contained).fi-aside > .fi-section-content-ctn {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    box-shadow: none;
+}
+
+.fi-section-header {
+    border-bottom: 1px solid var(--border);
+}
+
+.fi-section.fi-section-has-header:not(.fi-collapsed) > .fi-section-content-ctn {
+    border-top: 1px solid var(--border);
+}
+
+.fi-section-header-heading {
+    color: var(--ink);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.fi-section-header-description {
+    color: var(--muted);
+}
+
+.fi-section-content {
+    color: var(--ink);
+}
+
+.fi-section-footer {
+    border-top: 1px solid var(--border);
+    background-color: var(--surface);
+}
+
+.fi-section.fi-divided > .fi-section-content-ctn > .fi-section-content {
+    --tw-divide-opacity: 1;
+    border-color: var(--border);
+}

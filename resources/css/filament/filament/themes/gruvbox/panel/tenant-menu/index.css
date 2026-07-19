@@ -1,0 +1,26 @@
+/*
+ * Tenant menu — flat, brand border, primary-tinted active state.
+ */
+
+.fi-tenant-menu-trigger-btn {
+    border-radius: 0.5rem;
+    color: var(--ink);
+    background-color: transparent;
+    border: 1px solid var(--border);
+    transition: background-color 150ms ease-out, border-color 150ms ease-out;
+}
+
+.fi-tenant-menu-trigger-btn:hover,
+.fi-tenant-menu-trigger-btn:focus-visible {
+    background-color: var(--surface);
+    border-color: var(--muted);
+}
+
+.fi-tenant-menu-trigger-btn-label {
+    color: var(--ink);
+    font-weight: 500;
+}
+
+.fi-tenant-menu-avatar-ctn {
+    border: 1px solid var(--border);
+}

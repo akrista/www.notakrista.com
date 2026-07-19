@@ -1,0 +1,77 @@
+/*
+ * Notifications — single soft short shadow, brand surface. The brand rule:
+ * the only saturated color on a filled button is Signal Orange. So a
+ * success notification uses the Moss Aqua border + ink text, not a
+ * green fill. Reserve the filled tone for the primary action.
+ */
+
+.fi-no-notification {
+    background-color: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow-dropdown);
+    color: var(--ink);
+}
+
+.fi-no-notification-icon-bg {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+}
+
+.fi-no-notification-icon-bg > .fi-icon {
+    color: var(--primary);
+}
+
+.fi-no-notification-title {
+    color: var(--ink);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.fi-no-notification-body {
+    color: var(--muted);
+}
+
+.fi-no-notification-close-btn {
+    color: var(--muted);
+    border-radius: 0.5rem;
+}
+
+.fi-no-notification-close-btn:hover,
+.fi-no-notification-close-btn:focus-visible {
+    color: var(--ink);
+    background-color: var(--surface);
+}
+
+.fi-no-notification.fi-color-success .fi-no-notification-icon-bg {
+    border-color: var(--accent);
+}
+
+.fi-no-notification.fi-color-success .fi-no-notification-icon-bg > .fi-icon {
+    color: var(--accent);
+}
+
+.fi-no-notification.fi-color-warning .fi-no-notification-icon-bg {
+    border-color: var(--yellow);
+}
+
+.fi-no-notification.fi-color-warning .fi-no-notification-icon-bg > .fi-icon {
+    color: var(--yellow);
+}
+
+.fi-no-notification.fi-color-danger .fi-no-notification-icon-bg {
+    border-color: var(--red);
+}
+
+.fi-no-notification.fi-color-danger .fi-no-notification-icon-bg > .fi-icon {
+    color: var(--red);
+}
+
+.fi-no-notification.fi-color-info .fi-no-notification-icon-bg {
+    border-color: var(--blue);
+}
+
+.fi-no-notification.fi-color-info .fi-no-notification-icon-bg > .fi-icon {
+    color: var(--blue);
+}
