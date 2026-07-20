@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('id', 36)->primary();
             $table->string('name');
             $table->string('type');
-            $table->string('currency', 3)->default('USD');
+            $table->string('currency', 10)->default('USD');
             $table->decimal('opening_balance', 14, 2)->default(0);
             $table->string('icon', 16)->nullable();
             $table->string('color_token', 32)->nullable();

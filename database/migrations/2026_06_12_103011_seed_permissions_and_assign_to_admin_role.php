@@ -10,6 +10,7 @@ use Spatie\Permission\PermissionRegistrar;
 
 return new class extends Migration
 {
+    public $withinTransaction = false;
     /**
      * Run the migrations.
      */

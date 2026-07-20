@@ -67,7 +67,7 @@ return new class extends Migration
         }
 
         Schema::table('items', function (Blueprint $table): void {
-            $table->foreignUuid('category_id')->nullable()->after('category');
+            $table->string('category_id', 36)->nullable()->after('category');
         });
 
         if (Schema::hasColumn('items', 'category')) {
@@ -81,8 +81,9 @@ return new class extends Migration
 
             $caseSql = implode(' ', $cases);
 
+            $castType = 'varchar';
             DB::statement(
-                sprintf('UPDATE items SET category_id = CASE category %s END WHERE category IS NOT NULL', $caseSql),
+                sprintf('UPDATE items SET category_id = CAST(CASE category %s END AS %s) WHERE category IS NOT NULL', $caseSql, $castType),
                 $bindings
             );
         }

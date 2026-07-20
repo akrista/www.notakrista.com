@@ -12,7 +12,13 @@ initialStuff() {
         php artisan migrate --isolated --seed --force || php artisan migrate --seed --force
     fi
 
-    php artisan storage:link; \
+    php artisan storage:link;
+
+    if [ "${container_mode}" = "http" ]; then
+        echo "Building frontend assets ..."
+        bun run build
+    fi
+
     php artisan optimize;
 }
 
