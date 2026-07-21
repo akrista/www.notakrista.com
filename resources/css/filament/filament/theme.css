@@ -1,5 +1,4 @@
 @import '../../../../vendor/filament/filament/resources/css/theme.css';
 @import './themes/gruvbox/theme.css';
-
 @source '../../../../app/Filament/**/*';
 @source '../../../../resources/views/filament/**/*';

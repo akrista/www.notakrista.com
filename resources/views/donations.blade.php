@@ -96,9 +96,46 @@
                 </div>
                 <p class="text-body text-xs text-[var(--muted)] leading-relaxed" x-text="t('others_need_body')">
                     {{ __('donations.others_need_body') }}</p>
-                <a href="https://donarseguro.com/" target="_blank" rel="noopener"
-                    class="self-start button-cta bg-[var(--surface-raised)] border border-[var(--border)] text-[var(--accent)] hover:border-[var(--accent)] focus-ring-signature font-bold text-xs"
-                    x-text="t('others_need_link_label')">{{ __('donations.others_need_link_label') }}</a>
+
+                <!-- Tierra Viva bulletin — compact complement (bullets collapsed by default) -->
+                <div class="mt-1 flex flex-col gap-1.5">
+                    <p class="text-body text-xs text-[var(--ink)] leading-snug">
+                        <span class="text-[var(--yellow)] font-bold" aria-hidden="true">●</span>
+                        <span x-text="t('tierra_viva_preamble')">{{ __('donations.tierra_viva_preamble') }}</span>
+                    </p>
+                    <a href="https://www.instagram.com/p/Da5SpUQjiKa/?igsh=MXRjandhMTg3MmR2cA==" target="_blank"
+                        rel="noopener"
+                        class="text-body text-xs font-semibold text-[var(--accent)] hover:underline focus-ring-signature rounded self-start"
+                        x-text="t('tierra_viva_instagram_label')">{{ __('donations.tierra_viva_instagram_label') }}</a>
+                    <details
+                        class="text-mono text-[11px] text-[var(--muted)] [&>summary]:cursor-pointer [&>summary]:list-none [&>summary]:hover:text-[var(--ink)] [&>summary]:focus-ring-signature [&>summary]:rounded">
+                        <summary class="select-none" x-text="t('tierra_viva_toggle')">
+                            {{ __('donations.tierra_viva_toggle') }}</summary>
+                        <ul
+                            class="mt-1.5 text-body text-[11px] text-[var(--muted)] leading-relaxed list-disc list-outside ml-4 space-y-0.5 marker:text-[var(--accent)]">
+                            <li x-text="t('tierra_viva_bullets.families')">
+                                {{ __('donations.tierra_viva_bullets.families') }}</li>
+                            <li x-text="t('tierra_viva_bullets.volunteers')">
+                                {{ __('donations.tierra_viva_bullets.volunteers') }}</li>
+                            <li x-text="t('tierra_viva_bullets.allies')">
+                                {{ __('donations.tierra_viva_bullets.allies') }}</li>
+                            <li x-text="t('tierra_viva_bullets.platform')">
+                                {{ __('donations.tierra_viva_bullets.platform') }}</li>
+                        </ul>
+                    </details>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2 mt-1">
+                    <a href="https://www.mispidi.com/?id=tierravivavzla" target="_blank" rel="noopener"
+                        class="button-cta bg-[var(--surface-raised)] border border-[var(--border)] text-[var(--accent)] hover:border-[var(--accent)] focus-ring-signature font-bold text-xs"
+                        x-text="t('tierra_viva_mispidi_label')">{{ __('donations.tierra_viva_mispidi_label') }}</a>
+                    <a href="https://unidos2give.org/fundacion-tierra-viva/" target="_blank" rel="noopener"
+                        class="button-cta bg-[var(--surface-raised)] border border-[var(--border)] text-[var(--accent)] hover:border-[var(--accent)] focus-ring-signature font-bold text-xs"
+                        x-text="t('tierra_viva_unidos2give_label')">{{ __('donations.tierra_viva_unidos2give_label') }}</a>
+                    <a href="https://donarseguro.com/" target="_blank" rel="noopener"
+                        class="button-cta bg-[var(--surface-raised)] border border-[var(--border)] text-[var(--accent)] hover:border-[var(--accent)] focus-ring-signature font-bold text-xs"
+                        x-text="t('others_need_link_label')">{{ __('donations.others_need_link_label') }}</a>
+                </div>
             </div>
         </section>
 
