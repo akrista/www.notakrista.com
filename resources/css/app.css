@@ -144,7 +144,3 @@ select:focus[data-flux-control] {
     box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--primary) !important;
 }
 
-
-/* \[:where(&)\]:size-4 {
-    @apply size-4;
-} */

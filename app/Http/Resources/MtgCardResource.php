@@ -25,6 +25,7 @@ final class MtgCardResource extends JsonResource
             'number' => $this->resource->number,
             'quantity' => $this->resource->quantity,
             'mana_cost' => $this->resource->mana_cost,
+            'mana_cost_html' => \App\Filament\Resources\MtgCards\MtgCardResource::formatManaCost($this->resource->mana_cost)?->toHtml(),
             'type_line' => $this->resource->type_line,
             'rarity' => $this->resource->rarity,
             'price' => $this->resource->price,

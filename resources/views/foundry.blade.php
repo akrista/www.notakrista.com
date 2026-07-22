@@ -73,11 +73,11 @@
         <!-- PAGE TITLE -->
         <div class="w-full border-b border-[var(--border)] pb-4 flex flex-col gap-2">
             <h1 class="text-headline text-[var(--ink)]">
-                <span x-text="language === 'en' ? 'The Foundry' : 'La Fundición'"></span>
+                <span x-text="language === 'es' ? 'La Fundición' : 'The Foundry'"></span>
             </h1>
-            <p class="text-mono text-xs text-[var(--muted)]" x-text="language === 'en'
-                ? 'The forge where code is shaped, open-source kits are constructed, and tools are crafted.'
-                : 'La forja donde se da forma al código, se construyen kits de código abierto y se crean herramientas.'">
+            <p class="text-mono text-xs text-[var(--muted)]" x-text="language === 'es'
+                ? 'La forja donde se da forma al código, se construyen kits de código abierto y se crean herramientas.'
+                : 'The forge where code is shaped, open-source kits are constructed, and tools are crafted.'">
             </p>
         </div>
 
@@ -92,12 +92,12 @@
                     <div class="flex flex-col gap-2">
                         <div class="flex justify-between items-start">
                             <h2 class="text-title text-[var(--ink)] font-bold">
-                                <span x-text="language === 'en' ? project.name : project.name_es"></span>
+                                <span x-text="language === 'es' ? project.name_es : project.name"></span>
                                 <span x-show="project.external"> ↗</span>
                             </h2>
-                            <span class="text-mono text-[10px] text-[var(--accent)] font-semibold uppercase tracking-wider" x-text="language === 'en' ? project.type : project.type_es"></span>
+                            <span class="text-mono text-[10px] text-[var(--accent)] font-semibold uppercase tracking-wider" x-text="language === 'es' ? project.type_es : project.type"></span>
                         </div>
-                        <p class="text-body text-sm text-[var(--muted)] leading-relaxed" x-text="language === 'en' ? project.desc : project.desc_es"></p>
+                        <p class="text-body text-sm text-[var(--muted)] leading-relaxed" x-text="language === 'es' ? project.desc_es : project.desc"></p>
                     </div>
                     
                     <!-- Tech tags -->

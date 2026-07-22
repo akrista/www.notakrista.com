@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{ $title ?? 'Jorge Thomas — Software Engineer' }}</title>
+    <title>{{ $title ?? 'Jorge Thomas | Software Engineer' }}</title>
 
     <link rel="icon" href="/favicon.png" type="image/png">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -13,6 +13,7 @@
     @fonts
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @fluxAppearance
+    @include('partials.analytics')
 
     <!-- Alpine.js CDN for standalone static interactivity -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -346,6 +347,13 @@
                 },
                 isActive(path) {
                     return window.location.pathname === path;
+                },
+                privacyBannerOpen: !localStorage.getItem('privacy_dismissed'),
+                privacyOpen: false,
+                dismissPrivacy() {
+                    this.privacyBannerOpen = false;
+                    this.privacyOpen = false;
+                    localStorage.setItem('privacy_dismissed', 'true');
                 }
             }" :class="{ 'light': getResolvedTheme() === 'light' }"
         class="min-h-screen bg-[var(--bg)] text-[var(--ink)] transition-theme duration-300 flex flex-col justify-between p-6 md:p-12 font-sans">
@@ -364,129 +372,102 @@
 
             <!-- Navigation Links (Desktop only) -->
             <nav
-                class="hidden md:flex flex-wrap justify-center items-center gap-4 md:gap-6 text-mono text-xs uppercase tracking-wider">
+                class="hidden md:flex flex-wrap justify-center items-center gap-4 md:gap-6 text-label">
                 <a href="/"
                     :class="isActive('/') ? 'text-[var(--primary)] font-bold border-b border-[var(--primary)]' : 'text-[var(--muted)] hover:text-[var(--ink)]'"
                     class="transition-colors pb-0.5">
-                    <span x-text="language === 'en' ? 'Home' : 'Inicio'"></span>
+                    <span x-text="language === 'es' ? 'Inicio' : 'Home'"></span>
                 </a>
                 <a href="/foundry"
                     :class="isActive('/foundry') ? 'text-[var(--primary)] font-bold border-b border-[var(--primary)]' : 'text-[var(--muted)] hover:text-[var(--ink)]'"
                     class="transition-colors pb-0.5">
-                    <span x-text="language === 'en' ? 'Foundry' : 'Fundición'"></span>
+                    <span x-text="language === 'es' ? 'Fundición' : 'Foundry'"></span>
                 </a>
                 <a href="/character"
                     :class="isActive('/character') ? 'text-[var(--primary)] font-bold border-b border-[var(--primary)]' : 'text-[var(--muted)] hover:text-[var(--ink)]'"
                     class="transition-colors pb-0.5">
-                    <span x-text="language === 'en' ? 'Character' : 'Personaje'"></span>
+                    <span x-text="language === 'es' ? 'Personaje' : 'Character'"></span>
                 </a>
                 <a href="/inventory"
                     :class="isActive('/inventory') ? 'text-[var(--primary)] font-bold border-b border-[var(--primary)]' : 'text-[var(--muted)] hover:text-[var(--ink)]'"
                     class="transition-colors pb-0.5">
-                    <span x-text="language === 'en' ? 'Inventory' : 'Inventario'"></span>
+                    <span x-text="language === 'es' ? 'Inventario' : 'Inventory'"></span>
                 </a>
                 <a href="/skills"
                     :class="isActive('/skills') ? 'text-[var(--primary)] font-bold border-b border-[var(--primary)]' : 'text-[var(--muted)] hover:text-[var(--ink)]'"
                     class="transition-colors pb-0.5">
-                    <span x-text="language === 'en' ? 'Skills' : 'Habilidades'"></span>
+                    <span x-text="language === 'es' ? 'Habilidades' : 'Skills'"></span>
                 </a>
                 <a href="/stats"
                     :class="isActive('/stats') ? 'text-[var(--primary)] font-bold border-b border-[var(--primary)]' : 'text-[var(--muted)] hover:text-[var(--ink)]'"
                     class="transition-colors pb-0.5">
-                    <span x-text="language === 'en' ? 'Stats' : 'Estadísticas'"></span>
+                    <span x-text="language === 'es' ? 'Estadísticas' : 'Stats'"></span>
                 </a>
                 <a href="/donations"
                     :class="isActive('/donations') ? 'text-[var(--primary)] font-bold border-b border-[var(--primary)]' : 'text-[var(--muted)] hover:text-[var(--ink)]'"
-                    class="transition-colors pb-0.5">
-                    <span x-data="{
-                            currentText: '',
-                            isGlitching: false,
-                            scrambleInterval: null,
-                            glitchTimeout: null,
-                            flickerTimeout: null,
-                            periodicTimeout: null,
-                            chars: '!@#$%^&*()_+-=[]{}|;:,./<>?░▒▓█▌▐▀▄01',
-                            getOriginal() {
-                                return language === 'en' ? 'Donations' : 'Donaciones';
-                            },
-                            getBegging() {
-                                return language === 'en' ? 'E-Begging' : 'Mendicidad';
-                            },
-                            cleanup() {
-                                if (this.scrambleInterval) {
+                    class="transition-colors pb-0.5"
+                    x-data="{
+                        currentText: '',
+                        isGlitching: false,
+                        scrambleInterval: null,
+                        flickerTimeout: null,
+                        chars: '!@#$%^&*()_+-=[]{}|;:,./<>?░▒▓█▌▐▀▄01',
+                        getOriginal() {
+                            return language === 'es' ? 'Donaciones' : 'Donations';
+                        },
+                        getGlitchTarget() {
+                            return language === 'es' ? 'Mendicidad' : 'E-Begging';
+                        },
+                        cleanup() {
+                            if (this.scrambleInterval) { clearInterval(this.scrambleInterval); this.scrambleInterval = null; }
+                            if (this.flickerTimeout) { clearTimeout(this.flickerTimeout); this.flickerTimeout = null; }
+                        },
+                        scramble(toText) {
+                            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                                this.cleanup();
+                                this.isGlitching = true;
+                                const length = Math.max(this.currentText.length, toText.length);
+                                const half = Math.ceil(length / 2);
+                                this.currentText = toText.split('').map((char, index) => {
+                                    if (index < half) return char;
+                                    return this.chars[Math.floor(Math.random() * this.chars.length)];
+                                }).join('');
+                                this.flickerTimeout = setTimeout(() => { this.currentText = toText; this.isGlitching = false; this.flickerTimeout = null; }, 100);
+                                return;
+                            }
+                            this.cleanup();
+                            this.isGlitching = true;
+                            let length = Math.max(this.currentText.length, toText.length);
+                            let count = 0;
+                            this.scrambleInterval = setInterval(() => {
+                                this.currentText = toText.split('').map((char, index) => {
+                                    if (index < count) return char;
+                                    return this.chars[Math.floor(Math.random() * this.chars.length)];
+                                }).join('');
+                                count += 1.2;
+                                if (count >= length) {
+                                    this.currentText = toText;
+                                    this.isGlitching = false;
                                     clearInterval(this.scrambleInterval);
                                     this.scrambleInterval = null;
                                 }
-                                if (this.glitchTimeout) {
-                                    clearTimeout(this.glitchTimeout);
-                                    this.glitchTimeout = null;
-                                }
-                                if (this.flickerTimeout) {
-                                    clearTimeout(this.flickerTimeout);
-                                    this.flickerTimeout = null;
-                                }
-                            },
-                            scramble(toText) {
-                                if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                                    this.cleanup();
-                                    this.isGlitching = true;
-                                    const length = Math.max(this.currentText.length, toText.length);
-                                    const half = Math.ceil(length / 2);
-                                    this.currentText = toText.split('').map((char, index) => {
-                                        if (index < half) return char;
-                                        return this.chars[Math.floor(Math.random() * this.chars.length)];
-                                    }).join('');
-                                    this.flickerTimeout = setTimeout(() => {
-                                        this.currentText = toText;
-                                        this.isGlitching = false;
-                                        this.flickerTimeout = null;
-                                    }, 100);
-                                    return;
-                                }
-                                this.cleanup();
-                                this.isGlitching = true;
-                                let length = Math.max(this.currentText.length, toText.length);
-                                let count = 0;
-                                this.scrambleInterval = setInterval(() => {
-                                    this.currentText = toText.split('').map((char, index) => {
-                                        if (index < count) return char;
-                                        return this.chars[Math.floor(Math.random() * this.chars.length)];
-                                    }).join('');
-                                    count += 0.7;
-                                    if (count >= length) {
-                                        this.currentText = toText;
-                                        this.isGlitching = false;
-                                        clearInterval(this.scrambleInterval);
-                                        this.scrambleInterval = null;
-                                    }
-                                }, 22);
-                            },
-                            triggerGlitch() {
-                                this.scramble(this.getBegging());
-                                this.glitchTimeout = setTimeout(() => {
-                                    this.scramble(this.getOriginal());
-                                }, 1700);
-                            },
-                            scheduleNextGlitch() {
-                                if (this.periodicTimeout) {
-                                    clearTimeout(this.periodicTimeout);
-                                }
-                                const delay = 15000 + Math.random() * 15000;
-                                this.periodicTimeout = setTimeout(() => {
-                                    this.triggerGlitch();
-                                    this.scheduleNextGlitch();
-                                }, delay);
-                            },
-                            init() {
-                                this.currentText = this.getOriginal();
-                                this.$watch('language', () => {
-                                    this.cleanup();
-                                    this.currentText = this.getOriginal();
-                                });
-                                this.scheduleNextGlitch();
-                            }
-                        }" :class="(isGlitching || currentText === getBegging()) ? 'glitch-hack-active' : ''"
-                        class="inline-block" x-text="currentText"></span>
+                            }, 20);
+                        },
+                        triggerGlitch() {
+                            this.scramble(this.getGlitchTarget());
+                        },
+                        revertGlitch() {
+                            this.scramble(this.getOriginal());
+                        },
+                        init() {
+                            this.currentText = this.getOriginal();
+                            this.$watch('language', () => { this.cleanup(); this.currentText = this.getOriginal(); });
+                        }
+                    }"
+                    @mouseenter="triggerGlitch()"
+                    @mouseleave="revertGlitch()"
+                    :class="isGlitching ? 'glitch-hack-active' : ''">
+                    <span x-text="currentText"></span>
                 </a>
             </nav>
 
@@ -495,7 +476,7 @@
                 <!-- Language Switcher (text style) -->
                 <button type="button" @click="setLanguage(language === 'en' ? 'es' : 'en')"
                     class="font-mono text-xs uppercase tracking-wider transition-colors focus-ring-signature rounded px-2 py-1 flex items-center gap-1 text-[var(--muted)] hover:text-[var(--ink)]"
-                    :aria-label="language === 'en' ? 'Switch to Spanish' : 'Cambiar a Inglés'">
+                    :aria-label="language === 'es' ? 'Cambiar a Inglés' : 'Switch to Spanish'">
                     <span :class="language === 'en' ? 'text-[var(--accent)] font-bold' : ''">en</span>
                     <span class="text-[var(--border)] font-normal">|</span>
                     <span :class="language === 'es' ? 'text-[var(--accent)] font-bold' : ''">es</span>
@@ -504,7 +485,7 @@
                 <!-- Theme Switcher (Cycle Single Button) -->
                 <button type="button" @click="cycleTheme()"
                     class="interactive-link focus-ring-signature rounded-full p-2 text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--surface-raised)] transition-all flex items-center justify-center shrink-0 border border-[var(--border)]"
-                    :aria-label="language === 'en' ? 'Active theme: ' + theme + '. Toggle theme' : 'Tema activo: ' + theme + '. Cambiar tema'">
+                    :aria-label="language === 'es' ? 'Tema activo: ' + theme + '. Cambiar tema' : 'Active theme: ' + theme + '. Toggle theme'">
                     <!-- Sun Icon (if theme is light) -->
                     <svg x-show="theme === 'light'" class="w-4 h-4 fill-current" viewBox="0 0 24 24">
                         <path
@@ -530,7 +511,7 @@
                 <!-- Mobile Language Switcher -->
                 <button type="button" @click="setLanguage(language === 'en' ? 'es' : 'en')"
                     class="font-mono text-xs uppercase tracking-wider transition-colors focus-ring-signature rounded px-2 py-1 flex items-center gap-1 text-[var(--muted)] hover:text-[var(--ink)]"
-                    :aria-label="language === 'en' ? 'Switch to Spanish' : 'Cambiar a Inglés'">
+                    :aria-label="language === 'es' ? 'Cambiar a Inglés' : 'Switch to Spanish'">
                     <span :class="language === 'en' ? 'text-[var(--accent)] font-bold' : ''">en</span>
                     <span class="text-[var(--border)] font-normal">|</span>
                     <span :class="language === 'es' ? 'text-[var(--accent)] font-bold' : ''">es</span>
@@ -539,7 +520,7 @@
                 <!-- Hamburger Button -->
                 <button type="button" @click="mobileMenuOpen = true"
                     class="interactive-link focus-ring-signature rounded-full p-2 text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--surface-raised)] transition-all flex items-center justify-center shrink-0 border border-[var(--border)]"
-                    :aria-label="language === 'en' ? 'Open menu' : 'Abrir menú'">
+                    :aria-label="language === 'es' ? 'Abrir menú' : 'Open menu'">
                     <svg class="w-4.5 h-4.5 fill-current" viewBox="0 0 24 24">
                         <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
                     </svg>
@@ -570,7 +551,7 @@
                     <!-- Close Button -->
                     <button type="button" @click="mobileMenuOpen = false"
                         class="interactive-link focus-ring-signature rounded-full p-2 text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--surface-raised)] flex items-center justify-center shrink-0 border border-[var(--border)]"
-                        :aria-label="language === 'en' ? 'Close menu' : 'Cerrar menú'">
+                        :aria-label="language === 'es' ? 'Cerrar menú' : 'Close menu'">
                         <svg class="w-4.5 h-4.5 fill-current" viewBox="0 0 24 24">
                             <path
                                 d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
@@ -579,67 +560,55 @@
                 </div>
 
                 <!-- Navigation Links Stack -->
-                <nav class="flex flex-col gap-6 text-mono text-xs uppercase tracking-wider pt-4">
+                <nav class="flex flex-col gap-6 text-label pt-4">
                     <a href="/" @click="mobileMenuOpen = false"
                         :class="isActive('/') ? 'text-[var(--primary)] font-bold border-b border-[var(--primary)] self-start' : 'text-[var(--muted)] hover:text-[var(--ink)]'"
                         class="transition-colors pb-0.5">
-                        <span x-text="language === 'en' ? 'Home' : 'Inicio'"></span>
+                        <span x-text="language === 'es' ? 'Inicio' : 'Home'"></span>
                     </a>
                     <a href="/foundry" @click="mobileMenuOpen = false"
                         :class="isActive('/foundry') ? 'text-[var(--primary)] font-bold border-b border-[var(--primary)] self-start' : 'text-[var(--muted)] hover:text-[var(--ink)]'"
                         class="transition-colors pb-0.5">
-                        <span x-text="language === 'en' ? 'Foundry' : 'Fundición'"></span>
+                        <span x-text="language === 'es' ? 'Fundición' : 'Foundry'"></span>
                     </a>
                     <a href="/character" @click="mobileMenuOpen = false"
                         :class="isActive('/character') ? 'text-[var(--primary)] font-bold border-b border-[var(--primary)] self-start' : 'text-[var(--muted)] hover:text-[var(--ink)]'"
                         class="transition-colors pb-0.5">
-                        <span x-text="language === 'en' ? 'Character' : 'Personaje'"></span>
+                        <span x-text="language === 'es' ? 'Personaje' : 'Character'"></span>
                     </a>
                     <a href="/inventory" @click="mobileMenuOpen = false"
                         :class="isActive('/inventory') ? 'text-[var(--primary)] font-bold border-b border-[var(--primary)] self-start' : 'text-[var(--muted)] hover:text-[var(--ink)]'"
                         class="transition-colors pb-0.5">
-                        <span x-text="language === 'en' ? 'Inventory' : 'Inventario'"></span>
+                        <span x-text="language === 'es' ? 'Inventario' : 'Inventory'"></span>
                     </a>
                     <a href="/skills" @click="mobileMenuOpen = false"
                         :class="isActive('/skills') ? 'text-[var(--primary)] font-bold border-b border-[var(--primary)] self-start' : 'text-[var(--muted)] hover:text-[var(--ink)]'"
                         class="transition-colors pb-0.5">
-                        <span x-text="language === 'en' ? 'Skills' : 'Habilidades'"></span>
+                        <span x-text="language === 'es' ? 'Habilidades' : 'Skills'"></span>
                     </a>
                     <a href="/stats" @click="mobileMenuOpen = false"
                         :class="isActive('/stats') ? 'text-[var(--primary)] font-bold border-b border-[var(--primary)] self-start' : 'text-[var(--muted)] hover:text-[var(--ink)]'"
                         class="transition-colors pb-0.5">
-                        <span x-text="language === 'en' ? 'Stats' : 'Estadísticas'"></span>
+                        <span x-text="language === 'es' ? 'Estadísticas' : 'Stats'"></span>
                     </a>
                     <a href="/donations" @click="mobileMenuOpen = false"
                         :class="isActive('/donations') ? 'text-[var(--primary)] font-bold border-b border-[var(--primary)] self-start' : 'text-[var(--muted)] hover:text-[var(--ink)]'"
-                        class="transition-colors pb-0.5">
-                        <span x-data="{
+                        class="transition-colors pb-0.5"
+                        x-data="{
                             currentText: '',
                             isGlitching: false,
                             scrambleInterval: null,
-                            glitchTimeout: null,
                             flickerTimeout: null,
-                            periodicTimeout: null,
                             chars: '!@#$%^&*()_+-=[]{}|;:,./<>?░▒▓█▌▐▀▄01',
                             getOriginal() {
-                                return language === 'en' ? 'Donations' : 'Donaciones';
+                                return language === 'es' ? 'Donaciones' : 'Donations';
                             },
-                            getBegging() {
-                                return language === 'en' ? 'E-Begging' : 'Mendicidad';
+                            getGlitchTarget() {
+                                return language === 'es' ? 'Mendicidad' : 'E-Begging';
                             },
                             cleanup() {
-                                if (this.scrambleInterval) {
-                                    clearInterval(this.scrambleInterval);
-                                    this.scrambleInterval = null;
-                                }
-                                if (this.glitchTimeout) {
-                                    clearTimeout(this.glitchTimeout);
-                                    this.glitchTimeout = null;
-                                }
-                                if (this.flickerTimeout) {
-                                    clearTimeout(this.flickerTimeout);
-                                    this.flickerTimeout = null;
-                                }
+                                if (this.scrambleInterval) { clearInterval(this.scrambleInterval); this.scrambleInterval = null; }
+                                if (this.flickerTimeout) { clearTimeout(this.flickerTimeout); this.flickerTimeout = null; }
                             },
                             scramble(toText) {
                                 if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -651,11 +620,7 @@
                                         if (index < half) return char;
                                         return this.chars[Math.floor(Math.random() * this.chars.length)];
                                     }).join('');
-                                    this.flickerTimeout = setTimeout(() => {
-                                        this.currentText = toText;
-                                        this.isGlitching = false;
-                                        this.flickerTimeout = null;
-                                    }, 100);
+                                    this.flickerTimeout = setTimeout(() => { this.currentText = toText; this.isGlitching = false; this.flickerTimeout = null; }, 100);
                                     return;
                                 }
                                 this.cleanup();
@@ -667,41 +632,30 @@
                                         if (index < count) return char;
                                         return this.chars[Math.floor(Math.random() * this.chars.length)];
                                     }).join('');
-                                    count += 0.7;
+                                    count += 1.2;
                                     if (count >= length) {
                                         this.currentText = toText;
                                         this.isGlitching = false;
                                         clearInterval(this.scrambleInterval);
                                         this.scrambleInterval = null;
                                     }
-                                }, 22);
+                                }, 20);
                             },
                             triggerGlitch() {
-                                this.scramble(this.getBegging());
-                                this.glitchTimeout = setTimeout(() => {
-                                    this.scramble(this.getOriginal());
-                                }, 1700);
+                                this.scramble(this.getGlitchTarget());
                             },
-                            scheduleNextGlitch() {
-                                if (this.periodicTimeout) {
-                                    clearTimeout(this.periodicTimeout);
-                                }
-                                const delay = 15000 + Math.random() * 15000;
-                                this.periodicTimeout = setTimeout(() => {
-                                    this.triggerGlitch();
-                                    this.scheduleNextGlitch();
-                                }, delay);
+                            revertGlitch() {
+                                this.scramble(this.getOriginal());
                             },
                             init() {
                                 this.currentText = this.getOriginal();
-                                this.$watch('language', () => {
-                                    this.cleanup();
-                                    this.currentText = this.getOriginal();
-                                });
-                                this.scheduleNextGlitch();
+                                this.$watch('language', () => { this.cleanup(); this.currentText = this.getOriginal(); });
                             }
-                        }" :class="(isGlitching || currentText === getBegging()) ? 'glitch-hack-active' : ''"
-                            class="inline-block" x-text="currentText"></span>
+                        }"
+                        @mouseenter="triggerGlitch()"
+                        @mouseleave="revertGlitch()"
+                        :class="isGlitching ? 'glitch-hack-active' : ''">
+                        <span x-text="currentText"></span>
                     </a>
                 </nav>
 
@@ -710,7 +664,7 @@
                     <button type="button" @click="cycleTheme()"
                         class="interactive-link focus-ring-signature rounded-md py-2.5 px-4 text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--surface-raised)] transition-all flex items-center justify-center gap-2 border border-[var(--border)]">
                         <span class="text-mono text-xs uppercase tracking-wider"
-                            x-text="language === 'en' ? 'Theme: ' + theme : 'Tema: ' + theme"></span>
+                            x-text="language === 'es' ? 'Tema: ' + theme : 'Theme: ' + theme"></span>
                     </button>
                 </div>
             </div>
@@ -724,16 +678,62 @@
         <!-- FOOTER -->
         <footer
             class="w-full max-w-6xl mx-auto border-t border-[var(--border)] mt-16 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-mono text-xs text-[var(--muted)]">
-            <div>
+            <div class="flex flex-wrap items-center gap-2">
                 <span>Jorge Thomas &copy; 2026</span>
+                <span>&middot;</span>
+                <a href="https://github.com/akrista/notakrista.com" target="_blank" rel="noopener noreferrer"
+                    class="text-[var(--accent)] hover:text-[var(--ink)] focus-ring-signature rounded-sm px-1 py-0.5 transition-colors">
+                    <span x-text="language === 'es' ? '[Código Abierto / MIT]' : '[Open Source / MIT]'"></span>
+                </a>
+                <span>&middot;</span>
+                <button type="button" @click="privacyOpen = true; privacyBannerOpen = true;"
+                    class="text-[var(--muted)] hover:text-[var(--ink)] focus-ring-signature rounded-sm px-1 py-0.5 transition-colors cursor-pointer">
+                    <span x-text="language === 'es' ? '[Privacidad]' : '[Privacy]'"></span>
+                </button>
             </div>
             <div class="flex items-center gap-3">
                 <span
-                    x-text="language === 'en' ? 'Built with Laravel & Alpine.js' : 'Construido con Laravel y Alpine.js'"></span>
+                    x-text="language === 'es' ? 'Construido con Laravel, Livewire y Alpine.js' : 'Built with Laravel, Livewire & Alpine.js'"></span>
                 <span>&middot;</span>
-                <a href="https://github.com/akrista" class="hover:text-[var(--ink)] focus-ring-signature">[GitHub]</a>
+                <a href="https://github.com/akrista" target="_blank" rel="noopener noreferrer" class="hover:text-[var(--ink)] focus-ring-signature rounded-sm px-1 py-0.5 transition-colors">[GitHub]</a>
             </div>
         </footer>
+
+        <!-- PRIVACY DISCLAIMER BANNER & MODAL -->
+        <div x-show="privacyBannerOpen || privacyOpen"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 translate-y-2"
+            x-transition:enter-end="opacity-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100 translate-y-0"
+            x-transition:leave-end="opacity-0 translate-y-2"
+            class="fixed bottom-4 right-4 left-4 sm:left-auto sm:max-w-md z-50 p-5 rounded-lg bg-[var(--surface-raised)] border border-[var(--border)] shadow-xl text-xs text-[var(--ink)] space-y-3"
+            style="display: none;"
+            role="region"
+            aria-label="Privacy Disclaimer">
+            <div class="flex items-center justify-between border-b border-[var(--border)] pb-2">
+                <div class="flex items-center gap-2">
+                    <span class="inline-block w-2.5 h-2.5 rounded-full bg-[var(--accent)]"></span>
+                    <h3 class="font-semibold text-mono text-xs uppercase tracking-wider text-[var(--ink)]" x-text="language === 'es' ? 'Privacidad y Analítica' : 'Privacy & Analytics'"></h3>
+                </div>
+                <button type="button" @click="dismissPrivacy()"
+                    class="text-[var(--muted)] hover:text-[var(--ink)] focus-ring-signature rounded p-1 transition-colors"
+                    aria-label="Close">
+                    ✕
+                </button>
+            </div>
+            <p class="text-body text-xs text-[var(--muted)] leading-relaxed"
+                x-text="language === 'es'
+                    ? 'Este sitio utiliza Google Analytics y Microsoft Clarity para medir de forma anónima el rendimiento y la interacción de los visitantes. No se venden ni comparten datos personales.'
+                    : 'This site uses Google Analytics and Microsoft Clarity to anonymously measure visitor interactions and performance. No personal data is sold or shared.'">
+            </p>
+            <div class="flex items-center justify-end gap-2 pt-1">
+                <button type="button" @click="dismissPrivacy()"
+                    class="px-3 py-1.5 rounded-md bg-[var(--primary)] text-[var(--primary-ink)] font-semibold text-mono text-xs uppercase tracking-wider focus-ring-signature hover:opacity-90 transition-opacity cursor-pointer">
+                    <span x-text="language === 'es' ? 'Entendido' : 'Got It'"></span>
+                </button>
+            </div>
+        </div>
     </div>
 </body>
 

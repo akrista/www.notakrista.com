@@ -1,11 +1,11 @@
 ## Design Context
 
-This project's strategic and visual context lives at the project root and in `.impeccable/`. **Read these files before making UI decisions** — they encode the brand, the visual system, and the in-browser iteration config.
+This project's strategic and visual context lives at the project root and in `.impeccable/`. **Read these files before making UI decisions**: they encode the brand, the visual system, and the in-browser iteration config.
 
-- **`PRODUCT.md`** — register, platform, users, purpose, positioning, conversion & proof, brand personality, anti-references, design principles, accessibility floor. Answers "who/what/why."
-- **`DESIGN.md`** — visual system: palette, typography, elevation, components, do's and don'ts. Answers "how it looks." On visual decisions, DESIGN.md wins over PRODUCT.md; on strategic/voice decisions, PRODUCT.md wins.
-- **`.impeccable/design.json`** — sidecar with tonal ramps, motion tokens, breakpoints, self-contained component HTML/CSS, and narrative. Used by `$impeccable live` and Stitch-compatible tooling.
-- **`.impeccable/live/config.json`** — pre-configured for `$impeccable live` to boot straight into variant mode. Files: `resources/views/welcome.blade.php`, `resources/views/dashboard.blade.php`.
+- **`PRODUCT.md`**: register, platform, users, purpose, positioning, conversion & proof, brand personality, anti-references, design principles, accessibility floor. Answers "who/what/why."
+- **`DESIGN.md`**: visual system: palette, typography, elevation, components, do's and don'ts. Answers "how it looks." On visual decisions, DESIGN.md wins over PRODUCT.md; on strategic/voice decisions, PRODUCT.md wins.
+- **`.impeccable/design.json`**: sidecar with tonal ramps, motion tokens, breakpoints, self-contained component HTML/CSS, and narrative. Used by `$impeccable live` and Stitch-compatible tooling.
+- **`.impeccable/live/config.json`**: pre-configured for `$impeccable live` to boot straight into variant mode. Files: `resources/views/welcome.blade.php`, `resources/views/dashboard.blade.php`.
 
 **Quick rules from the system** (full text in PRODUCT.md / DESIGN.md):
 

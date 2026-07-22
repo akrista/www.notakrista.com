@@ -12,7 +12,7 @@
         <!-- PAGE TITLE (SEO & Accessibility) -->
         <div class="w-full border-b border-[var(--border)] pb-4">
             <h1 class="text-headline text-[var(--ink)]">
-                <span x-text="language === 'en' ? 'Character Sheet' : 'Hoja de Personaje'"></span>
+                <span x-text="language === 'es' ? 'Hoja de Personaje: Equipamiento y Stack Activo' : 'Character Sheet: Equipment & Active Stack'"></span>
             </h1>
         </div>
 
@@ -27,8 +27,8 @@
                     <!-- Inside Card Header & Switcher -->
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-[var(--border)] pb-4">
                         <div class="flex flex-col">
-                            <span class="text-mono text-[10px] text-[var(--muted)] uppercase" x-text="language === 'en' ? 'Active Equipment' : 'Equipamiento Activo'"></span>
-                            <h2 class="text-title text-[var(--ink)]" x-text="language === 'en' ? 'Build Configuration' : 'Configuración de Build'"></h2>
+                            <span class="text-label text-[var(--muted)]" x-text="language === 'es' ? 'Equipamiento Activo' : 'Active Equipment'"></span>
+                            <h2 class="text-title text-[var(--ink)]" x-text="language === 'es' ? 'Configuración de Build' : 'Build Configuration'"></h2>
                         </div>
                         
                         <!-- Mini Switcher Button inside Card -->
@@ -38,14 +38,14 @@
                                 @click="changeBuild('ranked')"
                                 :class="activeBuild === 'ranked' ? 'active' : ''"
                                 class="segmented-pill focus-ring-signature text-[10px] uppercase font-mono py-1 px-3"
-                                x-text="language === 'en' ? 'Ranked (PVP)' : 'Ranked (PVP)'"
+                                x-text="language === 'es' ? 'Ranked (Profesional)' : 'Ranked (Professional)'"
                             ></button>
                             <button
                                 type="button"
                                 @click="changeBuild('casual')"
                                 :class="activeBuild === 'casual' ? 'active' : ''"
                                 class="segmented-pill focus-ring-signature text-[10px] uppercase font-mono py-1 px-3"
-                                x-text="language === 'en' ? 'Casual (PVE)' : 'Casual (PVE)'"
+                                x-text="language === 'es' ? 'Casual (Personal)' : 'Casual (Personal)'"
                             ></button>
                         </div>
                     </div>
@@ -65,7 +65,7 @@
                                 :class="selectedSlot === activeBuild + '_head' ? 'border-[var(--primary)] text-[var(--primary)] ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg)]' : 'border-[var(--border)] text-[var(--muted)] hover:border-[var(--ink)] hover:text-[var(--ink)]'"
                                 class="border bg-[var(--surface)] rounded-md flex flex-col items-center justify-center p-1.5 focus-ring-signature transition-all">
                                 <span class="text-lg" x-text="activeBuild === 'ranked' ? '🛡️' : '🎧'"></span>
-                                <span class="text-mono text-[8px] mt-1" x-text="language === 'en' ? 'HEAD' : 'CABEZA'"></span>
+                                <span class="text-mono text-[8px] mt-1" x-text="language === 'es' ? 'CABEZA' : 'HEAD'"></span>
                             </button>
                             
                             <div></div>
@@ -75,7 +75,7 @@
                                 :class="selectedSlot === activeBuild + '_chest' ? 'border-[var(--primary)] text-[var(--primary)] ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg)]' : 'border-[var(--border)] text-[var(--muted)] hover:border-[var(--ink)] hover:text-[var(--ink)]'"
                                 class="border bg-[var(--surface)] rounded-md flex flex-col items-center justify-center p-1.5 focus-ring-signature transition-all">
                                 <span class="text-lg" x-text="activeBuild === 'ranked' ? '📦' : '👕'"></span>
-                                <span class="text-mono text-[8px] mt-1" x-text="language === 'en' ? 'ARMOR' : 'PECHO'"></span>
+                                <span class="text-mono text-[8px] mt-1" x-text="language === 'es' ? 'PECHO' : 'ARMOR'"></span>
                             </button>
 
                             <!-- ROW 2 -->
@@ -84,7 +84,7 @@
                                 :class="selectedSlot === activeBuild + '_main_hand' ? 'border-[var(--primary)] text-[var(--primary)] ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg)]' : 'border-[var(--border)] text-[var(--muted)] hover:border-[var(--ink)] hover:text-[var(--ink)]'"
                                 class="border bg-[var(--surface)] rounded-md flex flex-col items-center justify-center p-1.5 focus-ring-signature transition-all">
                                 <span class="text-lg" x-text="activeBuild === 'ranked' ? '⚔️' : '⌨️'"></span>
-                                <span class="text-mono text-[8px] mt-1" x-text="language === 'en' ? 'WEAPON' : 'ARMA'"></span>
+                                <span class="text-mono text-[8px] mt-1" x-text="language === 'es' ? 'ARMA' : 'WEAPON'"></span>
                             </button>
                             
                             <div></div>
@@ -94,7 +94,7 @@
                                 :class="selectedSlot === activeBuild + '_off_hand' ? 'border-[var(--primary)] text-[var(--primary)] ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg)]' : 'border-[var(--border)] text-[var(--muted)] hover:border-[var(--ink)] hover:text-[var(--ink)]'"
                                 class="border bg-[var(--surface)] rounded-md flex flex-col items-center justify-center p-1.5 focus-ring-signature transition-all">
                                 <span class="text-lg" x-text="activeBuild === 'ranked' ? '🔮' : '🖱️'"></span>
-                                <span class="text-mono text-[8px] mt-1" x-text="language === 'en' ? 'SHIELD' : 'ESCUDO'"></span>
+                                <span class="text-mono text-[8px] mt-1" x-text="language === 'es' ? 'ESCUDO' : 'SHIELD'"></span>
                             </button>
 
                             <!-- ROW 3 -->
@@ -103,7 +103,7 @@
                                 :class="selectedSlot === activeBuild + '_acc_1' ? 'border-[var(--primary)] text-[var(--primary)] ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg)]' : 'border-[var(--border)] text-[var(--muted)] hover:border-[var(--ink)] hover:text-[var(--ink)]'"
                                 class="border bg-[var(--surface)] rounded-md flex flex-col items-center justify-center p-1.5 focus-ring-signature transition-all">
                                 <span class="text-lg" x-text="activeBuild === 'ranked' ? '💍' : '📖'"></span>
-                                <span class="text-mono text-[8px] mt-1" x-text="language === 'en' ? 'RING 1' : 'ANILLO 1'"></span>
+                                <span class="text-mono text-[8px] mt-1" x-text="language === 'es' ? 'ANILLO 1' : 'RING 1'"></span>
                             </button>
                             
                             <div></div>
@@ -113,7 +113,7 @@
                                 :class="selectedSlot === activeBuild + '_acc_2' ? 'border-[var(--primary)] text-[var(--primary)] ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg)]' : 'border-[var(--border)] text-[var(--muted)] hover:border-[var(--ink)] hover:text-[var(--ink)]'"
                                 class="border bg-[var(--surface)] rounded-md flex flex-col items-center justify-center p-1.5 focus-ring-signature transition-all">
                                 <span class="text-lg" x-text="activeBuild === 'ranked' ? '💍' : '☕'"></span>
-                                <span class="text-mono text-[8px] mt-1" x-text="language === 'en' ? 'RING 2' : 'ANILLO 2'"></span>
+                                <span class="text-mono text-[8px] mt-1" x-text="language === 'es' ? 'ANILLO 2' : 'RING 2'"></span>
                             </button>
 
                         </div>
@@ -127,9 +127,9 @@
                 
                 <div class="flex flex-col gap-1">
                     <h2 class="text-title text-[var(--ink)]">
-                        <span x-text="language === 'en' ? 'Inspection Panel' : 'Panel de Inspección'"></span>
+                        <span x-text="language === 'es' ? 'Panel de Inspección' : 'Inspection Panel'"></span>
                     </h2>
-                    <p class="text-mono text-[10px] text-[var(--muted)]" x-text="language === 'en' ? 'Stats and effects description of the selected gear.' : 'Atributos y descripción del objeto seleccionado.'"></p>
+                    <p class="text-mono text-[10px] text-[var(--muted)]" x-text="language === 'es' ? 'Atributos y descripción del objeto seleccionado.' : 'Stats and effects description of the selected gear.'"></p>
                 </div>
 
                 <!-- Inspection Panel Card -->
@@ -140,7 +140,7 @@
                     <!-- Header with Rarity Color -->
                     <div class="flex flex-col gap-1 border-b border-[var(--border)] pb-4">
                         <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-bold text-[var(--ink)]" x-text="language === 'en' ? item().name : item().name_es"></h3>
+                            <h3 class="text-lg font-bold text-[var(--ink)]" x-text="language === 'es' ? item().name_es : item().name"></h3>
                             <span 
                                 :class="{
                                     'text-[var(--muted)] border-[var(--border)] bg-[var(--surface-raised)]': item().rarity === 'Common',
@@ -152,18 +152,18 @@
                                 x-text="item().rarity"
                             ></span>
                         </div>
-                        <span class="text-mono text-[10px] text-[var(--muted)]" x-text="language === 'en' ? item().type : item().type_es"></span>
+                        <span class="text-mono text-[10px] text-[var(--muted)]" x-text="language === 'es' ? item().type_es : item().type"></span>
                     </div>
 
                     <!-- Lore -->
                     <div class="flex flex-col gap-1">
-                        <span class="text-mono text-[9px] text-[var(--muted)] uppercase" x-text="language === 'en' ? 'Item Lore' : 'Lore del Objeto'"></span>
-                        <p class="text-body text-xs italic text-[var(--ink)]" x-text="language === 'en' ? item().desc : item().desc_es"></p>
+                        <span class="text-mono text-[9px] text-[var(--muted)] uppercase" x-text="language === 'es' ? 'Lore del Objeto' : 'Item Lore'"></span>
+                        <p class="text-body text-xs italic text-[var(--ink)]" x-text="language === 'es' ? item().desc_es : item().desc"></p>
                     </div>
 
                     <!-- Effects -->
                     <div class="flex flex-col gap-2">
-                        <span class="text-mono text-[9px] text-[var(--muted)] uppercase" x-text="language === 'en' ? 'Active Effects' : 'Efectos Activos'"></span>
+                        <span class="text-mono text-[9px] text-[var(--muted)] uppercase" x-text="language === 'es' ? 'Efectos Activos' : 'Active Effects'"></span>
                         <ul class="flex flex-col gap-1">
                             <template x-for="stat in item().stats" :key="stat">
                                 <li class="text-mono text-xs text-[var(--primary)] flex items-center gap-2">
@@ -176,11 +176,11 @@
 
                     <!-- Buffs -->
                     <div class="border-t border-[var(--border)] pt-4 flex flex-col gap-2">
-                        <span class="text-mono text-[9px] text-[var(--muted)] uppercase" x-text="language === 'en' ? 'Global Modifiers' : 'Modificadores Globales'"></span>
+                        <span class="text-mono text-[9px] text-[var(--muted)] uppercase" x-text="language === 'es' ? 'Modificadores Globales' : 'Global Modifiers'"></span>
                         <div class="flex flex-wrap gap-2">
                             <div class="flex items-center gap-1 badge-chip bg-[var(--surface-raised)] border border-[var(--border)]">
                                 <span class="w-2 h-2 rounded-full bg-[var(--accent)] animate-pulse"></span>
-                                <span class="text-mono text-[9px]" x-text="language === 'en' ? 'Full Stack Engineer (+50% Polyglot)' : 'Ingeniero Full Stack (+50% Políglota)'"></span>
+                                <span class="text-mono text-[9px]" x-text="language === 'es' ? 'Ingeniero Full Stack (+50% Políglota)' : 'Full Stack Engineer (+50% Polyglot)'"></span>
                             </div>
                         </div>
                     </div>

@@ -122,3 +122,62 @@ test('inventory page displays mtg and yugioh cards but excludes independencia ca
         ->assertSee('Blue-Eyes White Dragon')
         ->assertDontSee('Excludeme Card');
 });
+
+test('inventory page includes formatted mana cost html for mtg cards', function (): void {
+    MtgCard::factory()->create([
+        'name' => 'Counterspell',
+        'mana_cost' => '{U}{U}',
+    ]);
+
+    $response = $this->get(route('inventory'));
+
+    $response->assertOk()
+        ->assertSee('Counterspell')
+        ->assertSee('background-color: #c1d7e9', escape: false);
+});
+
+test('inventory page renders yugioh collection summary and toolbar controls', function (): void {
+    Http::fake([
+        'https://db.ygoprodeck.com/api/v7/cardsetsinfo.php*' => Http::response([
+            'name' => 'Dark Magician',
+            'set_rarity' => 'Ultra Rare',
+            'set_price' => '15.50',
+            'id' => 46986414,
+        ]),
+        'https://db.ygoprodeck.com/api/v7/cardinfo.php*' => Http::response([
+            'data' => [
+                [
+                    'type' => 'Spellcaster / Normal',
+                    'frameType' => 'normal',
+                    'card_prices' => [['tcgplayer_price' => '15.50']],
+                    'card_images' => [['image_url' => 'https://via.placeholder.com/640x480.png']],
+                ],
+            ],
+        ]),
+    ]);
+
+    YugiohCard::factory()->create([
+        'name' => 'Dark Magician',
+        'setcode' => 'SDY-006',
+        'rarity' => 'Ultra Rare',
+        'type' => 'Spellcaster / Normal',
+        'quantity' => 2,
+        'card_price' => 15.50,
+        'ygoprodeck_id' => 46986414,
+    ]);
+
+    $response = $this->get(route('inventory'));
+
+    $response->assertOk()
+        ->assertSee('Dark Magician')
+        ->assertSee('SDY-006')
+        ->assertSee('ygoprodeck_id', escape: false)
+        ->assertSee('46986414');
+});
+
+test('inventory page renders YGO tab before MTG tab', function (): void {
+    $response = $this->get(route('inventory'));
+
+    $response->assertOk()
+        ->assertSeeInOrder(['Yu-Gi-Oh!', 'Magic: The Gathering']);
+});

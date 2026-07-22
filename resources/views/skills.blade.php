@@ -115,13 +115,13 @@
     }" class="w-full flex flex-col gap-12">
         
         <!-- HEADER -->
-        <div class="flex flex-col gap-2">
-            <h2 class="text-headline text-[var(--ink)]">
-                <span x-text="language === 'en' ? 'Skills & Attributes' : 'Habilidades y Atributos'"></span>
-            </h2>
-            <p class="text-mono text-xs text-[var(--muted)]" x-text="language === 'en'
-                ? 'Proficiency bars representing active and passive capabilities.'
-                : 'Barras de dominio que representan las capacidades activas y pasivas.'">
+        <div class="flex flex-col gap-2 border-b border-[var(--border)] pb-4">
+            <h1 class="text-headline text-[var(--ink)]">
+                <span x-text="language === 'es' ? 'Habilidades y Atributos: Capacidades Técnicas y Personales' : 'Skills & Attributes: Technical & Personal Capabilities'"></span>
+            </h1>
+            <p class="text-mono text-xs text-[var(--muted)]" x-text="language === 'es'
+                ? 'Niveles de dominio que representan capacidades activas de ingeniería y personales.'
+                : 'Proficiency rankings representing active engineering and personal capabilities.'">
             </p>
         </div>
 
@@ -129,53 +129,53 @@
         <div class="w-full flex flex-col gap-8">
             <!-- SECTION 1: Business Skills -->
             <div class="flex flex-col gap-4">
-                <h3 class="text-title text-[var(--primary)] border-b border-[var(--border)] pb-2 uppercase text-mono text-sm tracking-wider">
-                    <span x-text="language === 'en' ? 'Professional Stack (Ranked)' : 'Pila Profesional (Ranked)'"></span>
-                </h3>
+                <h2 class="text-title text-[var(--primary)] border-b border-[var(--border)] pb-2 uppercase text-label">
+                    <span x-text="language === 'es' ? 'Pila Profesional (Ranked)' : 'Professional Stack (Ranked)'"></span>
+                </h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
                     <template x-for="skill in businessSkills" :key="skill.name">
                         <div class="card-bench border border-[var(--border)] rounded-lg p-5 flex flex-col gap-4">
                             <div class="flex justify-between items-start">
                                 <div class="flex flex-col">
-                                    <span class="text-mono text-[9px] text-[var(--muted)] uppercase" x-text="language === 'en' ? skill.type : skill.type_es"></span>
-                                    <h4 class="text-sm font-bold text-[var(--ink)]" x-text="language === 'en' ? skill.name : skill.name_es"></h4>
+                                    <span class="text-label text-[var(--muted)]" x-text="language === 'es' ? skill.type_es : skill.type"></span>
+                                    <h4 class="text-sm font-bold text-[var(--ink)]" x-text="language === 'es' ? skill.name_es : skill.name"></h4>
                                 </div>
                                 <div class="flex items-baseline gap-0.5 text-mono">
-                                    <span class="text-[9px] text-[var(--muted)]" x-text="language === 'en' ? 'LVL' : 'NIV'"></span>
+                                    <span class="text-[9px] text-[var(--muted)]" x-text="language === 'es' ? 'NIV' : 'LVL'"></span>
                                     <span class="text-base font-bold text-[var(--primary)]" x-text="skill.level"></span>
                                 </div>
                             </div>
                             <div class="w-full h-2.5 bg-[var(--surface-raised)] border border-[var(--border)] rounded-full overflow-hidden relative">
                                 <div class="h-full bg-[var(--primary)]" :style="`width: ${skill.level}%`"></div>
                             </div>
-                            <p class="text-body text-[11px] text-[var(--muted)] leading-relaxed" x-text="language === 'en' ? skill.desc : skill.desc_es"></p>
+                            <p class="text-body text-[11px] text-[var(--muted)] leading-relaxed" x-text="language === 'es' ? skill.desc_es : skill.desc"></p>
                         </div>
                     </template>
                 </div>
             </div>
 
-            <!-- SECTION 2: Personal Skills -->
+            <!-- SECTION 2: Life & Hobby Skills -->
             <div class="flex flex-col gap-4">
-                <h3 class="text-title text-[var(--accent)] border-b border-[var(--border)] pb-2 uppercase text-mono text-sm tracking-wider">
-                    <span x-text="language === 'en' ? 'Life & Hobby Skills (Casual)' : 'Habilidades Personales (Casual)'"></span>
-                </h3>
+                <h2 class="text-title text-[var(--accent)] border-b border-[var(--border)] pb-2 uppercase text-label">
+                    <span x-text="language === 'es' ? 'Habilidades Personales (Casual)' : 'Life & Hobby Skills (Casual)'"></span>
+                </h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
                     <template x-for="skill in personalSkills" :key="skill.name">
                         <div class="card-bench border border-[var(--border)] rounded-lg p-5 flex flex-col gap-4">
                             <div class="flex justify-between items-start">
                                 <div class="flex flex-col">
-                                    <span class="text-mono text-[9px] text-[var(--muted)] uppercase" x-text="language === 'en' ? skill.type : skill.type_es"></span>
-                                    <h4 class="text-sm font-bold text-[var(--ink)]" x-text="language === 'en' ? skill.name : skill.name_es"></h4>
+                                    <span class="text-mono text-[9px] text-[var(--muted)] uppercase" x-text="language === 'es' ? skill.type_es : skill.type"></span>
+                                    <h4 class="text-sm font-bold text-[var(--ink)]" x-text="language === 'es' ? skill.name_es : skill.name"></h4>
                                 </div>
                                 <div class="flex items-baseline gap-0.5 text-mono">
-                                    <span class="text-[9px] text-[var(--muted)]" x-text="language === 'en' ? 'LVL' : 'NIV'"></span>
+                                    <span class="text-[9px] text-[var(--muted)]" x-text="language === 'es' ? 'NIV' : 'LVL'"></span>
                                     <span class="text-base font-bold text-[var(--accent)]" x-text="skill.level"></span>
                                 </div>
                             </div>
                             <div class="w-full h-2.5 bg-[var(--surface-raised)] border border-[var(--border)] rounded-full overflow-hidden relative">
                                 <div class="h-full bg-[var(--accent)]" :style="`width: ${skill.level}%`"></div>
                             </div>
-                            <p class="text-body text-[11px] text-[var(--muted)] leading-relaxed" x-text="language === 'en' ? skill.desc : skill.desc_es"></p>
+                            <p class="text-body text-[11px] text-[var(--muted)] leading-relaxed" x-text="language === 'es' ? skill.desc_es : skill.desc"></p>
                         </div>
                     </template>
                 </div>
@@ -186,11 +186,11 @@
         <div class="card-bench border border-[var(--border)] rounded-lg p-6 w-full bg-[var(--surface)] mt-4">
             <div class="flex items-center gap-3 mb-2">
                 <span class="w-2 h-2 rounded-full bg-[var(--accent)] animate-pulse"></span>
-                <span class="text-mono text-xs uppercase text-[var(--accent)] font-semibold" x-text="language === 'en' ? 'Passive Traits / Buffs' : 'Rasgos Pasivos / Buffs'"></span>
+                <span class="text-mono text-xs uppercase text-[var(--accent)] font-semibold" x-text="language === 'es' ? 'Rasgos Pasivos / Buffs' : 'Passive Traits / Buffs'"></span>
             </div>
-            <p class="text-body text-sm text-[var(--muted)]" x-text="language === 'en'
-                ? 'Driven by public build logs and side-project sandboxes. Earns experience multipliers through daily commits and active code exploration.'
-                : 'Impulsado por logs de desarrollo público y proyectos secundarios. Obtiene multiplicadores de experiencia a través de commits diarios y exploración de código activo.'">
+            <p class="text-body text-sm text-[var(--muted)]" x-text="language === 'es'
+                ? 'Impulsado por logs de desarrollo público y proyectos secundarios. Obtiene multiplicadores de experiencia a través de commits diarios y exploración de código activo.'
+                : 'Driven by public build logs and side-project sandboxes. Earns experience multipliers through daily commits and active code exploration.'">
             </p>
         </div>
 

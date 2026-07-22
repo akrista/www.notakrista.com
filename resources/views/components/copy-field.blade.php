@@ -14,7 +14,7 @@
     @if ($label)
         <span class="text-mono text-[9px] uppercase text-[var(--muted)] tracking-wider">
             @if (is_array($label))
-                <span x-show="language === 'en'">{{ $label[0] }}</span>
+                <span x-show="language !== 'es'">{{ $label[0] }}</span>
                 <span x-show="language === 'es'">{{ $label[1] }}</span>
             @else
                 {{ $label }}
@@ -33,9 +33,9 @@
         @endif
         <button type="button"
             @click="navigator.clipboard.writeText(@js($value)).then(() => { copied = true; setTimeout(() => copied = false, 1500); })"
-            :aria-label="copied ? (language === 'en' ? 'Copied' : 'Copiado') : (language === 'en' ? 'Copy' : 'Copiar')"
+            :aria-label="copied ? (language === 'es' ? 'Copiado' : 'Copied') : (language === 'es' ? 'Copiar' : 'Copy')"
             class="font-mono text-[9px] uppercase tracking-wider text-[var(--muted)] hover:text-[var(--primary)] focus-ring-signature px-2 py-1 rounded border border-[var(--border)] hover:border-[var(--primary)] transition-all shrink-0">
-            <span x-show="!copied" x-text="language === 'en' ? 'Copy' : 'Copiar'"></span>
+            <span x-show="!copied" x-text="language === 'es' ? 'Copiar' : 'Copy'"></span>
             <span x-show="copied" class="text-[var(--accent)]" aria-hidden="true">✓</span>
         </button>
     </div>

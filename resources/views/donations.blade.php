@@ -97,7 +97,7 @@
                 <p class="text-body text-xs text-[var(--muted)] leading-relaxed" x-text="t('others_need_body')">
                     {{ __('donations.others_need_body') }}</p>
 
-                <!-- Tierra Viva bulletin — compact complement (bullets collapsed by default) -->
+                <!-- Tierra Viva bulletin: compact complement (bullets collapsed by default) -->
                 <div class="mt-1 flex flex-col gap-1.5">
                     <p class="text-body text-xs text-[var(--ink)] leading-snug">
                         <span class="text-[var(--yellow)] font-bold" aria-hidden="true">●</span>

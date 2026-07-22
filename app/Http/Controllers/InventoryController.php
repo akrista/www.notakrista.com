@@ -6,9 +6,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ItemResource;
 use App\Http\Resources\MtgCardResource;
+use App\Http\Resources\WarframeAccountResource;
 use App\Http\Resources\YugiohCardResource;
 use App\Models\Item;
 use App\Models\MtgCard;
+use App\Models\WarframeAccount;
 use App\Models\YugiohCard;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -41,11 +43,16 @@ final class InventoryController extends Controller
             ->orderBy('name')
             ->get();
 
+        $warframeAccount = WarframeAccount::query()
+            ->with(['userItems.catalogItem'])
+            ->first();
+
         return view('inventory', [
             'items' => $items,
             'initialItemId' => array_key_first($items),
             'mtgCards' => MtgCardResource::collection($mtgCards)->resolve($request),
             'yugiohCards' => YugiohCardResource::collection($yugiohCards)->resolve($request),
+            'warframeData' => $warframeAccount ? new WarframeAccountResource($warframeAccount)->resolve($request) : null,
         ]);
     }
 }

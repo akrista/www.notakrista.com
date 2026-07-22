@@ -9,7 +9,7 @@
                 <!-- Dynamic Subheading -->
                 <div class="h-8 flex items-center">
                     <p class="text-mono text-[var(--muted)] flex gap-1.5 items-center">
-                        <span x-text="language === 'en' ? 'a software engineer ' : 'un ingeniero de software '"></span>
+                        <span x-text="language === 'es' ? 'un ingeniero de software ' : 'a software engineer '"></span>
                         <span x-text="currentAttribute"
                             class="text-[var(--primary)] border-b border-[var(--primary)] font-semibold transition-all duration-200 inline-block"></span>
                     </p>
@@ -22,14 +22,14 @@
                     <span class="badge-chip bg-[var(--surface-raised)] text-[var(--ink)] border border-[var(--border)]">
                         <span class="w-2.5 h-2.5 rounded-full bg-[var(--accent)] inline-block"></span>
                         <span class="text-xs text-[var(--ink)] font-mono"
-                            x-text="language === 'en' ? 'Available for projects' : 'Disponible para proyectos'"></span>
+                            x-text="language === 'es' ? 'Disponible para proyectos' : 'Available for projects'"></span>
                     </span>
                 </div>
 
                 <!-- Bio Section -->
                 <div class="flex flex-col gap-4">
                     <p class="text-body text-[var(--muted)]">
-                        <span x-show="language === 'en'">
+                        <span x-show="language !== 'es'">
                             I build reliable, production-grade web applications with Laravel, Livewire, Filament, and
                             Tailwind CSS, prioritizing clean architectures, database performance, and highly intuitive
                             interfaces.
@@ -41,7 +41,7 @@
                         </span>
                     </p>
                     <p class="text-body text-[var(--muted)]">
-                        <span x-show="language === 'en'">
+                        <span x-show="language !== 'es'">
                             This website serves as my digital workbench, showcasing my professional work, side-project
                             sandboxes, and the real-life activities backing up the code.
                         </span>
@@ -56,7 +56,7 @@
                 <!-- Recruiter CTA / Contact Channels (Moved Up) -->
                 <div x-data="{ showMoreContacts: false }"
                     class="card-bench flex flex-col gap-4 border border-[var(--border)]">
-                    <h2 class="text-title text-[var(--ink)]" x-text="language === 'en' ? 'Get in Touch' : 'Contacto'">
+                    <h2 class="text-title text-[var(--ink)]" x-text="language === 'es' ? 'Contacto' : 'Get in Touch'">
                     </h2>
 
                     <!-- Prominent Primary Email CTA -->
@@ -66,7 +66,7 @@
                             <path
                                 d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
                         </svg>
-                        <span x-text="language === 'en' ? 'SEND EMAIL' : 'ENVIAR CORREO'"></span>
+                        <span x-text="language === 'es' ? 'ENVIAR CORREO' : 'SEND EMAIL'"></span>
                     </a>
 
                     <!-- Top Secondary Channels -->
@@ -92,8 +92,9 @@
                     <!-- Collapsible Trigger -->
                     <div class="text-center">
                         <button type="button" @click="showMoreContacts = !showMoreContacts"
+                            :aria-expanded="showMoreContacts"
                             class="font-mono text-xs text-[var(--muted)] hover:text-[var(--ink)] focus-ring-signature py-1 px-2 rounded hover:bg-[var(--surface-raised)] transition-all"
-                            x-text="showMoreContacts ? (language === 'en' ? '[- Hide Channels]' : '[- Ocultar Canales]') : (language === 'en' ? '[+ More Channels]' : '[+ Más Canales]')"></button>
+                            x-text="showMoreContacts ? (language === 'es' ? '[- Ocultar Canales]' : '[- Hide Channels]') : (language === 'es' ? '[+ Más Canales]' : '[+ More Channels]')"></button>
                     </div>
 
                     <!-- Additional Channels (Collapsible) -->
@@ -158,26 +159,26 @@
             <div class="alert-box flex flex-col gap-4">
                 <div class="flex items-center gap-3">
                     <span class="w-2.5 h-2.5 rounded-full bg-[var(--red)] inline-block"></span>
-                    <h3 class="font-mono text-sm uppercase text-[var(--red)] font-semibold"
-                        x-text="language === 'en' ? 'Emergency Relief Appeal' : 'Llamado de Emergencia'"></h3>
+                    <h3 class="text-label text-[var(--red)] font-semibold"
+                        x-text="language === 'es' ? 'Llamado de Emergencia' : 'Emergency Relief Appeal'"></h3>
                 </div>
                 <p class="text-body text-sm"
-                    x-text="language === 'en'
-                    ? 'On June 24, 2026, a severe earthquake struck Venezuela, deeply affecting my family and our living situation. I am raising support to cover structural repairs and urgent recovery expenses.'
-                    : 'El 24 de junio de 2026, un fuerte terremoto sacudió Venezuela, afectando gravemente a mi familia y nuestra vivienda. Estoy recaudando fondos para reparaciones estructurales y gastos urgentes de recuperación.'">
+                    x-text="language === 'es'
+                    ? 'El 24 de junio de 2026, un fuerte terremoto sacudió Venezuela, afectando gravemente a mi familia y nuestra vivienda. Estoy recaudando fondos para reparaciones estructurales y gastos urgentes de recuperación.'
+                    : 'On June 24, 2026, a severe earthquake struck Venezuela, deeply affecting my family and our living situation. I am raising support to cover structural repairs and urgent recovery expenses.'">
                 </p>
 
                 <div>
                     <a href="{{ route('donations') }}"
                         class="button-cta border border-[var(--primary)] text-[var(--primary)] hover:bg-[var(--surface-raised)] focus-ring-signature font-bold text-xs inline-block"
-                        x-text="language === 'en' ? 'Support / Donate' : 'Apoyar / Donar'"></a>
+                        x-text="language === 'es' ? 'Apoyar / Donar' : 'Support / Donate'"></a>
                 </div>
             </div>
 
             <!-- WORKBENCH DIRECTORY SECTION -->
             <div class="flex flex-col gap-6 w-full">
                 <h2 class="text-headline text-[var(--ink)]"
-                    x-text="language === 'en' ? 'Workbench Directory' : 'Directorio del Taller'"></h2>
+                    x-text="language === 'es' ? 'Directorio del Taller' : 'Workbench Directory'"></h2>
 
                 <div class="flex flex-col gap-4">
                     <!-- Prominent Link to Foundry -->
@@ -185,14 +186,13 @@
                         class="card-bench flex flex-col gap-2 focus-ring-signature hover:border-[var(--primary)] hover:bg-[var(--surface-raised)] transition-all">
                         <div class="flex justify-between items-center">
                             <h3 class="text-title text-[var(--ink)] font-bold">
-                                <span x-text="language === 'en' ? 'The Foundry' : 'La Fundición'"></span>
+                                <span x-text="language === 'es' ? 'La Fundición' : 'The Foundry'"></span>
                             </h3>
                             <span
-                                class="text-mono text-xs text-[var(--accent)] font-semibold uppercase tracking-wider">ACTIVE
-                                WORKSHOP</span>
+                                class="text-label text-[var(--accent)] font-semibold">ACTIVE WORKSHOP</span>
                         </div>
                         <p class="text-body text-sm text-[var(--muted)]"
-                            x-text="language === 'en' ? 'Inspect tools, open-source kits, and database schema controllers.' : 'Inspecciona herramientas, kits de código abierto y controladores de bases de datos.'">
+                            x-text="language === 'es' ? 'Inspecciona herramientas, kits de código abierto y controladores de bases de datos.' : 'Inspect tools, open-source kits, and database schema controllers.'">
                         </p>
                     </a>
 
@@ -203,12 +203,12 @@
                             class="card-bench flex flex-col gap-2 focus-ring-signature hover:border-[var(--primary)] hover:bg-[var(--surface-raised)] transition-all">
                             <div class="flex justify-between items-center">
                                 <h3 class="text-title text-[var(--ink)] font-bold">
-                                    <span x-text="language === 'en' ? 'Character Sheet' : 'Hoja de Personaje'"></span>
+                                    <span x-text="language === 'es' ? 'Hoja de Personaje' : 'Character Sheet'"></span>
                                 </h3>
-                                <span class="text-mono text-xs text-[var(--muted)] uppercase">LOADOUT</span>
+                                <span class="text-label text-[var(--muted)]">LOADOUT / TECH STACK</span>
                             </div>
                             <p class="text-body text-sm text-[var(--muted)]"
-                                x-text="language === 'en' ? 'View active equipment configurations and item stat scaling.' : 'Ver configuraciones de equipamiento activo y escalado de atributos.'">
+                                x-text="language === 'es' ? 'Ver configuraciones de equipamiento activo y escalado de atributos.' : 'View active equipment configurations and item stat scaling.'">
                             </p>
                         </a>
 
@@ -218,12 +218,12 @@
                             <div class="flex justify-between items-center">
                                 <h3 class="text-title text-[var(--ink)] font-bold">
                                     <span
-                                        x-text="language === 'en' ? 'Skills & Talents' : 'Habilidades y Talentos'"></span>
+                                        x-text="language === 'es' ? 'Habilidades y Talentos' : 'Skills & Talents'"></span>
                                 </h3>
-                                <span class="text-mono text-xs text-[var(--muted)] uppercase">ABILITIES</span>
+                                <span class="text-label text-[var(--muted)]">ABILITIES / CORE SKILLS</span>
                             </div>
                             <p class="text-body text-sm text-[var(--muted)]"
-                                x-text="language === 'en' ? 'Check proficiency rankings for professional and casual attributes.' : 'Consulta los niveles de dominio para habilidades profesionales y casuales.'">
+                                x-text="language === 'es' ? 'Consulta los niveles de dominio para habilidades profesionales y casuales.' : 'Check proficiency rankings for professional and casual attributes.'">
                             </p>
                         </a>
 
@@ -233,12 +233,12 @@
                             <div class="flex justify-between items-center">
                                 <h3 class="text-title text-[var(--ink)] font-bold">
                                     <span
-                                        x-text="language === 'en' ? 'Stats & Achievements' : 'Estadísticas y Logros'"></span>
+                                        x-text="language === 'es' ? 'Estadísticas y Logros' : 'Stats & Achievements'"></span>
                                 </h3>
-                                <span class="text-mono text-xs text-[var(--muted)] uppercase">LADDERS</span>
+                                <span class="text-label text-[var(--muted)]">LADDERS / METRICS</span>
                             </div>
                             <p class="text-body text-sm text-[var(--muted)]"
-                                x-text="language === 'en' ? 'Browse project metrics, commit trackers, and unlocked achievements.' : 'Explora métricas de proyectos, registros de commits y logros de juego.'">
+                                x-text="language === 'es' ? 'Explora métricas de proyectos, registros de commits y logros de juego.' : 'Browse project metrics, commit trackers, and unlocked achievements.'">
                             </p>
                         </a>
 
@@ -247,12 +247,12 @@
                             class="card-bench flex flex-col gap-2 focus-ring-signature hover:border-[var(--primary)] hover:bg-[var(--surface-raised)] transition-all">
                             <div class="flex justify-between items-center">
                                 <h3 class="text-title text-[var(--ink)] font-bold">
-                                    <span x-text="language === 'en' ? 'Inventory Bag' : 'Bolsa de Inventario'"></span>
+                                    <span x-text="language === 'es' ? 'Bolsa de Inventario' : 'Inventory Bag'"></span>
                                 </h3>
-                                <span class="text-mono text-xs text-[var(--muted)] uppercase">GEAR</span>
+                                <span class="text-label text-[var(--muted)]">GEAR / SETUP</span>
                             </div>
                             <p class="text-body text-sm text-[var(--muted)]"
-                                x-text="language === 'en' ? 'Inspect hardware gear, software tools, and alchemy setup.' : 'Examina componentes físicos, herramientas de software y alquimia.'">
+                                x-text="language === 'es' ? 'Examina componentes físicos, herramientas de software y alquimia.' : 'Inspect hardware gear, software tools, and alchemy setup.'">
                             </p>
                         </a>
                     </div>

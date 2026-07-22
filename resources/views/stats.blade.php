@@ -84,9 +84,9 @@
             <section class="w-full lg:w-6/12 flex flex-col gap-6">
                 <div class="flex flex-col gap-2">
                     <h2 class="text-headline text-[var(--ink)]">
-                        <span x-text="language === 'en' ? 'Ranked Ladder' : 'Tabla Clasificatoria'"></span>
+                        <span x-text="language === 'es' ? 'Tabla Clasificatoria: Trayectoria Profesional' : 'Ranked Ladder: Professional Track Record'"></span>
                     </h2>
-                    <p class="text-mono text-xs text-[var(--muted)]" x-text="language === 'en' ? 'Ranked statistics & credentials.' : 'Estadísticas ranked y credenciales.'"></p>
+                    <p class="text-mono text-xs text-[var(--muted)]" x-text="language === 'es' ? 'Estadísticas de ingeniería, proyectos entregados y credenciales.' : 'Engineering statistics, shipped projects, and credentials.'"></p>
                 </div>
 
                 <div class="card-bench border border-[var(--border)] rounded-lg p-6 flex flex-col gap-4">
@@ -94,7 +94,7 @@
                     <div class="flex flex-col gap-3.5">
                         <template x-for="metric in businessMetrics" :key="metric.label">
                             <div class="flex items-end justify-between font-mono text-xs w-full">
-                                <span class="text-[var(--muted)] pr-2" x-text="language === 'en' ? metric.label : metric.label_es"></span>
+                                <span class="text-[var(--muted)] pr-2" x-text="language === 'es' ? metric.label_es : metric.label"></span>
                                 <div class="flex-1 border-b border-dotted border-[var(--border)] mb-1"></div>
                                 <span class="text-[var(--ink)] font-bold pl-2" x-text="metric.value"></span>
                             </div>
@@ -103,14 +103,14 @@
 
                     <!-- Education -->
                     <div class="border-t border-[var(--border)] pt-4 mt-2 flex flex-col gap-3">
-                        <span class="text-mono text-[9px] text-[var(--muted)] uppercase" x-text="language === 'en' ? 'Education' : 'Educación'"></span>
+                        <span class="text-label text-[var(--muted)]" x-text="language === 'es' ? 'Educación' : 'Education'"></span>
                         <template x-for="edu in education" :key="edu.degree">
                             <div class="flex flex-col gap-1">
                                 <div class="flex justify-between items-start font-mono text-xs text-[var(--ink)] font-bold">
-                                    <span x-text="language === 'en' ? edu.degree : edu.degree_es"></span>
+                                    <span x-text="language === 'es' ? edu.degree_es : edu.degree"></span>
                                     <span class="text-[var(--primary)] shrink-0" x-text="edu.period"></span>
                                 </div>
-                                <span class="text-mono text-[10px] text-[var(--muted)]" x-text="language === 'en' ? edu.institution : edu.institution_es"></span>
+                                <span class="text-mono text-[10px] text-[var(--muted)]" x-text="language === 'es' ? edu.institution_es : edu.institution"></span>
                             </div>
                         </template>
                     </div>
@@ -121,16 +121,16 @@
             <section class="w-full lg:w-6/12 flex flex-col gap-6">
                 <div class="flex flex-col gap-2">
                     <h2 class="text-headline text-[var(--ink)]">
-                        <span x-text="language === 'en' ? 'Casual Ladder' : 'Tabla Casual'"></span>
+                        <span x-text="language === 'es' ? 'Tabla Casual: Métricas Personales y Pasatiempos' : 'Casual Ladder: Personal Metrics & Hobbies'"></span>
                     </h2>
-                    <p class="text-mono text-xs text-[var(--muted)]" x-text="language === 'en' ? 'Hobby metrics & gaming stats.' : 'Estadísticas casuales y logs de juego.'"></p>
+                    <p class="text-mono text-xs text-[var(--muted)]" x-text="language === 'es' ? 'Estadísticas casuales y logs de juego.' : 'Hobby metrics & activity stats.'"></p>
                 </div>
 
                 <div class="card-bench border border-[var(--border)] rounded-lg p-6 flex flex-col gap-4">
                     <div class="flex flex-col gap-3.5">
                         <template x-for="metric in personalMetrics" :key="metric.label">
                             <div class="flex items-end justify-between font-mono text-xs w-full">
-                                <span class="text-[var(--muted)] pr-2" x-text="language === 'en' ? metric.label : metric.label_es"></span>
+                                <span class="text-[var(--muted)] pr-2" x-text="language === 'es' ? metric.label_es : metric.label"></span>
                                 <div class="flex-1 border-b border-dotted border-[var(--border)] mb-1"></div>
                                 <span class="text-[var(--ink)] font-bold pl-2" x-text="metric.value"></span>
                             </div>
@@ -145,11 +145,11 @@
         <section class="w-full flex flex-col gap-6">
             <div class="flex flex-col gap-2">
                 <h2 class="text-headline text-[var(--ink)]">
-                    <span x-text="language === 'en' ? 'Achievements Unlocked' : 'Logros Desbloqueados'"></span>
+                    <span x-text="language === 'es' ? 'Logros Desbloqueados' : 'Achievements Unlocked'"></span>
                 </h2>
-                <p class="text-mono text-xs text-[var(--muted)]" x-text="language === 'en'
-                    ? 'Combined milestones and medals from the professional & casual workbench.'
-                    : 'Hitos y medallas combinadas del banco de trabajo profesional y casual.'">
+                <p class="text-mono text-xs text-[var(--muted)]" x-text="language === 'es'
+                    ? 'Hitos y medallas combinadas del banco de trabajo profesional y casual.'
+                    : 'Combined milestones and medals from the professional & casual workbench.'">
                 </p>
             </div>
 
@@ -163,10 +163,10 @@
                         <!-- Details -->
                         <div class="flex-1 flex flex-col gap-1.5">
                             <div class="flex justify-between items-baseline gap-2 flex-wrap">
-                                <h3 class="text-sm font-bold text-[var(--ink)]" x-text="language === 'en' ? ach.title : ach.title_es"></h3>
+                                <h3 class="text-sm font-bold text-[var(--ink)]" x-text="language === 'es' ? ach.title_es : ach.title"></h3>
                                 <span class="text-mono text-[9px] text-[var(--primary)] font-semibold" x-text="ach.unlocked"></span>
                             </div>
-                            <p class="text-body text-[11px] text-[var(--muted)] leading-normal" x-text="language === 'en' ? ach.desc : ach.desc_es"></p>
+                            <p class="text-body text-[11px] text-[var(--muted)] leading-normal" x-text="language === 'es' ? ach.desc_es : ach.desc"></p>
                         </div>
                     </div>
                 </template>

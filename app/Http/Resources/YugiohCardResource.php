@@ -29,6 +29,7 @@ final class YugiohCardResource extends JsonResource
             'price' => $this->resource->price,
             'card_price' => $this->resource->card_price,
             'image_url' => $this->resource->image_url,
+            'ygoprodeck_id' => $this->resource->ygoprodeck_id,
             'is_sold' => (bool) $this->resource->is_sold,
         ];
     }
