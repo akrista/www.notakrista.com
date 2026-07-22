@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('warframe_accounts', function (Blueprint $table): void {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
             $table->string('account_name');
             $table->string('active_avatar')->nullable();
             $table->unsignedBigInteger('credits')->default(0);

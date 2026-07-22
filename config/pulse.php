@@ -74,7 +74,7 @@ return [
         ],
 
         'database' => [
-            'connection' => env('PULSE_DB_CONNECTION'),
+            'connection' => env('APP_ENV') === 'testing' ? null : env('PULSE_DB_CONNECTION'),
             'chunk' => 1000,
         ],
     ],
